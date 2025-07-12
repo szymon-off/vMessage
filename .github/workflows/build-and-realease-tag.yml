@@ -1,0 +1,97 @@
+name: Build & Release Plugin
+
+on:
+  push:
+    tags:
+      - 'v*'  # Only run if commit marked with tag like v1.2.3 or similar
+
+jobs:
+  release:
+    name: Build & Release
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write  # Required for GitHub Releases
+      id-token: write  # Required by setup-java for security
+
+    steps:
+      - name: 📦 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: ☕ Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: 🏷 Extract version from tag
+        id: extract
+        run: |
+          TAG_NAME="${GITHUB_REF##*/}"
+          VERSION="${TAG_NAME#v}"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
+
+      - name: 🧪 Build JAR with Maven
+        run: mvn -B clean package -Drevision=${{ env.VERSION }}
+
+      - name: 📤 Upload JAR to GitHub Actions artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: plugin-${{ env.VERSION }}-jars
+          path: target/*.jar
+          if-no-files-found: error
+
+      - name: 📄 Read README.md
+        id: readme
+        run: |
+          README_ESCAPED=$(cat README.md | jq -Rs .)
+          echo "readme=$README_ESCAPED" >> $GITHUB_OUTPUT
+
+      - name: 🚀 Create GitHub Release (with Copilot changelog)
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG_NAME }}
+          name: Release ${{ env.VERSION }}
+          generate_release_notes: true
+          files: target/*.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: ⬇ Fetch GitHub Release Info
+        id: release_info
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const tag = process.env.TAG_NAME;
+            const release = await github.rest.repos.getReleaseByTag({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag
+            });
+            const body = release.data.body || "";
+            core.setOutput("changelog", body);
+        env:
+          TAG_NAME: ${{ env.TAG_NAME }}
+
+      - name: 🧩 Publish to Modrinth
+        uses: RubixDev/modrinth-upload@v1
+        with:
+          token: ${{ secrets.MODRINTH_TOKEN }}
+          project-id: ZIxTT2xI  # Replace this with your actual ID
+          version: ${{ env.VERSION }}
+          changelog: ${{ steps.release_info.outputs.changelog }}
+          version-type: release
+          featured: true
+          game-versions: '[ "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6", "1.21", "1.21.1", "1.21.2", "1.21.3", "1.21.4", "1.21.5", "1.21.6", "1.21.7" ]'
+          loaders: '[ "velocity" ]'    # Adjust as needed
+          files: target/*.jar
+
+      - name: 📝 Update Modrinth Project Description with README.md
+        run: |
+          curl -X PATCH https://api.modrinth.com/v2/project/ZIxTT2xI \
+            -H "Authorization: ${{ secrets.MODRINTH_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d "{ \"body\": ${{ steps.readme.outputs.readme }} }"
