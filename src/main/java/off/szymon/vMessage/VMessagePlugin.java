@@ -24,7 +24,7 @@ import java.nio.file.Path;
 @Plugin(
         id = "vmessage",
         name = "vMessage",
-        version = "1.1.3",
+        version = "1.1.4",
         description = "The #1 plugin for velocity message syncing",
         authors = {"SzymON_OFF"},
         dependencies = {
