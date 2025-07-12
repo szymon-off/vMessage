@@ -8,7 +8,6 @@
 - **Join/Leave/Change-Server Broadcasts:** Notifies all players network-wide when someone joins, leaves, or switches servers.
 - **Powerful Configuration:** Comes with a robust, easy-to-use config file so you can tailor the plugin to your network's needs.
 - **Lightweight & Fast:** No unnecessary features or bloat—just efficient, reliable message syncing.
-- **No Account System:** Works out of the box with your existing Velocity setup—no registration or authentication required.
 
 ## Usage
 
