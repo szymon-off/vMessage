@@ -1,0 +1,59 @@
+# vMessage Plugin Configuration File
+# MiniMessage is supported for formatting
+# Placeholders are parsed before MiniMessage so you can use them in your format
+# If a placeholder is unavailable it will be replaced with an empty string
+messages:
+  chat:
+    enabled: true
+    # %player% - Player
+    # %message% - Message
+    # %server% - Player's Current Server
+    # %prefix% - LuckPerms Prefix
+    # %suffix% - LuckPerms Suffix
+    format: "%prefix% <b>%player%:</b> %message%"
+    # The message to send when a muted player tries to send a message
+    # %player% - Player
+    # %message% - Message
+    # %server% - Player's Current Server
+    # %prefix% - LuckPerms Prefix
+    # %suffix% - LuckPerms Suffix
+    # %reason% - Reason for muting
+    # %end-date% - End date of the mute
+    # %moderator% - Moderator who muted the player
+    muted-message: "<red>You are muted! You cannot send messages."
+  join:
+    enabled: true
+    # %player% - Player
+    # %server% - Player's Current Server
+    # %prefix% - LuckPerms Prefix
+    # %suffix% - LuckPerms Suffix
+    format: "<dark_gray>(<green>+<dark_gray>) <gray>%player%"
+  leave:
+    enabled: true
+    # %player% - Player
+    # %server% - Player's Last Server
+    # %prefix% - LuckPerms Prefix
+    # %suffix% - LuckPerms Suffix
+    format: "<dark_gray>(<red>-<dark_gray>) <gray>%player%"
+  change:
+    enabled: true
+    # %player% - Player
+    # %old_server% - Player's Previous Server
+    # %new_server% - Player's New Server
+    # %prefix% - LuckPerms Prefix
+    # %suffix% - LuckPerms Suffix
+    format: "<dark_gray>(<gold>•<dark_gray>) <gray>%player% <dark_gray>(<gold>%old_server%→%new_server%<dark_gray>)"
+
+# If you want to use additional LuckPerms meta values you can add them here
+# You can then use them in placeholder format like this: &custom_name& [AMPERSAND not PERCENT]
+LuckPermsMeta:
+# Example:
+#  custom_name: "meta_key"
+#  custom_name2: "meta_key2"
+
+# If you want to display a different name for a server you can add it here
+# It will then be used in the messages above instead of the server's actual name
+ServerAliases:
+# Example:
+#  lobby1: "Lobby"
+#  lobby2: "Lobby"

@@ -1,0 +1,163 @@
+package off.szymon.vMessage;
+
+import com.google.inject.Inject;
+import com.velocitypowered.api.command.CommandManager;
+import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
+import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
+import com.velocitypowered.api.plugin.Dependency;
+import com.velocitypowered.api.plugin.Plugin;
+import com.velocitypowered.api.plugin.PluginContainer;
+import com.velocitypowered.api.plugin.annotation.DataDirectory;
+import com.velocitypowered.api.proxy.ProxyServer;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import space.arim.libertybans.api.LibertyBans;
+import space.arim.omnibus.Omnibus;
+import space.arim.omnibus.OmnibusProvider;
+
+import java.io.File;
+import java.nio.file.Path;
+
+@Plugin(
+        id = "vmessage",
+        name = "vMessage",
+        version = "1.1.3",
+        description = "The #1 plugin for velocity message syncing",
+        authors = {"SzymON_OFF"},
+        dependencies = {
+                @Dependency(id = "signedvelocity"),
+                @Dependency(id = "luckperms", optional = true),
+                @Dependency(id = "libertybans", optional = true)
+        }
+)
+public class VMessagePlugin {
+
+    private static VMessagePlugin instance;
+
+    private final ProxyServer server;
+    private final Logger logger;
+    private final File dataFolder;
+    private final PluginContainer plugin;
+    private final String name;
+    private LuckPerms lp;
+    private LibertyBans lb;
+    private Broadcaster broadcaster;
+
+    @Inject
+    public VMessagePlugin(ProxyServer server, Logger logger, @DataDirectory Path dataFolder, PluginContainer plugin) {
+        instance = this;
+
+        this.server = server;
+        this.logger = logger;
+        this.dataFolder = new File(dataFolder.toFile().getParentFile(), this.getClass().getAnnotation(Plugin.class).name());
+        this.plugin = plugin;
+
+        this.name = this.getClass().getAnnotation(Plugin.class).name();
+
+        this.onLoad();
+    }
+
+    @Subscribe
+    public void onProxyInitialization(ProxyInitializeEvent event) {
+        this.onEnable();
+    }
+
+    @Subscribe
+    public void onProxyShutdown(ProxyShutdownEvent event) {
+        this.onDisable();
+    }
+
+    public void onLoad() {
+        System.out.println(this.name + " loaded.");
+    }
+
+    public void onEnable() {
+        Config.setup();
+
+        if (server.getPluginManager().isLoaded("luckperms")) {
+            logger.info("LuckPerms detected, attempting to hook into it...");
+            try {
+                lp = LuckPermsProvider.get();
+                logger.info("Successfully hooked into LuckPerms");
+            } catch (Exception e) {
+                lp = null;
+                logger.error("Failed to hook into LuckPerms, disabling support");
+            }
+        } else {
+            logger.info("LuckPerms not detected, disabling support");
+            lp = null;
+        }
+        if (server.getPluginManager().isLoaded("libertybans")) {
+            logger.info("LibertyBans detected, attempting to hook into it...");
+            try {
+                Omnibus omnibus = OmnibusProvider.getOmnibus();
+                lb = omnibus.getRegistry()
+                        .getProvider(LibertyBans.class)
+                        .orElseThrow();
+                logger.info("Successfully hooked into LibertyBans");
+            } catch (Exception e) {
+                lb = null;
+                logger.error("Failed to hook into LibertyBans, disabling support");
+            }
+        } else {
+            logger.info("LibertyBans not detected, disabling support");
+            lb = null;
+        }
+
+        broadcaster = new Broadcaster();
+        server.getEventManager().register(this, new Listener());
+
+        CommandManager cmdManager = server.getCommandManager();
+        cmdManager.register(cmdManager.metaBuilder("vmessage")
+                .plugin(this)
+                .aliases("vmsg")
+                .build(),
+                new VMessageCommand()
+        );
+    }
+
+    public void onDisable() {
+        System.out.println(this.name + " disabled");
+    }
+
+    public ProxyServer getServer() {
+        return server;
+    }
+
+    public Logger getLogger() {
+        return logger;
+    }
+
+    public File getDataFolder() {
+        return dataFolder;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public static VMessagePlugin getInstance() {
+        return instance;
+    }
+
+    @Nullable
+    public LuckPerms getLuckPerms() {
+        return lp;
+    }
+
+    @Nullable
+    public LibertyBans getLibertyBans() {
+        return lb;
+    }
+
+    public Broadcaster getBroadcaster() {
+        return broadcaster;
+    }
+
+    public PluginContainer getPlugin() {
+        return plugin;
+    }
+}
