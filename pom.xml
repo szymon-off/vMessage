@@ -6,12 +6,13 @@
 
     <groupId>off.szymon</groupId>
     <artifactId>vMessage</artifactId>
-    <version>1.1.4</version>
+    <version>${revision}</version>
     <packaging>jar</packaging>
 
     <name>vMessage</name>
 
     <properties>
+        <revision>0.0.0</revision>
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -38,6 +39,49 @@
                         <goals>
                             <goal>shade</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.google.code.maven-replacer-plugin</groupId>
+                <artifactId>replacer</artifactId>
+                <version>1.5.3</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                        <configuration>
+                            <file>src/main/template/VersionTemplate.java</file>
+                            <outputFile>${project.build.directory}/generated-sources/version/Version.java</outputFile>
+                            <replacements>
+                                <replacement>
+                                    <!--suppress MavenModelInspection -->
+                                    <token>@VERSION@</token>
+                                    <value>${project.version}</value>
+                                </replacement>
+                            </replacements>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.4.0</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generated-sources/version</source>
+                            </sources>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
