@@ -23,12 +23,18 @@ public class VMessageCommand implements SimpleCommand {
         }
 
         switch (args[0].toLowerCase()) {
-            case "help" -> invocation.source().sendRichMessage("""
+            case "help" -> {
+                if (!invocation.source().hasPermission("vmessage.command.help")) {
+                    invocation.source().sendRichMessage("<red>You don't have permission to use this command.");
+                    return;
+                }
+                invocation.source().sendRichMessage("""
                     <#00ffff>vMessage</#00ffff> Help:
                     <#00ffff>/vmessage say <player> <message></#00ffff> - Sends a message as a player
                     <#00ffff>/vmessage reload</#00ffff> - Reload the config
                     <#00ffff>/vmessage help</#00ffff> - Show this help message
                     """);
+            }
             case "reload" -> {
                 if (invocation.source().hasPermission("vmessage.command.reload")) {
                     Config.reload();
@@ -39,6 +45,10 @@ public class VMessageCommand implements SimpleCommand {
                 }
             }
             case "say" -> {
+                if (!invocation.source().hasPermission("vmessage.command.say")) {
+                    invocation.source().sendRichMessage("<red>You don't have permission to use this command.");
+                    return;
+                }
                 if (args.length < 3) {
                     invocation.source().sendRichMessage("<red>Invalid options:</red> Use <#00ffff>/vmessage help</#00ffff> for more information.");
                     return;
