@@ -111,12 +111,7 @@ public class VMessagePlugin {
         server.getEventManager().register(this, new Listener());
 
         CommandManager cmdManager = server.getCommandManager();
-        cmdManager.register(cmdManager.metaBuilder("vmessage")
-                .plugin(this)
-                .aliases("vmsg")
-                .build(),
-                new VMessageCommand()
-        );
+        cmdManager.register(cmdManager.metaBuilder("vmessage").aliases("vm","vmsg").plugin(this).build(),new VMessageCommand().createCommand());
     }
 
     public void onDisable() {
