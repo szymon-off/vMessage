@@ -12,11 +12,11 @@ import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
+import off.szymon.vMessage.mute.EmptyMuteCompatibilityProvider;
+import off.szymon.vMessage.mute.LibertyBansCompatibilityProvider;
+import off.szymon.vMessage.mute.MutePluginCompatibilityProvider;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
-import space.arim.libertybans.api.LibertyBans;
-import space.arim.omnibus.Omnibus;
-import space.arim.omnibus.OmnibusProvider;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -42,8 +42,8 @@ public class VMessagePlugin {
     private final File dataFolder;
     private final PluginContainer plugin;
     private final String name;
+    private MutePluginCompatibilityProvider mutePluginCompatibilityProvider;
     private LuckPerms lp;
-    private LibertyBans lb;
     private Broadcaster broadcaster;
 
     @Inject
@@ -77,6 +77,7 @@ public class VMessagePlugin {
     public void onEnable() {
         Config.setup();
 
+        /* LuckPerms */
         if (server.getPluginManager().isLoaded("luckperms")) {
             logger.info("LuckPerms detected, attempting to hook into it...");
             try {
@@ -90,21 +91,20 @@ public class VMessagePlugin {
             logger.info("LuckPerms not detected, disabling support");
             lp = null;
         }
+
+        /* Mute Plugin Compatibility */
+        mutePluginCompatibilityProvider = new EmptyMuteCompatibilityProvider();
         if (server.getPluginManager().isLoaded("libertybans")) {
             logger.info("LibertyBans detected, attempting to hook into it...");
             try {
-                Omnibus omnibus = OmnibusProvider.getOmnibus();
-                lb = omnibus.getRegistry()
-                        .getProvider(LibertyBans.class)
-                        .orElseThrow();
+                mutePluginCompatibilityProvider = new LibertyBansCompatibilityProvider();
                 logger.info("Successfully hooked into LibertyBans");
             } catch (Exception e) {
-                lb = null;
+                mutePluginCompatibilityProvider = new EmptyMuteCompatibilityProvider();
                 logger.error("Failed to hook into LibertyBans, disabling support");
             }
         } else {
             logger.info("LibertyBans not detected, disabling support");
-            lb = null;
         }
 
         broadcaster = new Broadcaster();
@@ -138,14 +138,13 @@ public class VMessagePlugin {
         return instance;
     }
 
-    @Nullable
+    @Nullable("If LuckPerms is not loaded, this will return null")
     public LuckPerms getLuckPerms() {
         return lp;
     }
 
-    @Nullable
-    public LibertyBans getLibertyBans() {
-        return lb;
+    public MutePluginCompatibilityProvider getMutePluginCompatibilityProvider() {
+        return mutePluginCompatibilityProvider;
     }
 
     public Broadcaster getBroadcaster() {

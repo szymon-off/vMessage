@@ -9,14 +9,10 @@ import com.velocitypowered.api.proxy.server.RegisteredServer;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.cacheddata.CachedMetaData;
-import org.jetbrains.annotations.Nullable;
-import space.arim.libertybans.api.*;
-import space.arim.libertybans.api.punish.Punishment;
+import off.szymon.vMessage.mute.MutePluginCompatibilityProvider;
 
-import java.net.InetAddress;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 public class Listener {
 
@@ -27,8 +23,9 @@ public class Listener {
 
         Player player = e.getPlayer();
 
-        Punishment punishment = getMute(player.getUniqueId(), player.getRemoteAddress().getAddress());
-        if (punishment != null && !punishment.isExpired()) {
+        MutePluginCompatibilityProvider mpcp = VMessagePlugin.getInstance().getMutePluginCompatibilityProvider();
+        if (mpcp.isMuted(player)) {
+            MutePluginCompatibilityProvider.Mute mute = mpcp.getMute(player);
             Broadcaster broadcaster = VMessagePlugin.getInstance().getBroadcaster();
 
             String msg = Config.getString("messages.chat.muted-message");
@@ -36,22 +33,11 @@ public class Listener {
                     .map(server -> broadcaster.parseAlias(server.getServerInfo().getName()))
                     .orElse("Unknown");
 
-            String reason = punishment.getReason() != null ? punishment.getReason() : "No reason specified";
+            String reason = mute.reason();
 
-            String endDate = punishment.isExpired()
-                    ? "Expired"
-                    : (punishment.getEndDate() != null ? punishment.getEndDate().toString() : "Permanent");
+            String endDate = mute.endDateString();
 
-            String moderator;
-            Operator operator = punishment.getOperator();
-            if (operator instanceof PlayerOperator playerOp) {
-                Player p = VMessagePlugin.getInstance().getServer().getPlayer(playerOp.getUUID()).orElse(null);
-                moderator = p != null ? p.getUsername() : "Unknown Player";
-            } else if (operator instanceof ConsoleOperator) {
-                moderator = "Console";
-            } else {
-                moderator = "Unknown";
-            }
+            String moderator = mute.moderator();
 
             msg = msg
                     .replace("%player%", player.getUsername())
@@ -81,24 +67,6 @@ public class Listener {
         }
 
 
-    }
-
-    @Nullable
-    private Punishment getMute(UUID playerUuid, InetAddress playerAddress) {
-        LibertyBans lb = VMessagePlugin.getInstance().getLibertyBans();
-        if (lb == null) {
-            return null; // LibertyBans is not available
-        }
-
-        Optional<Punishment> punishment = lb.getSelector()
-                .selectionByApplicabilityBuilder(playerUuid, playerAddress)
-                .type(PunishmentType.MUTE)
-                .build()
-                .getFirstSpecificPunishment()
-                .toCompletableFuture() // Ensure it's a CompletableFuture
-                .join(); // Block and wait for the result
-
-        return punishment.orElse(null); // Return true if the player is muted
     }
 
     @Subscribe
