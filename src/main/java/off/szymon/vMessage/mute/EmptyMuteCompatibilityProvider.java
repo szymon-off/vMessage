@@ -2,16 +2,18 @@ package off.szymon.vMessage.mute;
 
 import com.velocitypowered.api.proxy.Player;
 
+import java.util.concurrent.CompletableFuture;
+
 public class EmptyMuteCompatibilityProvider implements MutePluginCompatibilityProvider {
 
     @Override
-    public boolean isMuted(Player player) {
-        return false;
+    public CompletableFuture<Boolean> isMuted(Player player) {
+        return CompletableFuture.completedFuture(false);
     }
 
     @Override
-    public Mute getMute(Player player) {
-        return null;
+    public CompletableFuture<Mute> getMute(Player player) {
+        return CompletableFuture.completedFuture(null);
     }
 
 }

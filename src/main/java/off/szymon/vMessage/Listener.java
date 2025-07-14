@@ -24,49 +24,49 @@ public class Listener {
         Player player = e.getPlayer();
 
         MutePluginCompatibilityProvider mpcp = VMessagePlugin.getInstance().getMutePluginCompatibilityProvider();
-        if (mpcp.isMuted(player)) {
-            MutePluginCompatibilityProvider.Mute mute = mpcp.getMute(player);
-            Broadcaster broadcaster = VMessagePlugin.getInstance().getBroadcaster();
 
-            String msg = Config.getString("messages.chat.muted-message");
-            String serverName = player.getCurrentServer()
-                    .map(server -> broadcaster.parseAlias(server.getServerInfo().getName()))
-                    .orElse("Unknown");
+        mpcp.isMuted(player).thenAcceptAsync(isMuted -> {
+            if (isMuted) {
+                mpcp.getMute(player).thenAcceptAsync(mute -> {
+                    Broadcaster broadcaster = VMessagePlugin.getInstance().getBroadcaster();
 
-            String reason = mute.reason();
+                    String msg = Config.getString("messages.chat.muted-message");
+                    String serverName = player.getCurrentServer()
+                            .map(server -> broadcaster.parseAlias(server.getServerInfo().getName()))
+                            .orElse("Unknown");
 
-            String endDate = mute.endDateString();
+                    String reason = mute.reason();
+                    String endDate = mute.endDateString();
+                    String moderator = mute.moderator();
 
-            String moderator = mute.moderator();
+                    msg = msg
+                            .replace("%player%", player.getUsername())
+                            .replace("%message%", e.getMessage())
+                            .replace("%server%", serverName)
+                            .replace("%reason%", reason)
+                            .replace("%end-date%", endDate)
+                            .replace("%moderator%", moderator);
 
-            msg = msg
-                    .replace("%player%", player.getUsername())
-                    .replace("%message%", e.getMessage())
-                    .replace("%server%", serverName)
-                    .replace("%reason%", reason)
-                    .replace("%end-date%", endDate)
-                    .replace("%moderator%", moderator);
+                    LuckPerms lp = VMessagePlugin.getInstance().getLuckPerms();
+                    if (lp != null) {
+                        CachedMetaData data = lp.getPlayerAdapter(Player.class).getMetaData(player);
+                        msg = msg
+                                .replace("%suffix%", Optional.ofNullable(data.getSuffix()).orElse(""))
+                                .replace("%prefix%", Optional.ofNullable(data.getPrefix()).orElse(""));
 
-            LuckPerms lp = VMessagePlugin.getInstance().getLuckPerms();
-            if (lp != null) {
-                CachedMetaData data = lp.getPlayerAdapter(Player.class).getMetaData(player);
-                msg = msg
-                        .replace("%suffix%", Optional.ofNullable(data.getSuffix()).orElse(""))
-                        .replace("%prefix%", Optional.ofNullable(data.getPrefix()).orElse(""));
-
-                for (Map.Entry<String, String> entry : broadcaster.getMetaPlaceholders().entrySet()) {
-                    msg = msg.replace(
-                            entry.getKey(),
-                            Optional.ofNullable(data.getMetaValue(entry.getValue())).orElse("")
-                    );
-                }
+                        for (Map.Entry<String, String> entry : broadcaster.getMetaPlaceholders().entrySet()) {
+                            msg = msg.replace(
+                                    entry.getKey(),
+                                    Optional.ofNullable(data.getMetaValue(entry.getValue())).orElse("")
+                            );
+                        }
+                    }
+                    player.sendMessage(MiniMessage.miniMessage().deserialize(msg));
+                });
+            } else {
+                VMessagePlugin.getInstance().getBroadcaster().message(e.getPlayer(), e.getMessage());
             }
-            player.sendMessage(MiniMessage.miniMessage().deserialize(msg));
-        } else {
-            VMessagePlugin.getInstance().getBroadcaster().message(e.getPlayer(), e.getMessage());
-        }
-
-
+        });
     }
 
     @Subscribe
