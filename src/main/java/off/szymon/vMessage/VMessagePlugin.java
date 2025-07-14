@@ -14,6 +14,7 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import off.szymon.vMessage.mute.EmptyMuteCompatibilityProvider;
 import off.szymon.vMessage.mute.LibertyBansCompatibilityProvider;
+import off.szymon.vMessage.mute.LiteBansCompatibilityProvider;
 import off.szymon.vMessage.mute.MutePluginCompatibilityProvider;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -30,7 +31,8 @@ import java.nio.file.Path;
         dependencies = {
                 @Dependency(id = "signedvelocity"),
                 @Dependency(id = "luckperms", optional = true),
-                @Dependency(id = "libertybans", optional = true)
+                @Dependency(id = "libertybans", optional = true),
+                @Dependency(id = "litebans", optional = true)
         }
 )
 public class VMessagePlugin {
@@ -106,6 +108,18 @@ public class VMessagePlugin {
         } else {
             logger.info("LibertyBans not detected, disabling support");
         }
+        if (server.getPluginManager().isLoaded("litebans")) {
+            logger.info("LiteBans detected, attempting to hook into it...");
+            try {
+                mutePluginCompatibilityProvider = new LiteBansCompatibilityProvider();
+                logger.info("Successfully hooked into LiteBans");
+            } catch (Exception e) {
+                mutePluginCompatibilityProvider = new EmptyMuteCompatibilityProvider();
+                logger.error("Failed to hook into LiteBans, disabling support");
+            }
+        } else {
+            logger.info("LiteBans not detected, disabling support");
+        }
 
         broadcaster = new Broadcaster();
         server.getEventManager().register(this, new Listener());
@@ -128,10 +142,6 @@ public class VMessagePlugin {
 
     public File getDataFolder() {
         return dataFolder;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public static VMessagePlugin getInstance() {
