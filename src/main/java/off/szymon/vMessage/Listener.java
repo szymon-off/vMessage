@@ -37,9 +37,11 @@ public class Listener {
                     .orElse("Unknown");
 
             String reason = punishment.getReason() != null ? punishment.getReason() : "No reason specified";
+
             String endDate = punishment.isExpired()
                     ? "Expired"
                     : (punishment.getEndDate() != null ? punishment.getEndDate().toString() : "Permanent");
+
             String moderator;
             Operator operator = punishment.getOperator();
             if (operator instanceof PlayerOperator playerOp) {
