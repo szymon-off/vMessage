@@ -25,8 +25,6 @@ public class VMessageCommand {
                         }
                         )
 
-
-
                         // /vmessage help
                         .then(LiteralArgumentBuilder.<CommandSource>literal("help")
                                 .requires(src -> src.hasPermission("vmessage.command.help"))
