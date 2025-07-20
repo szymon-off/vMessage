@@ -22,7 +22,10 @@ public class VMessageCommand {
                         Version: <#00ffff>%s</#00ffff>
                         """.formatted(VMessagePlugin.getInstance().getPlugin().getDescription().getVersion().get())));
                             return 1;
-                        })
+                        }
+                        )
+
+
 
                         // /vmessage help
                         .then(LiteralArgumentBuilder.<CommandSource>literal("help")
