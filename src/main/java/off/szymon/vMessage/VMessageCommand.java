@@ -65,7 +65,6 @@ public class VMessageCommand {
                                                     String playerName = StringArgumentType.getString(ctx, "player");
                                                     String message = StringArgumentType.getString(ctx, "message");
                                                     Optional<Player> target = VMessagePlugin.getInstance().getServer().getPlayer(playerName);
-
                                                     if (target.isEmpty()) {
                                                         ctx.getSource().sendMessage(MiniMessage.miniMessage().deserialize("<red>Player not found."));
                                                         return 1;
