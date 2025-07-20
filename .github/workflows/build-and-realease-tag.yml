@@ -47,8 +47,10 @@ jobs:
       - name: 📄 Read README.md
         id: readme
         run: |
-          README_ESCAPED=$(cat README.md | jq -Rs .)
-          echo "readme=$README_ESCAPED" >> $GITHUB_OUTPUT
+          echo "readme<<EOF" >> $GITHUB_OUTPUT
+          cat README.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
 
       - name: 🚀 Create GitHub Release (with Copilot changelog)
         uses: softprops/action-gh-release@v2
