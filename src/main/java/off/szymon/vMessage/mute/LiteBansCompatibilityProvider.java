@@ -34,9 +34,6 @@ public class LiteBansCompatibilityProvider implements MutePluginCompatibilityPro
                     player.getRemoteAddress().getAddress().toString(),
                     player.getCurrentServer().get().getServerInfo().getName()
             );
-            if (entry == null) {
-                return null;
-            }
             String playerName = player.getUsername();
             String reason = entry.getReason() != null ? entry.getReason() : "No reason specified";
             String moderator = entry.getExecutorName() != null ? entry.getExecutorName() : "Unknown";
