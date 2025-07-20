@@ -92,7 +92,7 @@ jobs:
         uses: RubixDev/modrinth-upload@v1
         with:
           token: ${{ secrets.MODRINTH_TOKEN }}
-          file_path: target/vmessage-${{ env.VERSION }}.jar
+          file_path: target/vMessage-${{ env.VERSION }}.jar
           name: vMessage ${{ env.VERSION }}
           version: ${{ env.VERSION }}
           changelog: ${{ steps.release_info.outputs.changelog }}
@@ -101,7 +101,7 @@ jobs:
           release_type: release
           loaders: velocity
           featured: true
-          project-id: ZIxTT2xI
+          project_id: ZIxTT2xI
           new_project_body: ${{ steps.readme.outputs.readme }}
           
 
