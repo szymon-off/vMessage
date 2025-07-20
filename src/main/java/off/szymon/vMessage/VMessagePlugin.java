@@ -130,10 +130,6 @@ public class VMessagePlugin {
         return dataFolder;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public static VMessagePlugin getInstance() {
         return instance;
     }
