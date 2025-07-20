@@ -47,9 +47,11 @@ jobs:
       - name: 📄 Read README.md
         id: readme
         run: |
-          echo "readme<<EOF" >> $GITHUB_OUTPUT
-          cat README.md >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          {
+            echo "readme<<EOF"
+            cat README.md
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
 
       - name: 🚀 Create GitHub Release (with Copilot changelog)
@@ -98,7 +100,7 @@ jobs:
           name: vMessage ${{ env.VERSION }}
           version: ${{ env.VERSION }}
           changelog: ${{ steps.release_info.outputs.changelog }}
-          relations: signedvelocity:required,luckperms:optional,libertybans:optional
+          relations: 7IbzD4Zm:required,Vebnzrzj:optional,PgXAUxLZ:optional # signedvelocity, luckperms, libertybans
           game_versions: 1.20,1.20.1,1.20.2,1.20.3,1.20.4,1.20.5,1.20.6,1.21,1.21.1,1.21.2,1.21.3,1.21.4,1.21.5,1.21.6,1.21.7,1.21.8
           release_type: release
           loaders: velocity
