@@ -49,7 +49,7 @@ commands:
   broadcast:
     enabled: true
     # %message% - Message
-    format: "<bold><red>Server:</b> %message%"
+    format: "<bold><#00ffff>Server:<reset> %message%"
 
 
 # If you want to use additional LuckPerms meta values you can add them here
