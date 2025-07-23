@@ -93,7 +93,12 @@ public class Broadcaster {
         String serverName = player.getCurrentServer()
                 .map(server -> server.getServerInfo().getName())
                 .map(this::parseAlias)
-                .orElse("");
+                .orElse(null);
+
+        if (serverName == null) {
+            return; // invalid server connection, do not send leave message
+        }
+
 
         msg = msg
                 .replace("%player%", player.getUsername())

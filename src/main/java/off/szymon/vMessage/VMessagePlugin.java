@@ -108,6 +108,7 @@ public class VMessagePlugin {
         }
 
         broadcaster = new Broadcaster();
+        server.getEventManager().register(this, new Listener());
 
         CommandRegisterer.registerCommands();
     }
