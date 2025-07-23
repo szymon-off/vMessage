@@ -1,7 +1,6 @@
 package off.szymon.vMessage;
 
 import com.google.inject.Inject;
-import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
@@ -12,6 +11,7 @@ import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
+import off.szymon.vMessage.cmd.CommandRegisterer;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import space.arim.libertybans.api.LibertyBans;
@@ -108,10 +108,8 @@ public class VMessagePlugin {
         }
 
         broadcaster = new Broadcaster();
-        server.getEventManager().register(this, new Listener());
 
-        CommandManager cmdManager = server.getCommandManager();
-        cmdManager.register(cmdManager.metaBuilder("vmessage").aliases("vm","vmsg").plugin(this).build(),new VMessageCommand().createCommand());
+        CommandRegisterer.registerCommands();
     }
 
     public void onDisable() {

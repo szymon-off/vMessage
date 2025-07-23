@@ -44,6 +44,14 @@ messages:
     # %suffix% - LuckPerms Suffix
     format: "<dark_gray>(<gold>•<dark_gray>) <gray>%player% <dark_gray>(<gold>%old_server%→%new_server%<dark_gray>)"
 
+commands:
+  # This command allows you to send a message as the server
+  broadcast:
+    enabled: true
+    # %message% - Message
+    format: "<bold><red>Server:</b> %message%"
+
+
 # If you want to use additional LuckPerms meta values you can add them here
 # You can then use them in placeholder format like this: &custom_name& [AMPERSAND not PERCENT]
 LuckPermsMeta:

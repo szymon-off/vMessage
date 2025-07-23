@@ -38,6 +38,13 @@ vMessage provides several administrative commands for advanced usage and configu
   Displays the help message with available commands.  
   **Permission:** `vmessage.command.help`
 
+- `/broadcast <message>`  
+  Broadcasts a custom message on the network.  
+  **Permission:** `vmessage.command.broadcast`  
+  **Aliases:** `/bc`, `/bcast`, `/alert`, `/announce`
+
+You can also use `/vmsg` or `/vm` as an alias for `/vmessage` for convenience.
+
 Make sure to assign the appropriate permissions to your staff or admin roles in your Velocity configuration.
 
 ## Configuration

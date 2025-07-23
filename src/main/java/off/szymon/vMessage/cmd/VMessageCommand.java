@@ -1,4 +1,4 @@
-package off.szymon.vMessage;
+package off.szymon.vMessage.cmd;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -7,6 +7,8 @@ import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import off.szymon.vMessage.Config;
+import off.szymon.vMessage.VMessagePlugin;
 
 import java.util.Optional;
 

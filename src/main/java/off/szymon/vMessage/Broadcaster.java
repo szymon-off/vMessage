@@ -5,7 +5,6 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.cacheddata.CachedMetaData;
 import org.simpleyaml.configuration.ConfigurationSection;
-import space.arim.libertybans.api.LibertyBans;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +14,6 @@ public class Broadcaster {
 
     private final HashMap<String,String> serverAliases; // Server name, Server alias
     private final LuckPerms lp;
-    private final LibertyBans lb;
     private final HashMap<String,String> metaPlaceholders; // Placeholder, Meta key
 
     public Broadcaster() {
@@ -38,16 +36,10 @@ public class Broadcaster {
                 }
             }
         }
-
-        /* LibertyBans */
-        lb = VMessagePlugin.getInstance().getLibertyBans();
     }
 
     public void message(Player player, String message) {
         if (!Config.getYaml().getBoolean("messages.chat.enabled")) return;
-
-
-
 
         String msg = Config.getString("messages.chat.format");
         msg = msg
@@ -167,6 +159,15 @@ public class Broadcaster {
                 }
             }
         }
+    }
+
+    public void broadcast(String message) {
+        if (!Config.getYaml().getBoolean("commands.broadcast.enabled")) return;
+
+        String msg = Config.getString("commands.broadcast.format");
+        msg = msg.replace("%message%", message);
+
+        VMessagePlugin.getInstance().getServer().sendMessage(MiniMessage.miniMessage().deserialize(msg));
     }
 
     public String parseAlias(String serverName) {
