@@ -104,11 +104,14 @@ public class VMessagePlugin {
             if (server.getPluginManager().isLoaded(pluginName)) {
                 logger.info("{} detected, attempting to hook into it...", displayName);
                 try {
-                    Map<String, MutePluginCompatibilityProvider> providerMap = Map.of(
-                        "libertybans", new LibertyBansCompatibilityProvider(),
-                        "litebans", new LiteBansCompatibilityProvider()
-                    );
-                    mutePluginCompatibilityProvider = providerMap.getOrDefault(pluginName, new EmptyMuteCompatibilityProvider());
+                    switch (pluginName) {
+                        case "libertybans":
+                            mutePluginCompatibilityProvider = new LibertyBansCompatibilityProvider();
+                            break;
+                        case "litebans":
+                            mutePluginCompatibilityProvider = new LiteBansCompatibilityProvider();
+                            break;
+                    }
                     logger.info("Successfully hooked into {}", displayName);
                     break;
                 } catch (Exception e) {
