@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Map;
 
 @Plugin(
         id = "vmessage",
@@ -94,30 +95,29 @@ public class VMessagePlugin {
         }
 
         /* Mute Plugin Compatibility */
+        Map<String, String> mutePlugins = Map.of("libertybans", "LibertyBans","litebans", "LiteBans");
         mutePluginCompatibilityProvider = new EmptyMuteCompatibilityProvider();
-        if (server.getPluginManager().isLoaded("libertybans")) {
-            logger.info("LibertyBans detected, attempting to hook into it...");
-            try {
-                mutePluginCompatibilityProvider = new LibertyBansCompatibilityProvider();
-                logger.info("Successfully hooked into LibertyBans");
-            } catch (Exception e) {
-                mutePluginCompatibilityProvider = new EmptyMuteCompatibilityProvider();
-                logger.error("Failed to hook into LibertyBans, disabling support");
+        logger.info("Checking for mute plugin compatibility...");
+        for (Map.Entry<String, String> entry : mutePlugins.entrySet()) {
+            String pluginName = entry.getKey();
+            String displayName = entry.getValue();
+            if (server.getPluginManager().isLoaded(pluginName)) {
+                logger.info("{} detected, attempting to hook into it...", displayName);
+                try {
+                    Map<String, MutePluginCompatibilityProvider> providerMap = Map.of(
+                        "libertybans", new LibertyBansCompatibilityProvider(),
+                        "litebans", new LiteBansCompatibilityProvider()
+                    );
+                    mutePluginCompatibilityProvider = providerMap.getOrDefault(pluginName, new EmptyMuteCompatibilityProvider());
+                    logger.info("Successfully hooked into {}", displayName);
+                    break;
+                } catch (Exception e) {
+                    mutePluginCompatibilityProvider = new EmptyMuteCompatibilityProvider();
+                    logger.error("Failed to hook into {}, disabling support", displayName);
+                }
+            } else {
+                logger.info("{} not detected, disabling support", displayName);
             }
-        } else {
-            logger.info("LibertyBans not detected, disabling support");
-        }
-        if (server.getPluginManager().isLoaded("litebans")) {
-            logger.info("LiteBans detected, attempting to hook into it...");
-            try {
-                mutePluginCompatibilityProvider = new LiteBansCompatibilityProvider();
-                logger.info("Successfully hooked into LiteBans");
-            } catch (Exception e) {
-                mutePluginCompatibilityProvider = new EmptyMuteCompatibilityProvider();
-                logger.error("Failed to hook into LiteBans, disabling support");
-            }
-        } else {
-            logger.info("LiteBans not detected, disabling support");
         }
 
         broadcaster = new Broadcaster();

@@ -17,7 +17,5 @@ public class LuckPermsCompatibilityProvider {
         return new PlayerData(lp.getPlayerAdapter(Player.class).getMetaData(player));
     }
 
-    public record PlayerData(CachedMetaData metaData) {
-
-    }
+    public record PlayerData(CachedMetaData metaData) {}
 }
