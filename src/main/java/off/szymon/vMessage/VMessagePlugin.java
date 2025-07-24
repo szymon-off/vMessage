@@ -10,12 +10,11 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
-import net.luckperms.api.LuckPerms;
-import net.luckperms.api.LuckPermsProvider;
-import off.szymon.vMessage.mute.EmptyMuteCompatibilityProvider;
-import off.szymon.vMessage.mute.LibertyBansCompatibilityProvider;
-import off.szymon.vMessage.mute.LiteBansCompatibilityProvider;
-import off.szymon.vMessage.mute.MutePluginCompatibilityProvider;
+import off.szymon.vMessage.compatibility.LuckPermsCompatibilityProvider;
+import off.szymon.vMessage.compatibility.mute.EmptyMuteCompatibilityProvider;
+import off.szymon.vMessage.compatibility.mute.LibertyBansCompatibilityProvider;
+import off.szymon.vMessage.compatibility.mute.LiteBansCompatibilityProvider;
+import off.szymon.vMessage.compatibility.mute.MutePluginCompatibilityProvider;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -45,7 +44,7 @@ public class VMessagePlugin {
     private final PluginContainer plugin;
     private final String name;
     private MutePluginCompatibilityProvider mutePluginCompatibilityProvider;
-    private LuckPerms lp;
+    private LuckPermsCompatibilityProvider lpCompatibilityProvider;
     private Broadcaster broadcaster;
 
     @Inject
@@ -83,15 +82,15 @@ public class VMessagePlugin {
         if (server.getPluginManager().isLoaded("luckperms")) {
             logger.info("LuckPerms detected, attempting to hook into it...");
             try {
-                lp = LuckPermsProvider.get();
+                lpCompatibilityProvider = new LuckPermsCompatibilityProvider();
                 logger.info("Successfully hooked into LuckPerms");
             } catch (Exception e) {
-                lp = null;
+                lpCompatibilityProvider = null;
                 logger.error("Failed to hook into LuckPerms, disabling support");
             }
         } else {
             logger.info("LuckPerms not detected, disabling support");
-            lp = null;
+            lpCompatibilityProvider = null;
         }
 
         /* Mute Plugin Compatibility */
@@ -149,8 +148,8 @@ public class VMessagePlugin {
     }
 
     @Nullable("If LuckPerms is not loaded, this will return null")
-    public LuckPerms getLuckPerms() {
-        return lp;
+    public LuckPermsCompatibilityProvider getLuckPermsCompatibilityProvider() {
+        return lpCompatibilityProvider;
     }
 
     public MutePluginCompatibilityProvider getMutePluginCompatibilityProvider() {

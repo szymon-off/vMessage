@@ -1,4 +1,4 @@
-package off.szymon.vMessage.mute;
+package off.szymon.vMessage.compatibility.mute;
 
 import com.velocitypowered.api.proxy.Player;
 import litebans.api.Database;

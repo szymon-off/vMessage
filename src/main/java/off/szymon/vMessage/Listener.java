@@ -7,9 +7,8 @@ import com.velocitypowered.api.event.player.ServerPostConnectEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.luckperms.api.LuckPerms;
-import net.luckperms.api.cacheddata.CachedMetaData;
-import off.szymon.vMessage.mute.MutePluginCompatibilityProvider;
+import off.szymon.vMessage.compatibility.LuckPermsCompatibilityProvider;
+import off.szymon.vMessage.compatibility.mute.MutePluginCompatibilityProvider;
 
 import java.util.Map;
 import java.util.Optional;
@@ -47,17 +46,18 @@ public class Listener {
                             .replace("%end-date%", endDate)
                             .replace("%moderator%", moderator);
 
-                    LuckPerms lp = VMessagePlugin.getInstance().getLuckPerms();
+                    LuckPermsCompatibilityProvider lp = VMessagePlugin.getInstance().getLuckPermsCompatibilityProvider();
+
                     if (lp != null) {
-                        CachedMetaData data = lp.getPlayerAdapter(Player.class).getMetaData(player);
+                        LuckPermsCompatibilityProvider.PlayerData data = lp.getMetaData(player);
                         msg = msg
-                                .replace("%suffix%", Optional.ofNullable(data.getSuffix()).orElse(""))
-                                .replace("%prefix%", Optional.ofNullable(data.getPrefix()).orElse(""));
+                                .replace("%suffix%", Optional.ofNullable(data.metaData().getSuffix()).orElse(""))
+                                .replace("%prefix%", Optional.ofNullable(data.metaData().getPrefix()).orElse(""));
 
                         for (Map.Entry<String, String> entry : broadcaster.getMetaPlaceholders().entrySet()) {
                             msg = msg.replace(
                                     entry.getKey(),
-                                    Optional.ofNullable(data.getMetaValue(entry.getValue())).orElse("")
+                                    Optional.ofNullable(data.metaData().getMetaValue(entry.getValue())).orElse("")
                             );
                         }
                     }
