@@ -58,8 +58,6 @@ public class VMessagePlugin {
         this.plugin = plugin;
 
         this.name = this.getClass().getAnnotation(Plugin.class).name();
-
-        this.onLoad();
     }
 
     @Subscribe
@@ -70,10 +68,6 @@ public class VMessagePlugin {
     @Subscribe
     public void onProxyShutdown(ProxyShutdownEvent event) {
         this.onDisable();
-    }
-
-    public void onLoad() {
-        System.out.println(this.name + " loaded.");
     }
 
     public void onEnable() {
