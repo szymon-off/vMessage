@@ -42,6 +42,8 @@ public class Broadcaster {
         if (!Config.getYaml().getBoolean("messages.chat.enabled")) return;
 
         String msg = Config.getString("messages.chat.format");
+
+        //noinspection OptionalGetWithoutIsPresent
         msg = msg
                 .replace("%player%", player.getUsername())
                 .replace("%message%", message)
@@ -67,6 +69,7 @@ public class Broadcaster {
         if (player.hasPermission("vmessage.silent.join")) return;
 
         String msg = Config.getString("messages.join.format");
+        //noinspection OptionalGetWithoutIsPresent
         msg = msg
                 .replace("%player%", player.getUsername())
                 .replace("%server%", parseAlias(player.getCurrentServer().get().getServerInfo().getName()));
@@ -126,6 +129,7 @@ public class Broadcaster {
         if (player.hasPermission("vmessage.silent.change")) return;
 
         String msg = Config.getString("messages.change.format");
+        //noinspection OptionalGetWithoutIsPresent
         msg = msg
                 .replace("%player%", player.getUsername())
                 .replace("%new_server%", parseAlias(player.getCurrentServer().get().getServerInfo().getName()))
