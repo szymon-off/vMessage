@@ -64,6 +64,7 @@ public class Broadcaster {
 
     public void join(Player player) {
         if (!Config.getYaml().getBoolean("messages.join.enabled")) return;
+        if (player.hasPermission("vmessage.silent.join")) return;
 
         String msg = Config.getString("messages.join.format");
         msg = msg
@@ -88,6 +89,7 @@ public class Broadcaster {
 
     public void leave(Player player) {
         if (!Config.getYaml().getBoolean("messages.leave.enabled")) return;
+        if (player.hasPermission("vmessage.silent.leave")) return;
 
         String msg = Config.getString("messages.leave.format");
         String serverName = player.getCurrentServer()
@@ -99,11 +101,9 @@ public class Broadcaster {
             return; // invalid server connection, do not send leave message
         }
 
-
         msg = msg
                 .replace("%player%", player.getUsername())
                 .replace("%server%", serverName);
-
 
         if (lp != null) {
             CachedMetaData data = lp.getPlayerAdapter(Player.class).getMetaData(player);
@@ -123,6 +123,7 @@ public class Broadcaster {
 
     public void change(Player player, String oldServer) {
         if (!Config.getYaml().getBoolean("messages.change.enabled")) return;
+        if (player.hasPermission("vmessage.silent.change")) return;
 
         String msg = Config.getString("messages.change.format");
         msg = msg
