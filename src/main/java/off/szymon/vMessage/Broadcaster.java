@@ -66,7 +66,10 @@ public class Broadcaster {
 
     public void join(Player player) {
         if (!Config.getYaml().getBoolean("messages.join.enabled")) return;
-        if (player.hasPermission("vmessage.silent.join")) return;
+        if (player.hasPermission("vmessage.silent.join")) {
+            VMessagePlugin.getInstance().getLogger().info("{} has silent join permission, not broadcasting join message", player.getUsername());
+            return;
+        }
 
         String msg = Config.getString("messages.join.format");
         //noinspection OptionalGetWithoutIsPresent
@@ -92,7 +95,10 @@ public class Broadcaster {
 
     public void leave(Player player) {
         if (!Config.getYaml().getBoolean("messages.leave.enabled")) return;
-        if (player.hasPermission("vmessage.silent.leave")) return;
+        if (player.hasPermission("vmessage.silent.leave")) {
+            VMessagePlugin.getInstance().getLogger().info("{} has silent leave permission, not broadcasting leave message", player.getUsername());
+            return;
+        }
 
         String msg = Config.getString("messages.leave.format");
         String serverName = player.getCurrentServer()
@@ -126,7 +132,10 @@ public class Broadcaster {
 
     public void change(Player player, String oldServer) {
         if (!Config.getYaml().getBoolean("messages.change.enabled")) return;
-        if (player.hasPermission("vmessage.silent.change")) return;
+        if (player.hasPermission("vmessage.silent.change")) {
+            VMessagePlugin.getInstance().getLogger().info("{} has silent change permission, not broadcasting change message", player.getUsername());
+            return;
+        }
 
         String msg = Config.getString("messages.change.format");
         //noinspection OptionalGetWithoutIsPresent
