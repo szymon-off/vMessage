@@ -204,8 +204,6 @@ public class Broadcaster {
     }
 
     private String escapeMiniMessage(String input) {
-        input = MiniMessage.miniMessage().escapeTags(input);
-        input = "<plain>" + input + "</plain>";
-        return  input;
+        return MiniMessage.miniMessage().escapeTags(input);
     }
 }
