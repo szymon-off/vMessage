@@ -1,5 +1,7 @@
 # vMessage
 
+> ⚠️ **Warning:** LiteBans mute support hasn't been tested yet. If you encounter any issues, please reach out to me on Discord: `szymon.off`
+
 **vMessage** is the best Velocity plugin for synchronizing chat and player events across your entire proxy network. It is designed for server administrators who want seamless, reliable, and configurable message syncing without unnecessary complexity.
 
 ## Features
