@@ -7,16 +7,11 @@ import com.velocitypowered.api.event.player.ServerPostConnectEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.luckperms.api.LuckPerms;
-import net.luckperms.api.cacheddata.CachedMetaData;
-import org.jetbrains.annotations.Nullable;
-import space.arim.libertybans.api.*;
-import space.arim.libertybans.api.punish.Punishment;
+import off.szymon.vMessage.compatibility.LuckPermsCompatibilityProvider;
+import off.szymon.vMessage.compatibility.mute.MutePluginCompatibilityProvider;
 
-import java.net.InetAddress;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 public class Listener {
 
@@ -27,76 +22,51 @@ public class Listener {
 
         Player player = e.getPlayer();
 
-        Punishment punishment = getMute(player.getUniqueId(), player.getRemoteAddress().getAddress());
-        if (punishment != null && !punishment.isExpired()) {
-            Broadcaster broadcaster = VMessagePlugin.getInstance().getBroadcaster();
+        MutePluginCompatibilityProvider mpcp = VMessagePlugin.getInstance().getMutePluginCompatibilityProvider();
 
-            String msg = Config.getString("messages.chat.muted-message");
-            String serverName = player.getCurrentServer()
-                    .map(server -> broadcaster.parseAlias(server.getServerInfo().getName()))
-                    .orElse("Unknown");
+        mpcp.isMuted(player).thenAcceptAsync(isMuted -> {
+            if (isMuted) {
+                mpcp.getMute(player).thenAcceptAsync(mute -> {
+                    Broadcaster broadcaster = VMessagePlugin.getInstance().getBroadcaster();
 
-            String reason = punishment.getReason() != null ? punishment.getReason() : "No reason specified";
-            String endDate = punishment.isExpired()
-                    ? "Expired"
-                    : (punishment.getEndDate() != null ? punishment.getEndDate().toString() : "Permanent");
-            String moderator;
-            Operator operator = punishment.getOperator();
-            if (operator instanceof PlayerOperator playerOp) {
-                Player p = VMessagePlugin.getInstance().getServer().getPlayer(playerOp.getUUID()).orElse(null);
-                moderator = p != null ? p.getUsername() : "Unknown Player";
-            } else if (operator instanceof ConsoleOperator) {
-                moderator = "Console";
+                    String msg = Config.getString("messages.chat.muted-message");
+                    String serverName = player.getCurrentServer()
+                            .map(server -> broadcaster.parseAlias(server.getServerInfo().getName()))
+                            .orElse("Unknown");
+
+                    String reason = mute.reason();
+                    String endDate = mute.endDateString();
+                    String moderator = mute.moderator();
+
+                    msg = msg
+                            .replace("%player%", player.getUsername())
+                            .replace("%message%", e.getMessage())
+                            .replace("%server%", serverName)
+                            .replace("%reason%", reason)
+                            .replace("%end-date%", endDate)
+                            .replace("%moderator%", moderator);
+
+                    LuckPermsCompatibilityProvider lp = VMessagePlugin.getInstance().getLuckPermsCompatibilityProvider();
+
+                    if (lp != null) {
+                        LuckPermsCompatibilityProvider.PlayerData data = lp.getMetaData(player);
+                        msg = msg
+                                .replace("%suffix%", Optional.ofNullable(data.metaData().getSuffix()).orElse(""))
+                                .replace("%prefix%", Optional.ofNullable(data.metaData().getPrefix()).orElse(""));
+
+                        for (Map.Entry<String, String> entry : broadcaster.getMetaPlaceholders().entrySet()) {
+                            msg = msg.replace(
+                                    entry.getKey(),
+                                    Optional.ofNullable(data.metaData().getMetaValue(entry.getValue())).orElse("")
+                            );
+                        }
+                    }
+                    player.sendMessage(MiniMessage.miniMessage().deserialize(msg));
+                });
             } else {
-                moderator = "Unknown";
+                VMessagePlugin.getInstance().getBroadcaster().message(e.getPlayer(), e.getMessage());
             }
-
-            msg = msg
-                    .replace("%player%", player.getUsername())
-                    .replace("%message%", e.getMessage())
-                    .replace("%server%", serverName)
-                    .replace("%reason%", reason)
-                    .replace("%end-date%", endDate)
-                    .replace("%moderator%", moderator);
-
-            LuckPerms lp = VMessagePlugin.getInstance().getLuckPerms();
-            if (lp != null) {
-                CachedMetaData data = lp.getPlayerAdapter(Player.class).getMetaData(player);
-                msg = msg
-                        .replace("%suffix%", Optional.ofNullable(data.getSuffix()).orElse(""))
-                        .replace("%prefix%", Optional.ofNullable(data.getPrefix()).orElse(""));
-
-                for (Map.Entry<String, String> entry : broadcaster.getMetaPlaceholders().entrySet()) {
-                    msg = msg.replace(
-                            entry.getKey(),
-                            Optional.ofNullable(data.getMetaValue(entry.getValue())).orElse("")
-                    );
-                }
-            }
-            player.sendMessage(MiniMessage.miniMessage().deserialize(msg));
-        } else {
-            VMessagePlugin.getInstance().getBroadcaster().message(e.getPlayer(), e.getMessage());
-        }
-
-
-    }
-
-    @Nullable
-    private Punishment getMute(UUID playerUuid, InetAddress playerAddress) {
-        LibertyBans lb = VMessagePlugin.getInstance().getLibertyBans();
-        if (lb == null) {
-            return null; // LibertyBans is not available
-        }
-
-        Optional<Punishment> punishment = lb.getSelector()
-                .selectionByApplicabilityBuilder(playerUuid, playerAddress)
-                .type(PunishmentType.MUTE)
-                .build()
-                .getFirstSpecificPunishment()
-                .toCompletableFuture() // Ensure it's a CompletableFuture
-                .join(); // Block and wait for the result
-
-        return punishment.orElse(null); // Return true if the player is muted
+        });
     }
 
     @Subscribe

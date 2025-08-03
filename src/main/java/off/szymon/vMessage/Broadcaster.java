@@ -2,8 +2,7 @@ package off.szymon.vMessage;
 
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.luckperms.api.LuckPerms;
-import net.luckperms.api.cacheddata.CachedMetaData;
+import off.szymon.vMessage.compatibility.LuckPermsCompatibilityProvider;
 import org.simpleyaml.configuration.ConfigurationSection;
 
 import java.util.HashMap;
@@ -13,7 +12,7 @@ import java.util.Optional;
 public class Broadcaster {
 
     private final HashMap<String,String> serverAliases; // Server name, Server alias
-    private final LuckPerms lp;
+    private final LuckPermsCompatibilityProvider lp;
     private final HashMap<String,String> metaPlaceholders; // Placeholder, Meta key
 
     public Broadcaster() {
@@ -26,7 +25,8 @@ public class Broadcaster {
         }
 
         /* LuckPerms */
-        lp = VMessagePlugin.getInstance().getLuckPerms();
+        lp = VMessagePlugin.getInstance().getLuckPermsCompatibilityProvider();
+
         metaPlaceholders = new HashMap<>();
         if (lp != null) {
             ConfigurationSection metas = Config.getYaml().getConfigurationSection("LuckPermsMeta");
@@ -49,15 +49,15 @@ public class Broadcaster {
                 .replace("%message%", message)
                 .replace("%server%", parseAlias(player.getCurrentServer().get().getServerInfo().getName()));
         if (lp != null) {
-            CachedMetaData data = lp.getPlayerAdapter(Player.class).getMetaData(player);
+            LuckPermsCompatibilityProvider.PlayerData data = lp.getMetaData(player);
             msg = msg
-                    .replace("%suffix%", Optional.ofNullable(data.getSuffix()).orElse(""))
-                    .replace("%prefix%", Optional.ofNullable(data.getPrefix()).orElse(""));
+                    .replace("%suffix%", Optional.ofNullable(data.metaData().getSuffix()).orElse(""))
+                    .replace("%prefix%", Optional.ofNullable(data.metaData().getPrefix()).orElse(""));
 
             for (Map.Entry<String,String> entry : metaPlaceholders.entrySet()) {
                 msg = msg.replace(
                         entry.getKey(),
-                        Optional.ofNullable(data.getMetaValue(entry.getValue())).orElse("")
+                        Optional.ofNullable(data.metaData().getMetaValue(entry.getValue())).orElse("")
                 );
             }
         }
@@ -78,15 +78,15 @@ public class Broadcaster {
                 .replace("%server%", parseAlias(player.getCurrentServer().get().getServerInfo().getName()));
 
         if (lp != null) {
-            CachedMetaData data = lp.getPlayerAdapter(Player.class).getMetaData(player);
+            LuckPermsCompatibilityProvider.PlayerData data = lp.getMetaData(player);
             msg = msg
-                    .replace("%suffix%", Optional.ofNullable(data.getSuffix()).orElse(""))
-                    .replace("%prefix%", Optional.ofNullable(data.getPrefix()).orElse(""));
+                    .replace("%suffix%", Optional.ofNullable(data.metaData().getSuffix()).orElse(""))
+                    .replace("%prefix%", Optional.ofNullable(data.metaData().getPrefix()).orElse(""));
 
             for (Map.Entry<String,String> entry : metaPlaceholders.entrySet()) {
                 msg = msg.replace(
                         entry.getKey(),
-                        Optional.ofNullable(data.getMetaValue(entry.getValue())).orElse("")
+                        Optional.ofNullable(data.metaData().getMetaValue(entry.getValue())).orElse("")
                 );
             }
         }
@@ -115,15 +115,15 @@ public class Broadcaster {
                 .replace("%server%", serverName);
 
         if (lp != null) {
-            CachedMetaData data = lp.getPlayerAdapter(Player.class).getMetaData(player);
+            LuckPermsCompatibilityProvider.PlayerData data = lp.getMetaData(player);
             msg = msg
-                    .replace("%suffix%", Optional.ofNullable(data.getSuffix()).orElse(""))
-                    .replace("%prefix%", Optional.ofNullable(data.getPrefix()).orElse(""));
+                    .replace("%suffix%", Optional.ofNullable(data.metaData().getSuffix()).orElse(""))
+                    .replace("%prefix%", Optional.ofNullable(data.metaData().getPrefix()).orElse(""));
 
             for (Map.Entry<String,String> entry : metaPlaceholders.entrySet()) {
                 msg = msg.replace(
                         entry.getKey(),
-                        Optional.ofNullable(data.getMetaValue(entry.getValue())).orElse("")
+                        Optional.ofNullable(data.metaData().getMetaValue(entry.getValue())).orElse("")
                 );
             }
         }
@@ -145,15 +145,16 @@ public class Broadcaster {
                 .replace("%old_server%", parseAlias(oldServer));
 
         if (lp != null) {
-            CachedMetaData data = lp.getPlayerAdapter(Player.class).getMetaData(player);
+            LuckPermsCompatibilityProvider.PlayerData data = lp.getMetaData(player);
+
             msg = msg
-                    .replace("%suffix%", Optional.ofNullable(data.getSuffix()).orElse(""))
-                    .replace("%prefix%", Optional.ofNullable(data.getPrefix()).orElse(""));
+                    .replace("%suffix%", Optional.ofNullable(data.metaData().getSuffix()).orElse(""))
+                    .replace("%prefix%", Optional.ofNullable(data.metaData().getPrefix()).orElse(""));
 
             for (Map.Entry<String,String> entry : metaPlaceholders.entrySet()) {
                 msg = msg.replace(
                         entry.getKey(),
-                        Optional.ofNullable(data.getMetaValue(entry.getValue())).orElse("")
+                        Optional.ofNullable(data.metaData().getMetaValue(entry.getValue())).orElse("")
                 );
             }
         }

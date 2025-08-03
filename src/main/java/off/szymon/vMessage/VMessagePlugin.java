@@ -9,17 +9,18 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
-import net.luckperms.api.LuckPerms;
-import net.luckperms.api.LuckPermsProvider;
+import off.szymon.vMessage.compatibility.LuckPermsCompatibilityProvider;
+import off.szymon.vMessage.compatibility.mute.EmptyMuteCompatibilityProvider;
+import off.szymon.vMessage.compatibility.mute.LibertyBansCompatibilityProvider;
+import off.szymon.vMessage.compatibility.mute.LiteBansCompatibilityProvider;
+import off.szymon.vMessage.compatibility.mute.MutePluginCompatibilityProvider;
 import off.szymon.vMessage.cmd.CommandRegisterer;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
-import space.arim.libertybans.api.LibertyBans;
-import space.arim.omnibus.Omnibus;
-import space.arim.omnibus.OmnibusProvider;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Map;
 
 @Plugin(
         id = "vmessage",
@@ -30,7 +31,8 @@ import java.nio.file.Path;
         dependencies = {
                 @Dependency(id = "signedvelocity"),
                 @Dependency(id = "luckperms", optional = true),
-                @Dependency(id = "libertybans", optional = true)
+                @Dependency(id = "libertybans", optional = true),
+                @Dependency(id = "litebans", optional = true)
         }
 )
 public class VMessagePlugin {
@@ -42,8 +44,8 @@ public class VMessagePlugin {
     private final File dataFolder;
     private final PluginContainer plugin;
     private final String name;
-    private LuckPerms lp;
-    private LibertyBans lb;
+    private MutePluginCompatibilityProvider mutePluginCompatibilityProvider;
+    private LuckPermsCompatibilityProvider lpCompatibilityProvider;
     private Broadcaster broadcaster;
 
     @Inject
@@ -56,8 +58,6 @@ public class VMessagePlugin {
         this.plugin = plugin;
 
         this.name = this.getClass().getAnnotation(Plugin.class).name();
-
-        this.onLoad();
     }
 
     @Subscribe
@@ -70,41 +70,51 @@ public class VMessagePlugin {
         this.onDisable();
     }
 
-    public void onLoad() {
-        System.out.println(this.name + " loaded.");
-    }
-
     public void onEnable() {
         Config.setup();
 
+        /* LuckPerms */
         if (server.getPluginManager().isLoaded("luckperms")) {
             logger.info("LuckPerms detected, attempting to hook into it...");
             try {
-                lp = LuckPermsProvider.get();
+                lpCompatibilityProvider = new LuckPermsCompatibilityProvider();
                 logger.info("Successfully hooked into LuckPerms");
             } catch (Exception e) {
-                lp = null;
+                lpCompatibilityProvider = null;
                 logger.error("Failed to hook into LuckPerms, disabling support");
             }
         } else {
             logger.info("LuckPerms not detected, disabling support");
-            lp = null;
+            lpCompatibilityProvider = null;
         }
-        if (server.getPluginManager().isLoaded("libertybans")) {
-            logger.info("LibertyBans detected, attempting to hook into it...");
-            try {
-                Omnibus omnibus = OmnibusProvider.getOmnibus();
-                lb = omnibus.getRegistry()
-                        .getProvider(LibertyBans.class)
-                        .orElseThrow();
-                logger.info("Successfully hooked into LibertyBans");
-            } catch (Exception e) {
-                lb = null;
-                logger.error("Failed to hook into LibertyBans, disabling support");
+
+        /* Mute Plugin Compatibility */
+        Map<String, String> mutePlugins = Map.of("libertybans", "LibertyBans","litebans", "LiteBans");
+        mutePluginCompatibilityProvider = new EmptyMuteCompatibilityProvider();
+        logger.info("Checking for mute plugin compatibility...");
+        for (Map.Entry<String, String> entry : mutePlugins.entrySet()) {
+            String pluginName = entry.getKey();
+            String displayName = entry.getValue();
+            if (server.getPluginManager().isLoaded(pluginName)) {
+                logger.info("{} detected, attempting to hook into it...", displayName);
+                try {
+                    switch (pluginName) {
+                        case "libertybans":
+                            mutePluginCompatibilityProvider = new LibertyBansCompatibilityProvider();
+                            break;
+                        case "litebans":
+                            mutePluginCompatibilityProvider = new LiteBansCompatibilityProvider();
+                            break;
+                    }
+                    logger.info("Successfully hooked into {}", displayName);
+                    break;
+                } catch (Exception e) {
+                    mutePluginCompatibilityProvider = new EmptyMuteCompatibilityProvider();
+                    logger.error("Failed to hook into {}, disabling support", displayName);
+                }
+            } else {
+                logger.info("{} not detected, disabling support", displayName);
             }
-        } else {
-            logger.info("LibertyBans not detected, disabling support");
-            lb = null;
         }
 
         broadcaster = new Broadcaster();
@@ -133,14 +143,13 @@ public class VMessagePlugin {
         return instance;
     }
 
-    @Nullable
-    public LuckPerms getLuckPerms() {
-        return lp;
+    @Nullable("If LuckPerms is not loaded, this will return null")
+    public LuckPermsCompatibilityProvider getLuckPermsCompatibilityProvider() {
+        return lpCompatibilityProvider;
     }
 
-    @Nullable
-    public LibertyBans getLibertyBans() {
-        return lb;
+    public MutePluginCompatibilityProvider getMutePluginCompatibilityProvider() {
+        return mutePluginCompatibilityProvider;
     }
 
     public Broadcaster getBroadcaster() {
