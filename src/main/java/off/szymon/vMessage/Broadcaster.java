@@ -46,7 +46,7 @@ public class Broadcaster {
         //noinspection OptionalGetWithoutIsPresent
         msg = msg
                 .replace("%player%", player.getUsername())
-                .replace("%message%", message)
+                .replace("%message%", escapeMiniMessage(message))
                 .replace("%server%", parseAlias(player.getCurrentServer().get().getServerInfo().getName()));
         if (lp != null) {
             LuckPermsCompatibilityProvider.PlayerData data = lp.getMetaData(player);
@@ -203,5 +203,11 @@ public class Broadcaster {
 
     public HashMap<String, String> getMetaPlaceholders() {
         return metaPlaceholders;
+    }
+
+    private String escapeMiniMessage(String input) {
+        input = MiniMessage.miniMessage().escapeTags(input);
+        input = "<plain>" + input + "</plain>";
+        return  input;
     }
 }
