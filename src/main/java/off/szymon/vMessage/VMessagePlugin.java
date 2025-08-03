@@ -1,7 +1,6 @@
 package off.szymon.vMessage;
 
 import com.google.inject.Inject;
-import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
@@ -15,6 +14,7 @@ import off.szymon.vMessage.compatibility.mute.EmptyMuteCompatibilityProvider;
 import off.szymon.vMessage.compatibility.mute.LibertyBansCompatibilityProvider;
 import off.szymon.vMessage.compatibility.mute.LiteBansCompatibilityProvider;
 import off.szymon.vMessage.compatibility.mute.MutePluginCompatibilityProvider;
+import off.szymon.vMessage.cmd.CommandRegisterer;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -120,8 +120,7 @@ public class VMessagePlugin {
         broadcaster = new Broadcaster();
         server.getEventManager().register(this, new Listener());
 
-        CommandManager cmdManager = server.getCommandManager();
-        cmdManager.register(cmdManager.metaBuilder("vmessage").aliases("vm","vmsg").plugin(this).build(),new VMessageCommand().createCommand());
+        CommandRegisterer.registerCommands();
     }
 
     public void onDisable() {

@@ -42,6 +42,8 @@ public class Broadcaster {
         if (!Config.getYaml().getBoolean("messages.chat.enabled")) return;
 
         String msg = Config.getString("messages.chat.format");
+
+        //noinspection OptionalGetWithoutIsPresent
         msg = msg
                 .replace("%player%", player.getUsername())
                 .replace("%message%", message)
@@ -64,8 +66,13 @@ public class Broadcaster {
 
     public void join(Player player) {
         if (!Config.getYaml().getBoolean("messages.join.enabled")) return;
+        if (player.hasPermission("vmessage.silent.join")) {
+            VMessagePlugin.getInstance().getLogger().info("{} has silent join permission, not broadcasting join message", player.getUsername());
+            return;
+        }
 
         String msg = Config.getString("messages.join.format");
+        //noinspection OptionalGetWithoutIsPresent
         msg = msg
                 .replace("%player%", player.getUsername())
                 .replace("%server%", parseAlias(player.getCurrentServer().get().getServerInfo().getName()));
@@ -88,17 +95,24 @@ public class Broadcaster {
 
     public void leave(Player player) {
         if (!Config.getYaml().getBoolean("messages.leave.enabled")) return;
+        if (player.hasPermission("vmessage.silent.leave")) {
+            VMessagePlugin.getInstance().getLogger().info("{} has silent leave permission, not broadcasting leave message", player.getUsername());
+            return;
+        }
 
         String msg = Config.getString("messages.leave.format");
         String serverName = player.getCurrentServer()
                 .map(server -> server.getServerInfo().getName())
                 .map(this::parseAlias)
-                .orElse("");
+                .orElse(null);
+
+        if (serverName == null) {
+            return; // invalid server connection, do not send leave message
+        }
 
         msg = msg
                 .replace("%player%", player.getUsername())
                 .replace("%server%", serverName);
-
 
         if (lp != null) {
             LuckPermsCompatibilityProvider.PlayerData data = lp.getMetaData(player);
@@ -118,8 +132,13 @@ public class Broadcaster {
 
     public void change(Player player, String oldServer) {
         if (!Config.getYaml().getBoolean("messages.change.enabled")) return;
+        if (player.hasPermission("vmessage.silent.change")) {
+            VMessagePlugin.getInstance().getLogger().info("{} has silent change permission, not broadcasting change message", player.getUsername());
+            return;
+        }
 
         String msg = Config.getString("messages.change.format");
+        //noinspection OptionalGetWithoutIsPresent
         msg = msg
                 .replace("%player%", player.getUsername())
                 .replace("%new_server%", parseAlias(player.getCurrentServer().get().getServerInfo().getName()))
@@ -160,6 +179,15 @@ public class Broadcaster {
                 }
             }
         }
+    }
+
+    public void broadcast(String message) {
+        if (!Config.getYaml().getBoolean("commands.broadcast.enabled")) return;
+
+        String msg = Config.getString("commands.broadcast.format");
+        msg = msg.replace("%message%", message);
+
+        VMessagePlugin.getInstance().getServer().sendMessage(MiniMessage.miniMessage().deserialize(msg));
     }
 
     public String parseAlias(String serverName) {

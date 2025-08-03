@@ -8,6 +8,7 @@
 
 - **Global Chat Sync:** Instantly syncs chat messages across all servers connected to your Velocity proxy.
 - **Join/Leave/Change-Server Broadcasts:** Notifies all players network-wide when someone joins, leaves, or switches servers.
+- **Silent Permissions:** Players with a special silent permission can prevent their join, leave, and server change messages from being announced.
 - **Powerful Configuration:** Comes with a robust, easy-to-use config file so you can tailor the plugin to your network's needs.
 - **Lightweight & Fast:** No unnecessary features or bloat—just efficient, reliable message syncing.
 
@@ -20,7 +21,7 @@
 Once installed and configured, vMessage will automatically:
 
 - Sync chat messages across all servers
-- Broadcast join, leave, and server switch events to all players
+- Broadcast join, leave, and server switch events to all players (unless the player has the silent permission)
 
 No commands or permissions are required for basic functionality.
 
@@ -39,6 +40,13 @@ vMessage provides several administrative commands for advanced usage and configu
 - `/vmessage help`  
   Displays the help message with available commands.  
   **Permission:** `vmessage.command.help`
+
+- `/broadcast <message>`  
+  Broadcasts a custom message on the network.  
+  **Permission:** `vmessage.command.broadcast`  
+  **Aliases:** `/bc`, `/bcast`, `/alert`, `/announce`
+
+You can also use `/vmsg` or `/vm` as an alias for `/vmessage` for convenience.
 
 Make sure to assign the appropriate permissions to your staff or admin roles in your Velocity configuration.
 

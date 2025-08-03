@@ -1,4 +1,4 @@
-package off.szymon.vMessage;
+package off.szymon.vMessage.cmd;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -7,6 +7,8 @@ import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import off.szymon.vMessage.Config;
+import off.szymon.vMessage.VMessagePlugin;
 
 import java.util.Optional;
 
@@ -22,10 +24,7 @@ public class VMessageCommand {
                         Version: <#00ffff>%s</#00ffff>
                         """.formatted(VMessagePlugin.getInstance().getPlugin().getDescription().getVersion().get())));
                             return 1;
-                        }
-                        )
-
-
+                        })
 
                         // /vmessage help
                         .then(LiteralArgumentBuilder.<CommandSource>literal("help")
@@ -68,7 +67,6 @@ public class VMessageCommand {
                                                     String playerName = StringArgumentType.getString(ctx, "player");
                                                     String message = StringArgumentType.getString(ctx, "message");
                                                     Optional<Player> target = VMessagePlugin.getInstance().getServer().getPlayer(playerName);
-
                                                     if (target.isEmpty()) {
                                                         ctx.getSource().sendMessage(MiniMessage.miniMessage().deserialize("<red>Player not found."));
                                                         return 1;

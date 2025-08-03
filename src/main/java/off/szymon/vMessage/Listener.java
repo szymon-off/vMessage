@@ -86,7 +86,6 @@ public class Listener {
         } else {
             VMessagePlugin.getInstance().getBroadcaster().change(e.getPlayer(),pre.getServerInfo().getName());
         }
-
     }
 
 }
