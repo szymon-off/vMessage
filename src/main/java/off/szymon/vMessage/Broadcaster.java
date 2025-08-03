@@ -182,8 +182,6 @@ public class Broadcaster {
     }
 
     public void broadcast(String message) {
-        if (!Config.getYaml().getBoolean("commands.broadcast.enabled")) return;
-
         String msg = Config.getString("commands.broadcast.format");
         msg = msg.replace("%message%", message);
 

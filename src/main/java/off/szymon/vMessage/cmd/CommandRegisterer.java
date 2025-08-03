@@ -1,6 +1,7 @@
 package off.szymon.vMessage.cmd;
 
 import com.velocitypowered.api.command.CommandManager;
+import off.szymon.vMessage.Config;
 import off.szymon.vMessage.VMessagePlugin;
 
 public class CommandRegisterer {
@@ -15,12 +16,14 @@ public class CommandRegisterer {
                 .build(),
                 new VMessageCommand().createCommand()
         );
-        cmdManager.register(cmdManager.metaBuilder("broadcast")
-                .plugin(vMessage)
-                .aliases("bc","bcast","alert","announce")
-                .build(),
-                new BroadcastCommand().createCommand()
-        );
+        if (Config.getYaml().getBoolean("commands.broadcast.enabled")) {
+            cmdManager.register(cmdManager.metaBuilder("broadcast")
+                            .plugin(vMessage)
+                            .aliases("bc","bcast")
+                            .build(),
+                    new BroadcastCommand().createCommand()
+            );
+        }
     }
 
 }

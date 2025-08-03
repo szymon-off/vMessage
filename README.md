@@ -44,7 +44,7 @@ vMessage provides several administrative commands for advanced usage and configu
 - `/broadcast <message>`  
   Broadcasts a custom message on the network.  
   **Permission:** `vmessage.command.broadcast`  
-  **Aliases:** `/bc`, `/bcast`, `/alert`, `/announce`
+  **Aliases:** `/bc`, `/bcast`
 
 You can also use `/vmsg` or `/vm` as an alias for `/vmessage` for convenience.
 
