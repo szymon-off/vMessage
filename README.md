@@ -33,6 +33,10 @@ vMessage provides several administrative commands for advanced usage and configu
   Sends a message as the specified player across the network.  
   **Permission:** `vmessage.command.say`
 
+- `/vmessage fake <join/leave/change> [player] [old-server]`
+  Sends a fake join, leave, or server change message as if the specified player performed that action.  
+  **Permission:** `vmessage.command.fake`, `vmessage.command.fake.join`, `[...].leave`, `[...].change`
+
 - `/vmessage reload`  
   Reloads the plugin configuration without restarting the proxy.  
   **Permission:** `vmessage.command.reload`

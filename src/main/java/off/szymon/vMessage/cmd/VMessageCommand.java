@@ -33,7 +33,7 @@ public class VMessageCommand {
                                     ctx.getSource().sendMessage(MiniMessage.miniMessage().deserialize("""
                             <#00ffff>vMessage</#00ffff> Help:
                             <#00ffff>/vmessage say <player> <message></#00ffff> - Sends a message as a player
-                            <#00ffff>/vmessage fake <join/leave/change> [player] [old-server]</#00ffff> - Show this help message
+                            <#00ffff>/vmessage fake <join/leave/change> [player] [old-server]</#00ffff> - Sends a fake join/leave/change message
                             <#00ffff>/vmessage reload</#00ffff> - Reload the config
                             <#00ffff>/vmessage help</#00ffff> - Show this help message
                             <#00ffff>/vmessage</#00ffff> - Show the plugin version and author"""));
@@ -84,6 +84,7 @@ public class VMessageCommand {
                         .then(LiteralArgumentBuilder.<CommandSource>literal("fake")
                                 .requires(src -> src.hasPermission("vmessage.command.fake"))
                                 .then(LiteralArgumentBuilder.<CommandSource>literal("join")
+                                        .requires(src -> src.hasPermission("vmessage.command.fake.join"))
                                         .executes(ctx -> {
                                             Player player = ctx.getSource() instanceof Player ? (Player) ctx.getSource() : null;
                                             if (player == null) {
@@ -116,6 +117,7 @@ public class VMessageCommand {
                                                 )
                                         )
                                 .then(LiteralArgumentBuilder.<CommandSource>literal("leave")
+                                        .requires(src -> src.hasPermission("vmessage.command.fake.leave"))
                                         .executes(ctx -> {
                                             Player player = ctx.getSource() instanceof Player ? (Player) ctx.getSource() : null;
                                             if (player == null) {
@@ -148,6 +150,7 @@ public class VMessageCommand {
                                         )
                                 )
                                 .then(LiteralArgumentBuilder.<CommandSource>literal("change")
+                                        .requires(src -> src.hasPermission("vmessage.command.fake.change"))
                                         .executes(ctx -> {
                                             Player player = ctx.getSource() instanceof Player ? (Player) ctx.getSource() : null;
                                             if (player == null) {
