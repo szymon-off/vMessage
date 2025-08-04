@@ -204,6 +204,6 @@ public class Broadcaster {
     }
 
     private String escapeMiniMessage(String input) {
-        return MiniMessage.miniMessage().escapeTags(input);
+        return Config.getYaml().getBoolean("messages.chat.allow-minimessage") ? input : MiniMessage.miniMessage().escapeTags(input);
     }
 }

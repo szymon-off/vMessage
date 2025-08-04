@@ -10,7 +10,9 @@ messages:
     # %server% - Player's Current Server
     # %prefix% - LuckPerms Prefix
     # %suffix% - LuckPerms Suffix
-    format: "%prefix% <b>%player%:</b> %message%"
+    format: "%prefix% <b>%player%:</b> %message%" # Default: "%prefix% <b>%player%:</b> %message%"
+    # Whether to allow players to use MiniMessage in their messages
+    allow-minimessage: false # Default: false
     # The message to send when a muted player tries to send a message
     # %player% - Player
     # %message% - Message
@@ -20,21 +22,21 @@ messages:
     # %reason% - Reason for muting
     # %end-date% - End date of the mute
     # %moderator% - Moderator who muted the player
-    muted-message: "<red>You are muted! You cannot send messages."
+    muted-message: "<red>You are muted! You cannot send messages." # Default: "<red>You are muted! You cannot send messages."
   join:
     enabled: true
     # %player% - Player
     # %server% - Player's Current Server
     # %prefix% - LuckPerms Prefix
     # %suffix% - LuckPerms Suffix
-    format: "<dark_gray>(<green>+<dark_gray>) <gray>%player%"
+    format: "<dark_gray>(<green>+<dark_gray>) <gray>%player%" # Default: "<dark_gray>(<green>+<dark_gray>) <gray>%player%"
   leave:
     enabled: true
     # %player% - Player
     # %server% - Player's Last Server
     # %prefix% - LuckPerms Prefix
     # %suffix% - LuckPerms Suffix
-    format: "<dark_gray>(<red>-<dark_gray>) <gray>%player%"
+    format: "<dark_gray>(<red>-<dark_gray>) <gray>%player%" # Default: "<dark_gray>(<red>-<dark_gray>) <gray>%player%"
   change:
     enabled: true
     # %player% - Player
@@ -42,15 +44,14 @@ messages:
     # %new_server% - Player's New Server
     # %prefix% - LuckPerms Prefix
     # %suffix% - LuckPerms Suffix
-    format: "<dark_gray>(<gold>•<dark_gray>) <gray>%player% <dark_gray>(<gold>%old_server%→%new_server%<dark_gray>)"
+    format: "<dark_gray>(<gold>•<dark_gray>) <gray>%player% <dark_gray>(<gold>%old_server%→%new_server%<dark_gray>)" # Default: "<dark_gray>(<gold>•<dark_gray>) <gray>%player% <dark_gray>(<gold>%old_server%→%new_server%<dark_gray>)"
 
 commands:
   # This command allows you to send a message as the server
   broadcast:
     enabled: true
     # %message% - Message
-    format: "<bold><#00ffff>Server:<reset> %message%"
-
+    format: "<bold><#00ffff>Server:<reset> %message%" # Default: "<bold><#00ffff>Server:<reset> %message%"
 
 # If you want to use additional LuckPerms meta values you can add them here
 # You can then use them in placeholder format like this: &custom_name& [AMPERSAND not PERCENT]
