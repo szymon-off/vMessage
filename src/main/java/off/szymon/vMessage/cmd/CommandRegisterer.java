@@ -11,9 +11,9 @@ public class CommandRegisterer {
 
         CommandManager cmdManager = vMessage.getServer().getCommandManager();
         cmdManager.register(cmdManager.metaBuilder("vmessage")
-                .plugin(vMessage)
-                .aliases("vm","vmsg")
-                .build(),
+                        .plugin(vMessage)
+                        .aliases("vm","vmsg")
+                        .build(),
                 new VMessageCommand().createCommand()
         );
         if (Config.getYaml().getBoolean("commands.broadcast.enabled")) {
@@ -22,6 +22,14 @@ public class CommandRegisterer {
                             .aliases("bc","bcast")
                             .build(),
                     new BroadcastCommand().createCommand()
+            );
+        }
+        if (Config.getYaml().getBoolean("commands.message.enabled")) {
+            cmdManager.register(cmdManager.metaBuilder("message")
+                            .plugin(vMessage)
+                            .aliases("msg","tell","whisper","w")
+                            .build(),
+                    new MessageCommand().createCommand()
             );
         }
     }
