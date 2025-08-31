@@ -64,7 +64,7 @@ commands:
     # %receiver-prefix% - Receiver's LuckPerms Prefix
     # %receiver-suffix% - Receiver's LuckPerms Suffix
     format:
-      sender: "<b>(<#00ffff>You </#00ffff>→ <#00ffff>%reciver%</#00ffff>): </b>%message%" # Default: "<b>(<#00ffff>You </#00ffff>→ <#00ffff>%reciver%</#00ffff>): </b>%message%"
+      sender: "<b>(<#00ffff>You </#00ffff>→ <#00ffff>%receiver%</#00ffff>): </b>%message%" # Default: "<b>(<#00ffff>You </#00ffff>→ <#00ffff>%reciver%</#00ffff>): </b>%message%"
       # Placeholders are the same as in sender-format
       receiver: "<b>(<#00ffff>%sender% </#00ffff>→ <#00ffff>You</#00ffff>): </b>%message%" # Default: "<b>(<#00ffff>%sender% </#00ffff>→ <#00ffff>You</#00ffff>): </b>%message%"
     # Whether to allow players to use MiniMessage in their messages
