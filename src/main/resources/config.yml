@@ -48,10 +48,27 @@ messages:
 
 commands:
   # This command allows you to send a message as the server
-  broadcast:
+  broadcast: # /broadcast, /bcast, /bc
     enabled: true
     # %message% - Message
     format: "<bold><#00ffff>Server:<reset> %message%" # Default: "<bold><#00ffff>Server:<reset> %message%"
+  message: # /message, /msg, /whisper, /w
+    enabled: true
+    # %sender% - Sender
+    # %receiver% - Receiver
+    # %message% - Message
+    # %sender-server% - Sender's Current Server
+    # %receiver-server% - Receiver's Current Server
+    # %sender-prefix% - Sender's LuckPerms Prefix
+    # %sender-suffix% - Sender's LuckPerms Suffix
+    # %receiver-prefix% - Receiver's LuckPerms Prefix
+    # %receiver-suffix% - Receiver's LuckPerms Suffix
+    format:
+      sender: "<b>(<#00ffff>You </#00ffff>→ <#00ffff>%reciver%</#00ffff>): </b>%message%" # Default: "<b>(<#00ffff>You </#00ffff>→ <#00ffff>%reciver%</#00ffff>): </b>%message%"
+      # Placeholders are the same as in sender-format
+      receiver: "<b>(<#00ffff>%sender% </#00ffff>→ <#00ffff>You</#00ffff>): </b>%message%" # Default: "<b>(<#00ffff>%sender% </#00ffff>→ <#00ffff>You</#00ffff>): </b>%message%"
+    # Whether to allow players to use MiniMessage in their messages
+    allow-minimessage: false # Default: false
 
 # If you want to use additional LuckPerms meta values you can add them here
 # You can then use them in placeholder format like this: &custom_name& [AMPERSAND not PERCENT]

@@ -51,6 +51,16 @@ vMessage provides several administrative commands for advanced usage and configu
   **Permission:** `vmessage.command.broadcast`  
   **Aliases:** `/bc`, `/bcast`
 
+- `/message <player> <message>`  
+  Sends a private message to a specific player across the network.  
+  **Permission:** `vmessage.command.msg`  
+  **Aliases:** `/msg`, `/tell`, `/whisper`, `/w`
+
+- `/reply <message>`  
+  Replies to the last player who sent you a private message.  
+  **Permission:** `vmessage.command.reply`  
+  **Aliases:** `/r`
+
 You can also use `/vmsg` or `/vm` as an alias for `/vmessage` for convenience.
 
 Make sure to assign the appropriate permissions to your staff or admin roles in your Velocity configuration.
