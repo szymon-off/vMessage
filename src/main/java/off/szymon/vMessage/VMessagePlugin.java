@@ -9,12 +9,12 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
+import off.szymon.vMessage.cmd.CommandRegisterer;
 import off.szymon.vMessage.compatibility.LuckPermsCompatibilityProvider;
 import off.szymon.vMessage.compatibility.mute.EmptyMuteCompatibilityProvider;
 import off.szymon.vMessage.compatibility.mute.LibertyBansCompatibilityProvider;
 import off.szymon.vMessage.compatibility.mute.LiteBansCompatibilityProvider;
 import off.szymon.vMessage.compatibility.mute.MutePluginCompatibilityProvider;
-import off.szymon.vMessage.cmd.CommandRegisterer;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
