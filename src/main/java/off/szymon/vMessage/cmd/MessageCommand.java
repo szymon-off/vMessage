@@ -25,6 +25,14 @@ public class MessageCommand {
                 LiteralArgumentBuilder.<CommandSource>literal("message")
                         .requires(src -> src.hasPermission("vmessage.command.message"))
                         .then(RequiredArgumentBuilder.<CommandSource, String>argument("player", StringArgumentType.word())
+                                .suggests(
+                                        (ctx, builder) -> {
+                                            for (Player player : VMessagePlugin.getInstance().getServer().getAllPlayers()) {
+                                                builder.suggest(player.getUsername());
+                                            }
+                                            return builder.buildFuture();
+                                        }
+                                )
                                 .then(RequiredArgumentBuilder.<CommandSource, String>argument("message", StringArgumentType.greedyString())
                                         .executes(ctx -> {
                                             String senderFormat = Config.getString("commands.message.format.sender");
