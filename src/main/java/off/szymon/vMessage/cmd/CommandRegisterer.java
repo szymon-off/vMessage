@@ -32,6 +32,14 @@ public class CommandRegisterer {
                     new MessageCommand().createCommand()
             );
         }
+        if (Config.getYaml().getBoolean("commands.message.enable-reply-command")) {
+            cmdManager.register(cmdManager.metaBuilder("reply")
+                            .plugin(vMessage)
+                            .aliases("r")
+                            .build(),
+                    new ReplyCommand().createCommand()
+            );
+        }
     }
 
 }

@@ -69,6 +69,9 @@ commands:
       receiver: "<b>(<#00ffff>%sender% </#00ffff>→ <#00ffff>You</#00ffff>): </b>%message%" # Default: "<b>(<#00ffff>%sender% </#00ffff>→ <#00ffff>You</#00ffff>): </b>%message%"
     # Whether to allow players to use MiniMessage in their messages
     allow-minimessage: false # Default: false
+    # Whether to enable the /reply command
+    # It will reply to the last person who sent you a message
+    enable-reply-command: true
 
 # If you want to use additional LuckPerms meta values you can add them here
 # You can then use them in placeholder format like this: &custom_name& [AMPERSAND not PERCENT]

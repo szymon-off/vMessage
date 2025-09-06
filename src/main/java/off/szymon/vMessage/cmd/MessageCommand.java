@@ -55,7 +55,7 @@ public class MessageCommand {
                                                 message = MiniMessage.miniMessage().escapeTags(message);
                                             }
 
-                                            /* Placholders */
+                                            /* Placeholders */
 
                                             // Player names (sender and receiver), servers (sender and receiver), message
                                             if (senderPlayer != null) {
@@ -132,6 +132,10 @@ public class MessageCommand {
 
                                             sender.sendRichMessage(senderFormat);
                                             receiver.sendRichMessage(receiverFormat);
+
+                                            if (senderPlayer != null) {
+                                                ReplyCommand.messageSent(senderPlayer.getUniqueId(), receiver.getUniqueId());
+                                            }
                                             return Command.SINGLE_SUCCESS;
                                         })
                                 )
