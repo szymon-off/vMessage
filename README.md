@@ -94,4 +94,7 @@ If you want to build vMessage yourself:
 
 ## License
 
-This project is licensed under the [MIT License](https://opensource.org/licenses/MIT). You are free to use, modify, and distribute it at no cost.
+- Versions **≤ 1.6.1** are licensed under the **MIT License**.
+- Versions **≥ 1.7.0** are licensed under the **GNU General Public License v3.0** (GPL-3.0).
+
+You can find the full text of each license in the corresponding release archive, or in the repository under the `LICENSE` file for that version.
