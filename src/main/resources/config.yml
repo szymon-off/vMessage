@@ -1,4 +1,6 @@
 # vMessage Plugin Configuration File
+# This file must be updated to the latest version when updating the plugin
+# The latest version of this file can be found here: https://github.com/szymon-off/vMessage/blob/master/src/main/resources/config.yml
 # MiniMessage is supported for formatting
 # Placeholders are parsed before MiniMessage so you can use them in your format
 # If a placeholder is unavailable it will be replaced with an empty string

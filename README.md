@@ -29,7 +29,8 @@ No commands or permissions are required for basic functionality.
 ## Updating
 
 To update vMessage, replace the existing `vMessage.jar` in your `plugins` folder with the latest version and restart your Velocity proxy.  
-If new configuration options are introduced, be sure to update your config file accordingly.  
+If new configuration options are introduced, be sure to update your config file accordingly.
+The configuration file is available here: [config.yml](https://github.com/szymon-off/vMessage/blob/master/src/main/resources/config.yml)  
 Automatic config migration is not yet available, but is planned for a future release.  
 Thank you for your understanding.
 
