@@ -12,7 +12,7 @@
 - **Powerful Configuration:** Comes with a robust, easy-to-use config file so you can tailor the plugin to your network's needs.
 - **Lightweight & Fast:** No unnecessary features or bloat—just efficient, reliable message syncing.
 
-## Usage
+## Installing
 
 1. Place `vMessage.jar` into your Velocity `plugins` folder.
 2. Install the appropriate versions of [SignedVelocity](https://modrinth.com/plugin/signedvelocity) on your proxy and backends.
@@ -25,6 +25,13 @@ Once installed and configured, vMessage will automatically:
 - Broadcast join, leave, and server switch events to all players (unless the player has the silent permission)
 
 No commands or permissions are required for basic functionality.
+
+## Updating
+
+To update vMessage, replace the existing `vMessage.jar` in your `plugins` folder with the latest version and restart your Velocity proxy.  
+If new configuration options are introduced, be sure to update your config file accordingly.  
+Automatic config migration is not yet available, but is planned for a future release.  
+Thank you for your understanding.
 
 ## Commands
 
