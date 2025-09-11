@@ -37,7 +37,7 @@ class ConfigManager {
         fun get(): ConfigManager = instance
     }
 
-    private val fileName = "config.yml.old"
+    private val fileName = "config.yml"
     private val path: Path = VMessagePlugin.get().dataFolder.toPath().resolve(fileName)
     private val file: File = path.toFile()
 
