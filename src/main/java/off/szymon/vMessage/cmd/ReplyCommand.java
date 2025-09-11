@@ -20,9 +20,9 @@ import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import off.szymon.vMessage.Config;
 import off.szymon.vMessage.VMessagePlugin;
 import off.szymon.vMessage.compatibility.LuckPermsCompatibilityProvider;
+import off.szymon.vMessage.config.ConfigManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,8 +45,8 @@ public class ReplyCommand {
                         .requires(src -> src.hasPermission("vmessage.command.reply"))
                         .then(RequiredArgumentBuilder.<CommandSource, String>argument("message", StringArgumentType.greedyString())
                                 .executes( ctx -> {
-                                    String senderFormat = Config.getString("commands.message.format.sender");
-                                    String receiverFormat = Config.getString("commands.message.format.receiver");
+                                    String senderFormat = ConfigManager.get().getConfig().getCommands().getMessage().getFormat().getSender();
+                                    String receiverFormat = ConfigManager.get().getConfig().getCommands().getMessage().getFormat().getReceiver();
                                     CommandSource sender = ctx.getSource();
                                     Player senderPlayer;
                                     if (ctx.getSource() instanceof Player) {
@@ -63,7 +63,7 @@ public class ReplyCommand {
                                         return Command.SINGLE_SUCCESS;
                                     }
                                     String message = StringArgumentType.getString(ctx, "message");
-                                    if (!Config.getYaml().getBoolean("commands.message.allow-minimessage")) {
+                                    if (!ConfigManager.get().getConfig().getCommands().getMessage().getAllowMiniMessage()) {
                                         message = MiniMessage.miniMessage().escapeTags(message);
                                     }
 

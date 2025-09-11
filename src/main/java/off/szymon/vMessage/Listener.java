@@ -21,6 +21,7 @@ import com.velocitypowered.api.proxy.server.RegisteredServer;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import off.szymon.vMessage.compatibility.LuckPermsCompatibilityProvider;
 import off.szymon.vMessage.compatibility.mute.MutePluginCompatibilityProvider;
+import off.szymon.vMessage.config.ConfigManager;
 
 import java.util.Map;
 import java.util.Optional;
@@ -41,7 +42,7 @@ public class Listener {
                 mpcp.getMute(player).thenAcceptAsync(mute -> {
                     Broadcaster broadcaster = VMessagePlugin.get().getBroadcaster();
 
-                    String msg = Config.getString("messages.chat.muted-message");
+                    String msg = ConfigManager.get().getConfig().getMessages().getChat().getMutedMessage();
                     String serverName = player.getCurrentServer()
                             .map(server -> broadcaster.parseAlias(server.getServerInfo().getName()))
                             .orElse("Unknown");

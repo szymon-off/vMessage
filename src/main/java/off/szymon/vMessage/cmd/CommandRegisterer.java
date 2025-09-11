@@ -13,8 +13,8 @@
 package off.szymon.vMessage.cmd;
 
 import com.velocitypowered.api.command.CommandManager;
-import off.szymon.vMessage.Config;
 import off.szymon.vMessage.VMessagePlugin;
+import off.szymon.vMessage.config.ConfigManager;
 
 public class CommandRegisterer {
 
@@ -28,7 +28,7 @@ public class CommandRegisterer {
                         .build(),
                 new VMessageCommand().createCommand()
         );
-        if (Config.getYaml().getBoolean("commands.broadcast.enabled")) {
+        if (ConfigManager.get().getConfig().getCommands().getBroadcast().getEnabled()) {
             cmdManager.register(cmdManager.metaBuilder("broadcast")
                             .plugin(vMessage)
                             .aliases("bc","bcast")
@@ -36,7 +36,7 @@ public class CommandRegisterer {
                     new BroadcastCommand().createCommand()
             );
         }
-        if (Config.getYaml().getBoolean("commands.message.enabled")) {
+        if (ConfigManager.get().getConfig().getCommands().getMessage().getEnabled()) {
             cmdManager.register(cmdManager.metaBuilder("message")
                             .plugin(vMessage)
                             .aliases("msg","tell","whisper","w")
@@ -44,7 +44,7 @@ public class CommandRegisterer {
                     new MessageCommand().createCommand()
             );
         }
-        if (Config.getYaml().getBoolean("commands.message.enable-reply-command")) {
+        if (ConfigManager.get().getConfig().getCommands().getMessage().getEnableReplyCommand()) {
             cmdManager.register(cmdManager.metaBuilder("reply")
                             .plugin(vMessage)
                             .aliases("r")

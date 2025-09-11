@@ -15,11 +15,13 @@ package off.szymon.vMessage;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import off.szymon.vMessage.compatibility.LuckPermsCompatibilityProvider;
-import org.simpleyaml.configuration.ConfigurationSection;
+import off.szymon.vMessage.config.ConfigManager;
+import org.spongepowered.configurate.CommentedConfigurationNode;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public class Broadcaster {
 
@@ -29,31 +31,19 @@ public class Broadcaster {
 
     public Broadcaster() {
         serverAliases = new HashMap<>();
-        ConfigurationSection aliases = Config.getYaml().getConfigurationSection("ServerAliases");
-        if (aliases != null) {
-            for (String key : aliases.getKeys(false)) {
-                serverAliases.put(key, aliases.getString(key));
-            }
-        }
+        reloadAliases();
 
         /* LuckPerms */
         lp = VMessagePlugin.get().getLuckPermsCompatibilityProvider();
 
         metaPlaceholders = new HashMap<>();
-        if (lp != null) {
-            ConfigurationSection metas = Config.getYaml().getConfigurationSection("LuckPermsMeta");
-            if (metas != null) {
-                for (String key : metas.getKeys(false)) {
-                    metaPlaceholders.put("&"+key+"&",metas.getString(key));
-                }
-            }
-        }
+        reloadMetaPlaceholders();
     }
 
     public void message(Player player, String message) {
-        if (!Config.getYaml().getBoolean("messages.chat.enabled")) return;
+        if (!ConfigManager.get().getConfig().getMessages().getChat().getEnabled()) return;
 
-        String msg = Config.getString("messages.chat.format");
+        String msg = ConfigManager.get().getConfig().getMessages().getChat().getFormat();
 
         //noinspection OptionalGetWithoutIsPresent
         msg = msg
@@ -77,13 +67,13 @@ public class Broadcaster {
     }
 
     public void join(Player player) {
-        if (!Config.getYaml().getBoolean("messages.join.enabled")) return;
+        if (!ConfigManager.get().getConfig().getMessages().getJoin().getEnabled()) return;
         if (player.hasPermission("vmessage.silent.join")) {
             VMessagePlugin.get().getLogger().info("{} has silent join permission, not broadcasting join message", player.getUsername());
             return;
         }
 
-        String msg = Config.getString("messages.join.format");
+        String msg = ConfigManager.get().getConfig().getMessages().getJoin().getFormat();
         //noinspection OptionalGetWithoutIsPresent
         msg = msg
                 .replace("%player%", player.getUsername())
@@ -106,13 +96,13 @@ public class Broadcaster {
     }
 
     public void leave(Player player) {
-        if (!Config.getYaml().getBoolean("messages.leave.enabled")) return;
+        if (!ConfigManager.get().getConfig().getMessages().getLeave().getEnabled()) return;
         if (player.hasPermission("vmessage.silent.leave")) {
             VMessagePlugin.get().getLogger().info("{} has silent leave permission, not broadcasting leave message", player.getUsername());
             return;
         }
 
-        String msg = Config.getString("messages.leave.format");
+        String msg = ConfigManager.get().getConfig().getMessages().getLeave().getFormat();
         String serverName = player.getCurrentServer()
                 .map(server -> server.getServerInfo().getName())
                 .map(this::parseAlias)
@@ -143,13 +133,13 @@ public class Broadcaster {
     }
 
     public void change(Player player, String oldServer) {
-        if (!Config.getYaml().getBoolean("messages.change.enabled")) return;
+        if (!ConfigManager.get().getConfig().getMessages().getChange().getEnabled()) return;
         if (player.hasPermission("vmessage.silent.change")) {
             VMessagePlugin.get().getLogger().info("{} has silent change permission, not broadcasting change message", player.getUsername());
             return;
         }
 
-        String msg = Config.getString("messages.change.format");
+        String msg = ConfigManager.get().getConfig().getMessages().getChange().getFormat();
         //noinspection OptionalGetWithoutIsPresent
         msg = msg
                 .replace("%player%", player.getUsername())
@@ -174,27 +164,30 @@ public class Broadcaster {
     }
 
     public void reload() {
-        serverAliases.clear();
-        ConfigurationSection aliases = Config.getYaml().getConfigurationSection("ServerAliases");
-        if (aliases != null) {
-            for (String key : aliases.getKeys(false)) {
-                serverAliases.put(key, aliases.getString(key));
-            }
-        }
+        reloadAliases();
+        reloadMetaPlaceholders();
+    }
 
+    public void reloadAliases() {
+        serverAliases.clear();
+        Set<Map.Entry<Object, CommentedConfigurationNode>> aliases = ConfigManager.get().getNode("serverAliases").childrenMap().entrySet();
+        for (Map.Entry<Object, CommentedConfigurationNode> entry : aliases) {
+            serverAliases.put(entry.getKey().toString(),entry.getValue().toString());
+        }
+    }
+
+    public void reloadMetaPlaceholders() {
         metaPlaceholders.clear();
         if (lp != null) {
-            ConfigurationSection metas = Config.getYaml().getConfigurationSection("LuckPermsMeta");
-            if (metas != null) {
-                for (String key : metas.getKeys(false)) {
-                    metaPlaceholders.put("&"+key+"&",metas.getString(key));
-                }
+            Set<Map.Entry<Object, CommentedConfigurationNode>> metas = ConfigManager.get().getNode("luckPermsMeta").childrenMap().entrySet();
+            for (Map.Entry<Object, CommentedConfigurationNode> entry : metas) {
+                metaPlaceholders.put("&"+entry.getKey().toString()+"&",entry.getValue().toString());
             }
         }
     }
 
     public void broadcast(String message) {
-        String msg = Config.getString("commands.broadcast.format");
+        String msg = ConfigManager.get().getConfig().getCommands().getBroadcast().getFormat();
         msg = msg.replace("%message%", message);
 
         VMessagePlugin.get().getServer().sendMessage(MiniMessage.miniMessage().deserialize(msg));
@@ -216,6 +209,6 @@ public class Broadcaster {
     }
 
     private String escapeMiniMessage(String input) {
-        return Config.getYaml().getBoolean("messages.chat.allow-minimessage") ? input : MiniMessage.miniMessage().escapeTags(input);
+        return ConfigManager.get().getConfig().getMessages().getChat().getAllowMiniMessage() ? input : MiniMessage.miniMessage().escapeTags(input);
     }
 }

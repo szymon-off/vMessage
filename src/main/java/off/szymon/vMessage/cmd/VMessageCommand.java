@@ -19,8 +19,8 @@ import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import off.szymon.vMessage.Config;
 import off.szymon.vMessage.VMessagePlugin;
+import off.szymon.vMessage.config.ConfigManager;
 
 import java.util.Optional;
 
@@ -57,7 +57,7 @@ public class VMessageCommand {
                         .then(LiteralArgumentBuilder.<CommandSource>literal("reload")
                                 .requires(src -> src.hasPermission("vmessage.command.reload"))
                                 .executes(ctx -> {
-                                    Config.reload();
+                                    ConfigManager.get().load();
                                     VMessagePlugin.get().getBroadcaster().reload();
                                     ctx.getSource().sendMessage(MiniMessage.miniMessage().deserialize("<#00ffff>vMessage</#00ffff> config reloaded!"));
                                     return 1;

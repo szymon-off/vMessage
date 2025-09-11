@@ -87,8 +87,6 @@ public class VMessagePlugin {
     }
 
     public void onEnable() {
-        Config.setup();
-
         /* LuckPerms */
         if (server.getPluginManager().isLoaded("luckperms")) {
             logger.info("LuckPerms detected, attempting to hook into it...");
