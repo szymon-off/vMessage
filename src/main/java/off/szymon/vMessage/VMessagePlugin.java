@@ -27,6 +27,8 @@ import off.szymon.vMessage.compatibility.mute.EmptyMuteCompatibilityProvider;
 import off.szymon.vMessage.compatibility.mute.LibertyBansCompatibilityProvider;
 import off.szymon.vMessage.compatibility.mute.LiteBansCompatibilityProvider;
 import off.szymon.vMessage.compatibility.mute.MutePluginCompatibilityProvider;
+import org.bstats.charts.SimplePie;
+import org.bstats.velocity.Metrics;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -59,15 +61,17 @@ public class VMessagePlugin {
     private MutePluginCompatibilityProvider mutePluginCompatibilityProvider;
     private LuckPermsCompatibilityProvider lpCompatibilityProvider;
     private Broadcaster broadcaster;
+    private final Metrics.Factory metricsFactory;
 
     @Inject
-    public VMessagePlugin(ProxyServer server, Logger logger, @DataDirectory Path dataFolder, PluginContainer plugin) {
+    public VMessagePlugin(ProxyServer server, Logger logger, @DataDirectory Path dataFolder, PluginContainer plugin, Metrics.Factory metricsFactory) {
         instance = this;
 
         this.server = server;
         this.logger = logger;
         this.dataFolder = new File(dataFolder.toFile().getParentFile(), this.getClass().getAnnotation(Plugin.class).name());
         this.plugin = plugin;
+        this.metricsFactory = metricsFactory;
 
         this.name = this.getClass().getAnnotation(Plugin.class).name();
     }
@@ -133,6 +137,18 @@ public class VMessagePlugin {
         server.getEventManager().register(this, new Listener());
 
         CommandRegisterer.registerCommands();
+
+        Metrics metrics = metricsFactory.make(this, 27241);
+
+        metrics.addCustomChart(new SimplePie("mute_plugin", () -> {
+            String pluginName = "None";
+            if (mutePluginCompatibilityProvider instanceof LibertyBansCompatibilityProvider) {
+                pluginName = "LibertyBans";
+            } else if (mutePluginCompatibilityProvider instanceof LiteBansCompatibilityProvider) {
+                pluginName = "LiteBans";
+            }
+            return pluginName;
+        }));
     }
 
     public void onDisable() {
