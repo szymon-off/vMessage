@@ -27,6 +27,7 @@ import off.szymon.vMessage.compatibility.mute.EmptyMuteCompatibilityProvider;
 import off.szymon.vMessage.compatibility.mute.LibertyBansCompatibilityProvider;
 import off.szymon.vMessage.compatibility.mute.LiteBansCompatibilityProvider;
 import off.szymon.vMessage.compatibility.mute.MutePluginCompatibilityProvider;
+import off.szymon.vMessage.config.ConfigManager;
 import org.bstats.charts.SimplePie;
 import org.bstats.velocity.Metrics;
 import org.jetbrains.annotations.Nullable;
@@ -87,6 +88,8 @@ public class VMessagePlugin {
     }
 
     public void onEnable() {
+        new ConfigManager();
+
         /* LuckPerms */
         if (server.getPluginManager().isLoaded("luckperms")) {
             logger.info("LuckPerms detected, attempting to hook into it...");
