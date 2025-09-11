@@ -1,6 +1,10 @@
 # vMessage
 
-> ⚠️ **Warning:** LiteBans mute support hasn't been tested yet. If you encounter any issues, please reach out to me on Discord: `szymon.off`
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/szymon-off/vMessage) ![GitHub issues](https://img.shields.io/github/issues/szymon-off/vMessage) ![GitHub](https://img.shields.io/github/license/szymon-off/vMessage) ![GitHub last commit](https://img.shields.io/github/last-commit/szymon-off/vMessage)
+
+> ⚠️ **[VERY IMPORTANT] Update Notice:** Please **back up** your config file before updating to version **1.8.0** or higher, as the configuration format has changed significantly and **your data may be lost**. You have been warned!
+
+> ⚠️ **Warning:** LiteBans mute support hasn't been tested yet. If you encounter any issues, please create an [issue](https://github.com/szymon-off/vMessage/issues) or reach out to me on Discord: `szymon.off`
 
 **vMessage** is the best Velocity plugin for synchronizing chat and player events across your entire proxy network. It is designed for server administrators who want seamless, reliable, and configurable message syncing without unnecessary complexity.
 

@@ -56,8 +56,7 @@ class ConfigManager {
                     ❗ Due to limitations of the Configurate library, there are no comments next to individual settings. ❗
                     ❗ If you need help understanding what a setting does, please refer to the wiki page linked above ❗
                     
-                    ⚠️ If you have used vMessage before v1.8.0 you might see some config settings double! ⚠️
-                    ⚠️ Use the ones without dashes or starting with a lowercase letter. ⚠️
+                    ⚠️ If you have used vMessage before v1.8.0, the contents of this file may be malformed ⚠️
                     """.trimIndent()
                 )
                 .implicitInitialization(true)
