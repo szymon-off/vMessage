@@ -24,7 +24,7 @@ import java.util.Objects;
 
 public class Config {
 
-    private final static Logger log = VMessagePlugin.getInstance().getLogger();
+    private final static Logger log = VMessagePlugin.get().getLogger();
     private static File file;
     private static YamlFile yaml;
 
@@ -39,14 +39,14 @@ public class Config {
     }
 
     private static File copyResource() {
-        File outputFile = new File(VMessagePlugin.getInstance().getDataFolder(), "config.yml");
+        File outputFile = new File(VMessagePlugin.get().getDataFolder(), "config.yml.old");
         try {
             File parentDir = outputFile.getParentFile();
             if (parentDir != null && !parentDir.exists() && !parentDir.mkdirs()) {
                 throw new IOException("Failed to create directories for: " + outputFile.getAbsolutePath());
             }
             if (!outputFile.exists()) {
-                try (InputStream in = Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream("config.yml"))) {
+                try (InputStream in = Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream("config.yml.old"))) {
                     Files.copy(in, outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
                     log.debug("Copied resource to {}",outputFile.getAbsolutePath());
                 }

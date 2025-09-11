@@ -19,7 +19,7 @@ import off.szymon.vMessage.VMessagePlugin;
 public class CommandRegisterer {
 
     public static void registerCommands() {
-        VMessagePlugin vMessage = VMessagePlugin.getInstance();
+        VMessagePlugin vMessage = VMessagePlugin.get();
 
         CommandManager cmdManager = vMessage.getServer().getCommandManager();
         cmdManager.register(cmdManager.metaBuilder("vmessage")

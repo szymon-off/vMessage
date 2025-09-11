@@ -28,7 +28,7 @@ public class BroadcastCommand {
                         .then(RequiredArgumentBuilder.<CommandSource, String>argument("message", StringArgumentType.greedyString())
                                 .executes(ctx -> {
                                     String message = StringArgumentType.getString(ctx, "message");
-                                    VMessagePlugin.getInstance().getBroadcaster().broadcast(message);
+                                    VMessagePlugin.get().getBroadcaster().broadcast(message);
                                     return 1; // Command executed successfully
                                 })
                         )

@@ -53,7 +53,7 @@ public class LibertyBansCompatibilityProvider implements MutePluginCompatibility
             String moderator;
             Operator operator = punishment.getOperator();
             if (operator instanceof PlayerOperator playerOp) {
-                Player p = VMessagePlugin.getInstance().getServer().getPlayer(playerOp.getUUID()).orElse(null);
+                Player p = VMessagePlugin.get().getServer().getPlayer(playerOp.getUUID()).orElse(null);
                 moderator = p != null ? p.getUsername() : "Unknown Player";
             } else if (operator instanceof ConsoleOperator) {
                 moderator = "Console";

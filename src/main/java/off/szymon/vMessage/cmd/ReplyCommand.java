@@ -36,7 +36,7 @@ public class ReplyCommand {
     private final LuckPermsCompatibilityProvider lp;
 
     public ReplyCommand() {
-        this.lp = VMessagePlugin.getInstance().getLuckPermsCompatibilityProvider();
+        this.lp = VMessagePlugin.get().getLuckPermsCompatibilityProvider();
     }
 
     public BrigadierCommand createCommand() {
@@ -57,7 +57,7 @@ public class ReplyCommand {
                                     }
                                     Player receiver;
                                     try {
-                                        receiver = VMessagePlugin.getInstance().getServer().getPlayer(Optional.ofNullable(repliers.get(senderPlayer.getUniqueId())).orElseThrow()).orElseThrow();
+                                        receiver = VMessagePlugin.get().getServer().getPlayer(Optional.ofNullable(repliers.get(senderPlayer.getUniqueId())).orElseThrow()).orElseThrow();
                                     } catch (Exception e) {
                                         ctx.getSource().sendRichMessage("<red>You have no one to reply to.");
                                         return Command.SINGLE_SUCCESS;
@@ -71,10 +71,10 @@ public class ReplyCommand {
 
                                     // Player names (sender and receiver), servers (sender and receiver), message
                                     String senderServer = senderPlayer.getCurrentServer()
-                                            .map(server -> VMessagePlugin.getInstance().getBroadcaster().parseAlias(server.getServerInfo().getName()))
+                                            .map(server -> VMessagePlugin.get().getBroadcaster().parseAlias(server.getServerInfo().getName()))
                                             .orElse("Unknown");
                                     String receiverServer = receiver.getCurrentServer()
-                                            .map(server -> VMessagePlugin.getInstance().getBroadcaster().parseAlias(server.getServerInfo().getName()))
+                                            .map(server -> VMessagePlugin.get().getBroadcaster().parseAlias(server.getServerInfo().getName()))
                                             .orElse("Unknown");
                                     senderFormat = senderFormat
                                             .replace("%sender%", senderPlayer.getUsername())
@@ -96,7 +96,7 @@ public class ReplyCommand {
                                         senderFormat = senderFormat
                                                 .replace("%sender-prefix%", senderData.metaData().getPrefix() != null ? senderData.metaData().getPrefix() : "")
                                                 .replace("%sender-suffix%", senderData.metaData().getSuffix() != null ? senderData.metaData().getSuffix() : "");
-                                        for (var entry : VMessagePlugin.getInstance().getBroadcaster().getMetaPlaceholders().entrySet()) {
+                                        for (var entry : VMessagePlugin.get().getBroadcaster().getMetaPlaceholders().entrySet()) {
                                             senderFormat = senderFormat.replace(
                                                     entry.getKey(),
                                                     senderData.metaData().getMetaValue(entry.getValue()) != null ? senderData.metaData().getMetaValue(entry.getValue()) : ""
@@ -109,7 +109,7 @@ public class ReplyCommand {
                                         receiverFormat = receiverFormat
                                                 .replace("%receiver-prefix%", receiverData.metaData().getPrefix() != null ? receiverData.metaData().getPrefix() : "")
                                                 .replace("%receiver-suffix%", receiverData.metaData().getSuffix() != null ? receiverData.metaData().getSuffix() : "");
-                                        for (var entry : VMessagePlugin.getInstance().getBroadcaster().getMetaPlaceholders().entrySet()) {
+                                        for (var entry : VMessagePlugin.get().getBroadcaster().getMetaPlaceholders().entrySet()) {
                                             senderFormat = senderFormat.replace(
                                                     entry.getKey(),
                                                     receiverData.metaData().getMetaValue(entry.getValue()) != null ? receiverData.metaData().getMetaValue(entry.getValue()) : ""

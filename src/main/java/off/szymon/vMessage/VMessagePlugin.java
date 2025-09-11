@@ -167,7 +167,7 @@ public class VMessagePlugin {
         return dataFolder;
     }
 
-    public static VMessagePlugin getInstance() {
+    public static VMessagePlugin get() {
         return instance;
     }
 

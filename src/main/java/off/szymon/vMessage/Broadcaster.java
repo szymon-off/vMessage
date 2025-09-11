@@ -37,7 +37,7 @@ public class Broadcaster {
         }
 
         /* LuckPerms */
-        lp = VMessagePlugin.getInstance().getLuckPermsCompatibilityProvider();
+        lp = VMessagePlugin.get().getLuckPermsCompatibilityProvider();
 
         metaPlaceholders = new HashMap<>();
         if (lp != null) {
@@ -73,13 +73,13 @@ public class Broadcaster {
                 );
             }
         }
-        VMessagePlugin.getInstance().getServer().sendMessage(MiniMessage.miniMessage().deserialize(msg));
+        VMessagePlugin.get().getServer().sendMessage(MiniMessage.miniMessage().deserialize(msg));
     }
 
     public void join(Player player) {
         if (!Config.getYaml().getBoolean("messages.join.enabled")) return;
         if (player.hasPermission("vmessage.silent.join")) {
-            VMessagePlugin.getInstance().getLogger().info("{} has silent join permission, not broadcasting join message", player.getUsername());
+            VMessagePlugin.get().getLogger().info("{} has silent join permission, not broadcasting join message", player.getUsername());
             return;
         }
 
@@ -102,13 +102,13 @@ public class Broadcaster {
                 );
             }
         }
-        VMessagePlugin.getInstance().getServer().sendMessage(MiniMessage.miniMessage().deserialize(msg));
+        VMessagePlugin.get().getServer().sendMessage(MiniMessage.miniMessage().deserialize(msg));
     }
 
     public void leave(Player player) {
         if (!Config.getYaml().getBoolean("messages.leave.enabled")) return;
         if (player.hasPermission("vmessage.silent.leave")) {
-            VMessagePlugin.getInstance().getLogger().info("{} has silent leave permission, not broadcasting leave message", player.getUsername());
+            VMessagePlugin.get().getLogger().info("{} has silent leave permission, not broadcasting leave message", player.getUsername());
             return;
         }
 
@@ -139,13 +139,13 @@ public class Broadcaster {
                 );
             }
         }
-        VMessagePlugin.getInstance().getServer().sendMessage(MiniMessage.miniMessage().deserialize(msg));
+        VMessagePlugin.get().getServer().sendMessage(MiniMessage.miniMessage().deserialize(msg));
     }
 
     public void change(Player player, String oldServer) {
         if (!Config.getYaml().getBoolean("messages.change.enabled")) return;
         if (player.hasPermission("vmessage.silent.change")) {
-            VMessagePlugin.getInstance().getLogger().info("{} has silent change permission, not broadcasting change message", player.getUsername());
+            VMessagePlugin.get().getLogger().info("{} has silent change permission, not broadcasting change message", player.getUsername());
             return;
         }
 
@@ -170,7 +170,7 @@ public class Broadcaster {
                 );
             }
         }
-        VMessagePlugin.getInstance().getServer().sendMessage(MiniMessage.miniMessage().deserialize(msg));
+        VMessagePlugin.get().getServer().sendMessage(MiniMessage.miniMessage().deserialize(msg));
     }
 
     public void reload() {
@@ -197,7 +197,7 @@ public class Broadcaster {
         String msg = Config.getString("commands.broadcast.format");
         msg = msg.replace("%message%", message);
 
-        VMessagePlugin.getInstance().getServer().sendMessage(MiniMessage.miniMessage().deserialize(msg));
+        VMessagePlugin.get().getServer().sendMessage(MiniMessage.miniMessage().deserialize(msg));
     }
 
     public String parseAlias(String serverName) {

@@ -29,7 +29,7 @@ public class MessageCommand {
     private final LuckPermsCompatibilityProvider lp;
 
     public MessageCommand() {
-        lp = VMessagePlugin.getInstance().getLuckPermsCompatibilityProvider();
+        lp = VMessagePlugin.get().getLuckPermsCompatibilityProvider();
     }
 
     public BrigadierCommand createCommand() {
@@ -39,7 +39,7 @@ public class MessageCommand {
                         .then(RequiredArgumentBuilder.<CommandSource, String>argument("player", StringArgumentType.word())
                                 .suggests(
                                         (ctx, builder) -> {
-                                            for (Player player : VMessagePlugin.getInstance().getServer().getAllPlayers()) {
+                                            for (Player player : VMessagePlugin.get().getServer().getAllPlayers()) {
                                                 builder.suggest(player.getUsername());
                                             }
                                             return builder.buildFuture();
@@ -53,7 +53,7 @@ public class MessageCommand {
                                             Player senderPlayer = ctx.getSource() instanceof Player ? (Player) ctx.getSource() : null;
                                             Player receiver;
                                             try {
-                                                receiver = VMessagePlugin.getInstance().getServer().getPlayer(StringArgumentType.getString(ctx, "player")).orElseThrow();
+                                                receiver = VMessagePlugin.get().getServer().getPlayer(StringArgumentType.getString(ctx, "player")).orElseThrow();
                                             } catch (Exception e) {
                                                 sender.sendRichMessage("<red>Player not found!");
                                                 return Command.SINGLE_SUCCESS;
@@ -72,10 +72,10 @@ public class MessageCommand {
                                             // Player names (sender and receiver), servers (sender and receiver), message
                                             if (senderPlayer != null) {
                                                 String senderServer = senderPlayer.getCurrentServer()
-                                                        .map(server -> VMessagePlugin.getInstance().getBroadcaster().parseAlias(server.getServerInfo().getName()))
+                                                        .map(server -> VMessagePlugin.get().getBroadcaster().parseAlias(server.getServerInfo().getName()))
                                                         .orElse("Unknown");
                                                 String receiverServer = receiver.getCurrentServer()
-                                                        .map(server -> VMessagePlugin.getInstance().getBroadcaster().parseAlias(server.getServerInfo().getName()))
+                                                        .map(server -> VMessagePlugin.get().getBroadcaster().parseAlias(server.getServerInfo().getName()))
                                                         .orElse("Unknown");
                                                 senderFormat = senderFormat
                                                         .replace("%sender%", senderPlayer.getUsername())
@@ -106,7 +106,7 @@ public class MessageCommand {
                                                     senderFormat = senderFormat
                                                             .replace("%sender-prefix%", senderData.metaData().getPrefix() != null ? senderData.metaData().getPrefix() : "")
                                                             .replace("%sender-suffix%", senderData.metaData().getSuffix() != null ? senderData.metaData().getSuffix() : "");
-                                                    for (var entry : VMessagePlugin.getInstance().getBroadcaster().getMetaPlaceholders().entrySet()) {
+                                                    for (var entry : VMessagePlugin.get().getBroadcaster().getMetaPlaceholders().entrySet()) {
                                                         senderFormat = senderFormat.replace(
                                                                 entry.getKey(),
                                                                 senderData.metaData().getMetaValue(entry.getValue()) != null ? senderData.metaData().getMetaValue(entry.getValue()) : ""
@@ -124,7 +124,7 @@ public class MessageCommand {
                                                 receiverFormat = receiverFormat
                                                         .replace("%receiver-prefix%", receiverData.metaData().getPrefix() != null ? receiverData.metaData().getPrefix() : "")
                                                         .replace("%receiver-suffix%", receiverData.metaData().getSuffix() != null ? receiverData.metaData().getSuffix() : "");
-                                                for (var entry : VMessagePlugin.getInstance().getBroadcaster().getMetaPlaceholders().entrySet()) {
+                                                for (var entry : VMessagePlugin.get().getBroadcaster().getMetaPlaceholders().entrySet()) {
                                                     senderFormat = senderFormat.replace(
                                                             entry.getKey(),
                                                             receiverData.metaData().getMetaValue(entry.getValue()) != null ? receiverData.metaData().getMetaValue(entry.getValue()) : ""

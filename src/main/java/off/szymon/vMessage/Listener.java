@@ -34,12 +34,12 @@ public class Listener {
 
         Player player = e.getPlayer();
 
-        MutePluginCompatibilityProvider mpcp = VMessagePlugin.getInstance().getMutePluginCompatibilityProvider();
+        MutePluginCompatibilityProvider mpcp = VMessagePlugin.get().getMutePluginCompatibilityProvider();
 
         mpcp.isMuted(player).thenAcceptAsync(isMuted -> {
             if (isMuted) {
                 mpcp.getMute(player).thenAcceptAsync(mute -> {
-                    Broadcaster broadcaster = VMessagePlugin.getInstance().getBroadcaster();
+                    Broadcaster broadcaster = VMessagePlugin.get().getBroadcaster();
 
                     String msg = Config.getString("messages.chat.muted-message");
                     String serverName = player.getCurrentServer()
@@ -58,7 +58,7 @@ public class Listener {
                             .replace("%end-date%", endDate)
                             .replace("%moderator%", moderator);
 
-                    LuckPermsCompatibilityProvider lp = VMessagePlugin.getInstance().getLuckPermsCompatibilityProvider();
+                    LuckPermsCompatibilityProvider lp = VMessagePlugin.get().getLuckPermsCompatibilityProvider();
 
                     if (lp != null) {
                         LuckPermsCompatibilityProvider.PlayerData data = lp.getMetaData(player);
@@ -76,7 +76,7 @@ public class Listener {
                     player.sendMessage(MiniMessage.miniMessage().deserialize(msg));
                 });
             } else {
-                VMessagePlugin.getInstance().getBroadcaster().message(e.getPlayer(), e.getMessage());
+                VMessagePlugin.get().getBroadcaster().message(e.getPlayer(), e.getMessage());
             }
         });
     }
@@ -84,9 +84,9 @@ public class Listener {
     @Subscribe
     private void onPlayerLeave(DisconnectEvent e) {
         try {
-            VMessagePlugin.getInstance().getBroadcaster().leave(e.getPlayer());
+            VMessagePlugin.get().getBroadcaster().leave(e.getPlayer());
         } catch (Exception ex) {
-            VMessagePlugin.getInstance().getLogger().error("Error while broadcasting player leave event: {}", ex.getMessage());
+            VMessagePlugin.get().getLogger().error("Error while broadcasting player leave event: {}", ex.getMessage());
         }
     }
 
@@ -94,9 +94,9 @@ public class Listener {
     private void onPlayerConnect(ServerPostConnectEvent e) {
         RegisteredServer pre = e.getPreviousServer();
         if (pre == null) {
-            VMessagePlugin.getInstance().getBroadcaster().join(e.getPlayer());
+            VMessagePlugin.get().getBroadcaster().join(e.getPlayer());
         } else {
-            VMessagePlugin.getInstance().getBroadcaster().change(e.getPlayer(),pre.getServerInfo().getName());
+            VMessagePlugin.get().getBroadcaster().change(e.getPlayer(),pre.getServerInfo().getName());
         }
     }
 

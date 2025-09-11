@@ -34,7 +34,7 @@ public class VMessageCommand {
                             ctx.getSource().sendMessage(MiniMessage.miniMessage().deserialize("""
                         <#00ffff>vMessage</#00ffff> by <#00ffff>%s</#00ffff>
                         Version: <#00ffff>%s</#00ffff>"""
-                                    .formatted(String.join(",",VMessagePlugin.getInstance().getPlugin().getDescription().getAuthors()),VMessagePlugin.getInstance().getPlugin().getDescription().getVersion().get())));
+                                    .formatted(String.join(",",VMessagePlugin.get().getPlugin().getDescription().getAuthors()),VMessagePlugin.get().getPlugin().getDescription().getVersion().get())));
                             return 1;
                         })
 
@@ -58,7 +58,7 @@ public class VMessageCommand {
                                 .requires(src -> src.hasPermission("vmessage.command.reload"))
                                 .executes(ctx -> {
                                     Config.reload();
-                                    VMessagePlugin.getInstance().getBroadcaster().reload();
+                                    VMessagePlugin.get().getBroadcaster().reload();
                                     ctx.getSource().sendMessage(MiniMessage.miniMessage().deserialize("<#00ffff>vMessage</#00ffff> config reloaded!"));
                                     return 1;
                                 })
@@ -69,7 +69,7 @@ public class VMessageCommand {
                                 .requires(src -> src.hasPermission("vmessage.command.say"))
                                 .then(RequiredArgumentBuilder.<CommandSource, String>argument("player", StringArgumentType.word())
                                         .suggests((ctx, builder) -> {
-                                            VMessagePlugin.getInstance().getServer().getAllPlayers().stream()
+                                            VMessagePlugin.get().getServer().getAllPlayers().stream()
                                                     .map(Player::getUsername)
                                                     .filter(name -> name.toLowerCase().startsWith(builder.getRemainingLowerCase()))
                                                     .forEach(builder::suggest);
@@ -79,13 +79,13 @@ public class VMessageCommand {
                                                 .executes(ctx -> {
                                                     String playerName = StringArgumentType.getString(ctx, "player");
                                                     String message = StringArgumentType.getString(ctx, "message");
-                                                    Optional<Player> target = VMessagePlugin.getInstance().getServer().getPlayer(playerName);
+                                                    Optional<Player> target = VMessagePlugin.get().getServer().getPlayer(playerName);
                                                     if (target.isEmpty()) {
                                                         ctx.getSource().sendMessage(MiniMessage.miniMessage().deserialize("<red>Player not found."));
                                                         return 1;
                                                     }
 
-                                                    VMessagePlugin.getInstance().getBroadcaster().message(target.get(), message);
+                                                    VMessagePlugin.get().getBroadcaster().message(target.get(), message);
                                                     return 1;
                                                 })
                                         )
@@ -103,13 +103,13 @@ public class VMessageCommand {
                                                 ctx.getSource().sendMessage(MiniMessage.miniMessage().deserialize("<red>You must be a player to use this command."));
                                                 return 1;
                                             }
-                                            VMessagePlugin.getInstance().getBroadcaster().join(player);
+                                            VMessagePlugin.get().getBroadcaster().join(player);
                                             ctx.getSource().sendMessage(MiniMessage.miniMessage().deserialize("<green>Fake join message sent for " + player.getUsername() + "."));
                                             return 1;
                                         })
                                         .then(RequiredArgumentBuilder.<CommandSource, String>argument("player", StringArgumentType.word())
                                                 .suggests((ctx, builder) -> {
-                                                    VMessagePlugin.getInstance().getServer().getAllPlayers().stream()
+                                                    VMessagePlugin.get().getServer().getAllPlayers().stream()
                                                             .map(Player::getUsername)
                                                             .filter(name -> name.toLowerCase().startsWith(builder.getRemainingLowerCase()))
                                                             .forEach(builder::suggest);
@@ -117,12 +117,12 @@ public class VMessageCommand {
                                                 })
                                                 .executes(ctx -> {
                                                     String playerName = StringArgumentType.getString(ctx, "player");
-                                                    Optional<Player> target = VMessagePlugin.getInstance().getServer().getPlayer(playerName);
+                                                    Optional<Player> target = VMessagePlugin.get().getServer().getPlayer(playerName);
                                                     if (target.isEmpty()) {
                                                         ctx.getSource().sendMessage(MiniMessage.miniMessage().deserialize("<red>Player "+playerName+" not found."));
                                                         return 1;
                                                     }
-                                                    VMessagePlugin.getInstance().getBroadcaster().join(target.get());
+                                                    VMessagePlugin.get().getBroadcaster().join(target.get());
                                                     ctx.getSource().sendMessage(MiniMessage.miniMessage().deserialize("<green>Fake join message sent for " + target.get().getUsername() + "."));
                                                     return 1;
                                                 })
@@ -136,13 +136,13 @@ public class VMessageCommand {
                                                 ctx.getSource().sendMessage(MiniMessage.miniMessage().deserialize("<red>You must be a player to use this command."));
                                                 return 1;
                                             }
-                                            VMessagePlugin.getInstance().getBroadcaster().leave(player);
+                                            VMessagePlugin.get().getBroadcaster().leave(player);
                                             ctx.getSource().sendMessage(MiniMessage.miniMessage().deserialize("<green>Fake leave message sent for " + player.getUsername() + "."));
                                             return 1;
                                         })
                                         .then(RequiredArgumentBuilder.<CommandSource, String>argument("player", StringArgumentType.word())
                                                 .suggests((ctx, builder) -> {
-                                                    VMessagePlugin.getInstance().getServer().getAllPlayers().stream()
+                                                    VMessagePlugin.get().getServer().getAllPlayers().stream()
                                                             .map(Player::getUsername)
                                                             .filter(name -> name.toLowerCase().startsWith(builder.getRemainingLowerCase()))
                                                             .forEach(builder::suggest);
@@ -150,12 +150,12 @@ public class VMessageCommand {
                                                 })
                                                 .executes(ctx -> {
                                                     String playerName = StringArgumentType.getString(ctx, "player");
-                                                    Optional<Player> target = VMessagePlugin.getInstance().getServer().getPlayer(playerName);
+                                                    Optional<Player> target = VMessagePlugin.get().getServer().getPlayer(playerName);
                                                     if (target.isEmpty()) {
                                                         ctx.getSource().sendMessage(MiniMessage.miniMessage().deserialize("<red>Player "+playerName+" not found."));
                                                         return 1;
                                                     }
-                                                    VMessagePlugin.getInstance().getBroadcaster().leave(target.get());
+                                                    VMessagePlugin.get().getBroadcaster().leave(target.get());
                                                     ctx.getSource().sendMessage(MiniMessage.miniMessage().deserialize("<green>Fake leave message sent for " + target.get().getUsername() + "."));
                                                     return 1;
                                                 })
@@ -169,13 +169,13 @@ public class VMessageCommand {
                                                 ctx.getSource().sendMessage(MiniMessage.miniMessage().deserialize("<red>You must be a player to use this command."));
                                                 return 1;
                                             }
-                                            VMessagePlugin.getInstance().getBroadcaster().change(player, player.getCurrentServer().get().getServerInfo().getName());
+                                            VMessagePlugin.get().getBroadcaster().change(player, player.getCurrentServer().get().getServerInfo().getName());
                                             ctx.getSource().sendMessage(MiniMessage.miniMessage().deserialize("<green>Fake change message sent for " + player.getUsername() + "."));
                                             return 1;
                                         })
                                         .then(RequiredArgumentBuilder.<CommandSource, String>argument("player", StringArgumentType.word())
                                                 .suggests((ctx, builder) -> {
-                                                    VMessagePlugin.getInstance().getServer().getAllPlayers().stream()
+                                                    VMessagePlugin.get().getServer().getAllPlayers().stream()
                                                             .map(Player::getUsername)
                                                             .filter(name -> name.toLowerCase().startsWith(builder.getRemainingLowerCase()))
                                                             .forEach(builder::suggest);
@@ -185,12 +185,12 @@ public class VMessageCommand {
                                                         .executes(ctx -> {
                                                             String playerName = StringArgumentType.getString(ctx, "player");
                                                             String oldServer = StringArgumentType.getString(ctx, "old-server");
-                                                            Optional<Player> target = VMessagePlugin.getInstance().getServer().getPlayer(playerName);
+                                                            Optional<Player> target = VMessagePlugin.get().getServer().getPlayer(playerName);
                                                             if (target.isEmpty()) {
                                                                 ctx.getSource().sendMessage(MiniMessage.miniMessage().deserialize("<red>Player "+playerName+" not found."));
                                                                 return 1;
                                                             }
-                                                            VMessagePlugin.getInstance().getBroadcaster().change(target.get(), oldServer);
+                                                            VMessagePlugin.get().getBroadcaster().change(target.get(), oldServer);
                                                             ctx.getSource().sendMessage(MiniMessage.miniMessage().deserialize("<green>Fake change message sent for " + target.get().getUsername() + "."));
                                                             return 1;
                                                         })
