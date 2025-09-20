@@ -1,8 +1,8 @@
 # vMessage
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/szymon-off/vMessage) ![GitHub issues](https://img.shields.io/github/issues/szymon-off/vMessage) ![GitHub](https://img.shields.io/github/license/szymon-off/vMessage) ![GitHub last commit](https://img.shields.io/github/last-commit/szymon-off/vMessage)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/szymon-off/vMessage) ![Modrinth Downloads](https://img.shields.io/modrinth/dt/ZIxTT2xI?logo=modrinth&color=%2300AF5C) ![GitHub issues](https://img.shields.io/github/issues/szymon-off/vMessage) ![GitHub](https://img.shields.io/github/license/szymon-off/vMessage) ![GitHub last commit](https://img.shields.io/github/last-commit/szymon-off/vMessage)
 
-> ⚠️ **[VERY IMPORTANT] Update Notice:** Please **back up** your config file before updating to version **1.8.0** or higher, as the configuration format has changed significantly and **your data may be lost**. You have been warned!
+> ⚠️ **Update Notice:** We recommend you **back up** your config file before updating from version **1.7.0** or below, as the configuration format has changed significantly and **your data may be lost**.
 
 > ⚠️ **Warning:** LiteBans mute support hasn't been tested yet. If you encounter any issues, please create an [issue](https://github.com/szymon-off/vMessage/issues) or reach out to me on Discord: `szymon.off`
 
@@ -79,7 +79,7 @@ Make sure to assign the appropriate permissions to your staff or admin roles in 
 
 ## Configuration
 
-vMessage provides a powerful and easy-to-use configuration file. You can customize message formats, toggle features, and more. See the comments in `config.yml` for details.
+vMessage provides a powerful and easy-to-use configuration file. You can customize message formats, toggle features, and more. Look at the wiki for detailed configuration options: [vMessage Wiki](https://github.com/szymon-off/vMessage/wiki/Configuration-(config.yml))
 
 ## Why vMessage?
 
