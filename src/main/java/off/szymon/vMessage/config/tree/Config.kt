@@ -10,6 +10,8 @@
  * See the LICENSE file in the project root for details.
  */
 
+@file:Suppress("unused")
+
 package off.szymon.vMessage.config.tree
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable
@@ -85,7 +87,15 @@ class MessageFormatConfig {
 }
 
 @ConfigSerializable
-class LuckPermsMetaConfig
+class LuckPermsMetaConfig {
+    // Not to be used in-code, these only serve as example keys for the config file
+    var customName1 = "meta_key1"
+    var customName2 = "meta_key2"
+}
 
 @ConfigSerializable
-class ServerAliasesConfig
+class ServerAliasesConfig {
+    // Not to be used in-code, these only serve as example aliases for the config file
+    var lobby1 = "Lobby"
+    var lobby2 = "Lobby"
+}
