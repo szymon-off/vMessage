@@ -15,10 +15,13 @@
 package off.szymon.vMessage.config.tree
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable
+import org.spongepowered.configurate.objectmapping.meta.Comment
 
 @ConfigSerializable
 class MainConfig {
+    @Comment("This is a comment test.\nLet's hope this works properly.")
     var messages = MessagesConfig()
+    @Comment("This is an another comment test.\nLet's hope this works properly as well.")
     var commands = CommandsConfig()
     var luckPermsMeta = LuckPermsMetaConfig()
     var serverAliases = ServerAliasesConfig()
