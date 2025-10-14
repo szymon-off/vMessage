@@ -53,9 +53,6 @@ class ConfigManager {
                     Placeholders are parsed before MiniMessage so you can use them in your format.
                     For in-depth explanation of the configuration options, visit: https://github.com/szymon-off/vMessage/wiki/Configuration-(config.yml)
                     
-                    ❗ Due to limitations of the Configurate library, there are no comments next to individual settings. ❗
-                    ❗ If you need help understanding what a setting does, please refer to the wiki page linked above ❗
-                    
                     ⚠️ If you have used vMessage before v1.8.0, the contents of this file may be malformed ⚠️
                     """.trimIndent()
                 )
