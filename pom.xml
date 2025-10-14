@@ -31,6 +31,10 @@
                             <pattern>org.bstats</pattern>
                             <shadedPattern>off.szymon.vMessage.libs.bstats</shadedPattern>
                         </relocation>
+                        <relocation>
+                            <pattern>org.spongepowered.configurate</pattern>
+                            <shadedPattern>off.szymon.vMessage.libs.configurate</shadedPattern>
+                        </relocation>
                     </relocations>
                     <filters>
                         <filter>
