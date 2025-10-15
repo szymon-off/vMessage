@@ -61,7 +61,7 @@ class ConfigManager {
         }
         .indent(2)
         .nodeStyle(NodeStyle.BLOCK)
-        .headerMode(HeaderMode.PRESET)
+        .headerMode(HeaderMode.PRESERVE)
         .build()
 
     lateinit var config: MainConfig
@@ -71,15 +71,15 @@ class ConfigManager {
 
     init {
         instance = this
-        if (config.backupConfig == null || config.backupConfig == true) {
-            Files.copy(file, File(file.parentFile, "$fileName.bak"))
-        }
         load()
     }
 
     fun load() {
         root = loader.load()
         config = root.get(MainConfig::class.java) ?: MainConfig()
+        if (config.backupConfig == null || config.backupConfig == true) {
+            Files.copy(file, File(file.parentFile, "$fileName.bak"))
+        }
         save()
     }
 
