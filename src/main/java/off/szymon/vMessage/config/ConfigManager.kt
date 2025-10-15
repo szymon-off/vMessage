@@ -77,9 +77,10 @@ class ConfigManager {
     fun load() {
         root = loader.load()
         config = root.get(MainConfig::class.java) ?: MainConfig()
-        if (config.backupConfig == null || config.backupConfig == true) {
+        if (config.backupConfig) {
             Files.copy(file, File(file.parentFile, "$fileName.bak"))
         }
+        config.backupConfig = false
         save()
     }
 
