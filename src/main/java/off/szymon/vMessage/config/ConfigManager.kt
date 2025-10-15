@@ -12,6 +12,7 @@
 
 package off.szymon.vMessage.config
 
+import com.google.common.io.Files
 import off.szymon.vMessage.VMessagePlugin
 import off.szymon.vMessage.config.tree.MainConfig
 import org.spongepowered.configurate.CommentedConfigurationNode
@@ -70,6 +71,9 @@ class ConfigManager {
 
     init {
         instance = this
+        if (config.backupConfig == null || config.backupConfig == true) {
+            Files.copy(file, File(file.parentFile, "$fileName.bak"))
+        }
         load()
     }
 

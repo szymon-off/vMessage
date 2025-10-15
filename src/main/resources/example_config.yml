@@ -1,25 +1,25 @@
-#  vMessage Configuration File
-#  Thanks for downloading my plugin! I hope you like it!
-#  MiniMessage is supported for formatting in all messages.
-#  Placeholders are parsed before MiniMessage so you can use them in your format.
-#  For in-depth explanation of the configuration options, visit: https://github.com/szymon-off/vMessage/wiki/Configuration-(config.yml)
+# vMessage Configuration File
+# Thanks for downloading my plugin! I hope you like it!
+# MiniMessage is supported for formatting in all messages.
+# Placeholders are parsed before MiniMessage so you can use them in your format.
+# For in-depth explanation of the configuration options, visit: https://github.com/szymon-off/vMessage/wiki/Configuration-(config.yml)
 #
-#  ❗ Due to limitations of the Configurate library, there are no comments next to individual settings. ❗
-#  ❗ If you need help understanding what a setting does, please refer to the wiki page linked above ❗
-#
-#  ⚠️ If you have used vMessage before v1.8.0, the contents of this file may be malformed ⚠️
+# ⚠️ If you have used vMessage before v1.8.0, the contents of this file may be malformed ⚠️
 
 messages:
   chat:
     enabled: true
+
     # %player% - Player
     # %message% - Message
     # %server% - Player's Current Server
     # %prefix% - LuckPerms Prefix
     # %suffix% - LuckPerms Suffix
     format: '%prefix% <b>%player%:</b> %message%'
+
     # Whether to allow players to use MiniMessage in their messages
     allow-mini-message: false
+
     # The message to send when a muted player tries to send a message
     # %player% - Player
     # %message% - Message
@@ -32,6 +32,7 @@ messages:
     muted-message: <red>You are muted and cannot send messages.</red>
   join:
     enabled: true
+
     # %player% - Player
     # %server% - Player's Current Server
     # %prefix% - LuckPerms Prefix
@@ -39,6 +40,7 @@ messages:
     format: <dark_gray>(<green>+<dark_gray>) <gray>%player%
   leave:
     enabled: true
+
     # %player% - Player
     # %server% - Player's Last Server
     # %prefix% - LuckPerms Prefix
@@ -46,6 +48,7 @@ messages:
     format: <dark_gray>(<red>-<dark_gray>) <gray>%player%
   change:
     enabled: true
+
     # %player% - Player
     # %old_server% - Player's Previous Server
     # %new_server% - Player's New Server
@@ -56,11 +59,14 @@ commands:
   # /broadcast, /bcast, /bc
   broadcast:
     enabled: true
+
     # %message% - Message
     format: <bold><#00ffff>Server:<reset> %message%
+
   # /message, /msg, /whisper, /w
   message:
     enabled: true
+
     # %sender% - Sender
     # %receiver% - Receiver
     # %message% - Message
@@ -74,8 +80,10 @@ commands:
     format:
       sender: '<b>(<#00ffff>You </#00ffff>→ <#00ffff>%receiver%</#00ffff>): </b>%message%'
       receiver: '<b>(<#00ffff>%sender% </#00ffff>→ <#00ffff>You</#00ffff>): </b>%message%'
+
     # Whether to allow players to use MiniMessage in their private messages
     allow-mini-message: false
+
     # Whether to enable the /reply command
     # It will reply to the last person who sent you a message
     enable-reply-command: true
@@ -83,11 +91,12 @@ commands:
 # If you want to use additional LuckPerms meta values you can add them here
 # You can then use them in placeholder format like this: &custom_name& [AMPERSAND not PERCENT]
 luck-perms-meta:
-  custom_name: meta_key1
-  custom_name2: meta_key2
+  custom-name1: meta_key1
+  custom-name2: meta_key2
 
 # If you want to display a different name for a server you can add it here
 # It will then be used in the messages above instead of the server's actual name
 server-aliases:
+  lobby: Lobby
   lobby1: Lobby
   lobby2: Lobby
