@@ -25,7 +25,7 @@ class MainConfig {
     var luckPermsMeta = LuckPermsMetaConfig()
     @Comment("If you want to display a different name for a server you can add it here\nIt will then be used in the messages above instead of the server's actual name")
     var serverAliases = ServerAliasesConfig()
-    @Comment("Default to true if left empty\nThis option is here for safety when updating the plugin from an older version\nWARNING: This will overwrite the previous backup (config.yml.bak)")
+    @Comment("This option is here for safety when updating the plugin from an older version\nWARNING: This will overwrite the previous backup (config.yml.bak)")
     var backupConfig = true
 }
 
