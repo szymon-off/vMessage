@@ -80,8 +80,7 @@ class ConfigManager {
     fun load() {
         root = loader.load()
         config = root.get(MainConfig::class.java) ?: MainConfig()
-        root.set(MainConfig::class.java, config)
-        loader.save(root)
+        save()
     }
 
     fun save() {
