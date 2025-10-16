@@ -34,6 +34,12 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
 
+      - name: 🔍 Get previous tag
+        id: prev_tag
+        run: |
+          PREV_TAG=$(git describe --tags --abbrev=0 --match "v*" --exclude "${GITHUB_REF_NAME}" "$(git rev-list --tags --skip=1 --max-count=1)")
+          echo "PREV_TAG=$PREV_TAG" >> $GITHUB_ENV
+
       - name: 🧪 Build JAR with Maven
         run: mvn -B clean package -Drevision=${{ env.VERSION }}
 
@@ -44,54 +50,28 @@ jobs:
           path: target/*.jar
           if-no-files-found: error
 
-      - name: 📄 Read README.md
-        id: readme
+      - name: 🧾 Generate release body
+        id: body
         run: |
-          {
-            echo "readme<<EOF"
-            cat README.md
-            echo "EOF"
-          } >> "$GITHUB_OUTPUT"
+          COMMIT_MSG="${{ github.event.head_commit.message }}"
+          CHANGELOG_URL="https://github.com/${{ github.repository }}/compare/${{ env.PREV_TAG }}...${{ env.TAG_NAME }}"
+          echo "body<<EOF" >> $GITHUB_OUTPUT
+          echo "$COMMIT_MSG" >> $GITHUB_OUTPUT
+          echo "" >> $GITHUB_OUTPUT
+          echo "" >> $GITHUB_OUTPUT
+          echo "**Full Changelog**: $CHANGELOG_URL" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
-
-      - name: 🚀 Create GitHub Release (with Copilot changelog)
+      - name: 🚀 Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.TAG_NAME }}
           name: v${{ env.VERSION }}
-          generate_release_notes: true
+          body: ${{ steps.body.outputs.body }}
           files: target/*.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: ⬇ Fetch GitHub Release Info
-        id: release_info
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const tag = process.env.TAG_NAME;
-            const release = await github.rest.repos.getReleaseByTag({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tag
-            });
-            const body = release.data.body || "";
-            core.setOutput("changelog", body);
-        env:
-          TAG_NAME: ${{ env.TAG_NAME }}
-
-#      - name: 🧩 Publish to Modrinth
-#        uses: RubixDev/modrinth-upload@v1
-#        with:
-#          token: ${{ secrets.MODRINTH_TOKEN }}
-#          project-id: ZIxTT2xI  # Replace this with your actual ID
-#          version: ${{ env.VERSION }}
-#          changelog: ${{ steps.release_info.outputs.changelog }}
-#          version-type: release
-#          featured: true
-#          game-versions: '[ "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6", "1.21", "1.21.1", "1.21.2", "1.21.3", "1.21.4", "1.21.5", "1.21.6", "1.21.7" ]'
-#          loaders: '[ "velocity" ]'    # Adjust as needed
-#          files: target/*.jar
       - name: 🧩 Publish to Modrinth
         uses: RubixDev/modrinth-upload@v1
         with:
@@ -99,7 +79,7 @@ jobs:
           file_path: target/vMessage-${{ env.VERSION }}.jar
           name: vMessage ${{ env.VERSION }}
           version: ${{ env.VERSION }}
-          changelog: ${{ steps.release_info.outputs.changelog }}
+          changelog: ${{ steps.body.outputs.body }}
           relations: 7IbzD4Zm:required,Vebnzrzj:optional,PgXAUxLZ:optional # signedvelocity, luckperms, libertybans
           game_versions: 1.20,1.20.1,1.20.2,1.20.3,1.20.4,1.20.5,1.20.6,1.21,1.21.1,1.21.2,1.21.3,1.21.4,1.21.5,1.21.6,1.21.7,1.21.8,1.21.9,1.21.10
           release_type: release
@@ -107,11 +87,3 @@ jobs:
           featured: true
           project_id: ZIxTT2xI
           new_project_body: ${{ steps.readme.outputs.readme }}
-          
-
-#      - name: 📝 Update Modrinth Project Description with README.md
-#        run: |
-#          curl -X PATCH https://api.modrinth.com/v2/project/ZIxTT2xI \
-#            -H "Authorization: ${{ secrets.MODRINTH_TOKEN }}" \
-#            -H "Content-Type: application/json" \
-#            -d "{ \"body\": ${{ steps.readme.outputs.readme }} }"

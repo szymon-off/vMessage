@@ -89,7 +89,9 @@ public class VMessagePlugin {
 
     public void onEnable() {
         if (!server.getPluginManager().isLoaded("signedvelocity")) {
-            logger.warn("SignedVelocity not detected! vMessage might not work properly without it. Please consider installing SignedVelocity from https://modrinth.com/plugin/signedvelocity . Proceeding without it...");
+            logger.warn("SignedVelocity not detected! vMessage might not work properly without it.");
+            logger.warn("Please consider installing SignedVelocity on the proxy and backends from https://modrinth.com/plugin/signedvelocity");
+            logger.warn("Proceeding without it...");
         }
         new ConfigManager();
 
