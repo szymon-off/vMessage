@@ -44,7 +44,7 @@ import java.util.Map;
         description = "The #1 plugin for velocity message syncing",
         authors = {"SzymON_OFF"},
         dependencies = {
-                @Dependency(id = "signedvelocity"),
+                @Dependency(id = "signedvelocity", optional = true),
                 @Dependency(id = "luckperms", optional = true),
                 @Dependency(id = "libertybans", optional = true),
                 @Dependency(id = "litebans", optional = true)
@@ -88,6 +88,9 @@ public class VMessagePlugin {
     }
 
     public void onEnable() {
+        if (!server.getPluginManager().isLoaded("signedvelocity")) {
+            logger.warn("SignedVelocity not detected! vMessage might not work properly without it. Please consider installing SignedVelocity from https://modrinth.com/plugin/signedvelocity . Proceeding without it...");
+        }
         new ConfigManager();
 
         /* LuckPerms */
