@@ -50,24 +50,12 @@ jobs:
           path: target/*.jar
           if-no-files-found: error
 
-      - name: 🧾 Generate release body
-        id: body
-        run: |
-          COMMIT_MSG="${{ github.event.head_commit.message }}"
-          CHANGELOG_URL="https://github.com/${{ github.repository }}/compare/${{ env.PREV_TAG }}...${{ env.TAG_NAME }}"
-          echo "body<<EOF" >> $GITHUB_OUTPUT
-          echo "$COMMIT_MSG" >> $GITHUB_OUTPUT
-          echo "" >> $GITHUB_OUTPUT
-          echo "" >> $GITHUB_OUTPUT
-          echo "**Full Changelog**: $CHANGELOG_URL" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
       - name: 🚀 Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.TAG_NAME }}
           name: v${{ env.VERSION }}
-          body: ${{ steps.body.outputs.body }}
+          body: ${{ github.event.head_commit.message }}
           files: target/*.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -79,7 +67,7 @@ jobs:
           file_path: target/vMessage-${{ env.VERSION }}.jar
           name: vMessage ${{ env.VERSION }}
           version: ${{ env.VERSION }}
-          changelog: ${{ steps.body.outputs.body }}
+          changelog: ${{ github.event.head_commit.message }}
           relations: 7IbzD4Zm:required,Vebnzrzj:optional,PgXAUxLZ:optional # signedvelocity, luckperms, libertybans
           game_versions: 1.20,1.20.1,1.20.2,1.20.3,1.20.4,1.20.5,1.20.6,1.21,1.21.1,1.21.2,1.21.3,1.21.4,1.21.5,1.21.6,1.21.7,1.21.8,1.21.9,1.21.10
           release_type: release
