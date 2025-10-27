@@ -172,7 +172,7 @@ public class Broadcaster {
         serverAliases.clear();
         Set<Map.Entry<Object, CommentedConfigurationNode>> aliases = ConfigManager.get().getNode("server-aliases").childrenMap().entrySet();
         for (Map.Entry<Object, CommentedConfigurationNode> entry : aliases) {
-            serverAliases.put(entry.getKey().toString(),entry.getValue().toString());
+            serverAliases.put(entry.getKey().toString(),entry.getValue().getString(""));
         }
     }
 
