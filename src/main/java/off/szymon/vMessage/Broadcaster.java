@@ -179,7 +179,7 @@ public class Broadcaster {
     public void reloadMetaPlaceholders() {
         metaPlaceholders.clear();
         if (lp != null) {
-            Set<Map.Entry<Object, CommentedConfigurationNode>> metas = ConfigManager.get().getNode("luckPermsMeta").childrenMap().entrySet();
+            Set<Map.Entry<Object, CommentedConfigurationNode>> metas = ConfigManager.get().getNode("luck-perms-meta").childrenMap().entrySet();
             for (Map.Entry<Object, CommentedConfigurationNode> entry : metas) {
                 metaPlaceholders.put("&"+entry.getKey().toString()+"&",entry.getValue().toString());
             }
