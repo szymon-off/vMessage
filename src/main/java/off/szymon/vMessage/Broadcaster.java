@@ -154,10 +154,17 @@ public class Broadcaster {
                     .replace("%prefix%", Optional.ofNullable(data.metaData().getPrefix()).orElse(""));
 
             for (Map.Entry<String,String> entry : metaPlaceholders.entrySet()) {
+                String metaValue = Optional.ofNullable(data.metaData().getMetaValue(entry.getValue())).orElse("DEBUG_VAL");
                 msg = msg.replace(
                         entry.getKey(),
-                        Optional.ofNullable(data.metaData().getMetaValue(entry.getValue())).orElse("")
+                        metaValue
                 );
+                VMessagePlugin.get().getLogger().debug("KEY: {}",entry.getKey());
+                VMessagePlugin.get().getLogger().debug("VALUE: {}",entry.getValue());
+                VMessagePlugin.get().getLogger().debug("META_VALUE: {}",metaValue);
+                VMessagePlugin.get().getLogger().debug("PLACEHOLDERS: {}", metaPlaceholders);
+                VMessagePlugin.get().getLogger().debug("PLAYER_DATA: {}",data);
+                VMessagePlugin.get().getLogger().debug("META_DATA: {}",data.metaData());
             }
         }
         VMessagePlugin.get().getServer().sendMessage(MiniMessage.miniMessage().deserialize(msg));
