@@ -159,12 +159,12 @@ public class Broadcaster {
                         entry.getKey(),
                         metaValue
                 );
-                VMessagePlugin.get().getLogger().debug("KEY: {}",entry.getKey());
-                VMessagePlugin.get().getLogger().debug("VALUE: {}",entry.getValue());
-                VMessagePlugin.get().getLogger().debug("META_VALUE: {}",metaValue);
-                VMessagePlugin.get().getLogger().debug("PLACEHOLDERS: {}", metaPlaceholders);
-                VMessagePlugin.get().getLogger().debug("PLAYER_DATA: {}",data);
-                VMessagePlugin.get().getLogger().debug("META_DATA: {}",data.metaData());
+                VMessagePlugin.get().getLogger().info("KEY: {}",entry.getKey());
+                VMessagePlugin.get().getLogger().info("VALUE: {}",entry.getValue());
+                VMessagePlugin.get().getLogger().info("META_VALUE: {}",metaValue);
+                VMessagePlugin.get().getLogger().info("PLACEHOLDERS: {}", metaPlaceholders);
+                VMessagePlugin.get().getLogger().info("PLAYER_DATA: {}",data);
+                VMessagePlugin.get().getLogger().info("META_DATA: {}",data.metaData());
             }
         }
         VMessagePlugin.get().getServer().sendMessage(MiniMessage.miniMessage().deserialize(msg));
