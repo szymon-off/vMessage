@@ -153,6 +153,9 @@ public class Broadcaster {
                     .replace("%suffix%", Optional.ofNullable(data.metaData().getSuffix()).orElse(""))
                     .replace("%prefix%", Optional.ofNullable(data.metaData().getPrefix()).orElse(""));
 
+            VMessagePlugin.get().getLogger().info("PLACEHOLDERS: {}", metaPlaceholders);
+            VMessagePlugin.get().getLogger().info("PLAYER_DATA: {}",data);
+            VMessagePlugin.get().getLogger().info("META_DATA: {}",data.metaData());
             for (Map.Entry<String,String> entry : metaPlaceholders.entrySet()) {
                 String metaValue = Optional.ofNullable(data.metaData().getMetaValue(entry.getValue())).orElse("DEBUG_VAL");
                 msg = msg.replace(
@@ -162,9 +165,6 @@ public class Broadcaster {
                 VMessagePlugin.get().getLogger().info("KEY: {}",entry.getKey());
                 VMessagePlugin.get().getLogger().info("VALUE: {}",entry.getValue());
                 VMessagePlugin.get().getLogger().info("META_VALUE: {}",metaValue);
-                VMessagePlugin.get().getLogger().info("PLACEHOLDERS: {}", metaPlaceholders);
-                VMessagePlugin.get().getLogger().info("PLAYER_DATA: {}",data);
-                VMessagePlugin.get().getLogger().info("META_DATA: {}",data.metaData());
             }
         }
         VMessagePlugin.get().getServer().sendMessage(MiniMessage.miniMessage().deserialize(msg));
