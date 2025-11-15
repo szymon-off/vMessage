@@ -16,7 +16,6 @@ import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import off.szymon.vMessage.compatibility.LuckPermsCompatibilityProvider;
 import off.szymon.vMessage.config.ConfigManager;
-import org.slf4j.Logger;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 
 import java.util.HashMap;
@@ -57,22 +56,12 @@ public class Broadcaster {
                     .replace("%suffix%", Optional.ofNullable(data.metaData().getSuffix()).orElse(""))
                     .replace("%prefix%", Optional.ofNullable(data.metaData().getPrefix()).orElse(""));
 
-            Logger logger = VMessagePlugin.get().getLogger();
-            logger.debug("PLACEHOLDERS: {}", metaPlaceholders);
-            logger.debug("PLAYER_DATA: {}", data);
-            logger.debug("META_DATA: {}", data.metaData());
             for (Map.Entry<String,String> entry : metaPlaceholders.entrySet()) {
                 String metaValue = Optional.ofNullable(data.metaData().getMetaValue(entry.getValue())).orElse("");
                 msg = msg.replace(
                         entry.getKey(),
                         metaValue
                 );
-                logger.debug("KEY: {}", entry.getKey());
-                logger.debug("VALUE: {}", entry.getValue());
-                logger.debug("META_VALUE: {}", metaValue);
-                //                System.out.println("KEY: {}" + entry.getKey());
-                //                System.out.println("VALUE: {} " + entry.getValue());
-                //                System.out.println("META_VALUE: " + metaValue);
             }
         }
         VMessagePlugin.get().getServer().sendMessage(MiniMessage.miniMessage().deserialize(msg));
@@ -195,7 +184,7 @@ public class Broadcaster {
         if (lp != null) {
             Set<Map.Entry<Object, CommentedConfigurationNode>> metas = ConfigManager.get().getNode("luck-perms-meta").childrenMap().entrySet();
             for (Map.Entry<Object, CommentedConfigurationNode> entry : metas) {
-                metaPlaceholders.put("&"+entry.getKey().toString()+"&",entry.getValue().toString());
+                metaPlaceholders.put("&"+entry.getKey().toString()+"&",entry.getValue().getString(""));
             }
         }
     }
