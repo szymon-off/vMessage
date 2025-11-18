@@ -75,13 +75,15 @@ class ConfigManager {
     }
 
     fun load() {
+        var fileCreated = false
         if (!file.exists()) {
+            fileCreated = true
             file.parentFile.mkdirs()
             file.createNewFile()
         }
         root = loader.load()
         config = root.get(MainConfig::class.java) ?: MainConfig()
-        if (config.backupConfig) {
+        if (!fileCreated && config.backupConfig) {
             @Suppress("UnstableApiUsage")
             Files.copy(file, File(file.parentFile, "$fileName.bak"))
         }
