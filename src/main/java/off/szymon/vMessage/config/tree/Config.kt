@@ -84,6 +84,8 @@ class BroadcastConfig {
     var enabled = true
     @Comment("%message% - Message")
     var format = "<bold><#00ffff>Server:<reset> %message%"
+    @Comment("Whether to allow players to use MiniMessage in their broadcast messages\nMiniMessage is always allowed for console broadcasts")
+    var allowMiniMessage = true
 }
 
 @ConfigSerializable

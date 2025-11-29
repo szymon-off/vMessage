@@ -31,7 +31,7 @@ public class CommandRegisterer {
         if (ConfigManager.get().getConfig().getCommands().getBroadcast().getEnabled()) {
             cmdManager.register(cmdManager.metaBuilder("broadcast")
                             .plugin(vMessage)
-                            .aliases("bc","bcast")
+                            .aliases("bc", "bcast", "shout")
                             .build(),
                     new BroadcastCommand().createCommand()
             );

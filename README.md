@@ -58,7 +58,7 @@ vMessage provides several administrative commands for advanced usage and configu
 - `/broadcast <message>`  
   Broadcasts a custom message on the network.  
   **Permission:** `vmessage.command.broadcast`  
-  **Aliases:** `/bc`, `/bcast`
+  **Aliases:** `/bc`, `/bcast`, `/shout`
 
 - `/message <player> <message>`  
   Sends a private message to a specific player across the network.  

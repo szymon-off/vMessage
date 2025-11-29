@@ -16,6 +16,7 @@ import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import off.szymon.vMessage.compatibility.LuckPermsCompatibilityProvider;
 import off.szymon.vMessage.config.ConfigManager;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 
 import java.util.HashMap;
@@ -189,9 +190,41 @@ public class Broadcaster {
         }
     }
 
-    public void broadcast(String message) {
+    public void broadcast(String message, @Nullable Player player) {
         String msg = ConfigManager.get().getConfig().getCommands().getBroadcast().getFormat();
-        msg = msg.replace("%message%", message);
+
+        if (player != null) {
+            if (!ConfigManager.get().getConfig().getCommands().getBroadcast().getAllowMiniMessage()) {
+                msg = msg.replace("%message%", MiniMessage.miniMessage().escapeTags(message));
+            }
+            msg = msg
+                .replace("%player%", player.getUsername())
+                .replace("%server%", parseAlias(player.getCurrentServer().get().getServerInfo().getName()));
+            if (lp != null) {
+                LuckPermsCompatibilityProvider.PlayerData data = lp.getMetaData(player);
+                msg = msg
+                        .replace("%suffix%", Optional.ofNullable(data.metaData().getSuffix()).orElse(""))
+                        .replace("%prefix%", Optional.ofNullable(data.metaData().getPrefix()).orElse(""));
+
+                for (Map.Entry<String,String> entry : metaPlaceholders.entrySet()) {
+                    String metaValue = Optional.ofNullable(data.metaData().getMetaValue(entry.getValue())).orElse("");
+                    msg = msg.replace(
+                            entry.getKey(),
+                            metaValue
+                    );
+                }
+            }
+        } else {
+            msg = msg
+                .replace("%message%", message)
+                .replace("%player%", "")
+                .replace("%server%", "")
+                .replace("%suffix%", "")
+                .replace("%prefix%", "");
+            for (String key : metaPlaceholders.keySet()) {
+                msg = msg.replace(key, "");
+            }
+        }
 
         VMessagePlugin.get().getServer().sendMessage(MiniMessage.miniMessage().deserialize(msg));
     }

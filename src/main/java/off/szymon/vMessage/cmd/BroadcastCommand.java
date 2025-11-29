@@ -17,6 +17,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.proxy.Player;
 import off.szymon.vMessage.VMessagePlugin;
 
 public class BroadcastCommand {
@@ -28,11 +29,10 @@ public class BroadcastCommand {
                         .then(RequiredArgumentBuilder.<CommandSource, String>argument("message", StringArgumentType.greedyString())
                                 .executes(ctx -> {
                                     String message = StringArgumentType.getString(ctx, "message");
-                                    VMessagePlugin.get().getBroadcaster().broadcast(message);
+                                    VMessagePlugin.get().getBroadcaster().broadcast(message, ctx.getSource() instanceof Player player ? player : null);
                                     return 1; // Command executed successfully
-                                })
-                        )
-        );
+                                }
+        )));
     }
 
 }
