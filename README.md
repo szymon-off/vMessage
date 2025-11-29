@@ -2,7 +2,7 @@
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/szymon-off/vMessage) ![Modrinth Downloads](https://img.shields.io/modrinth/dt/ZIxTT2xI?logo=modrinth&color=%2300AF5C) ![GitHub issues](https://img.shields.io/github/issues/szymon-off/vMessage) ![GitHub](https://img.shields.io/github/license/szymon-off/vMessage) ![GitHub last commit](https://img.shields.io/github/last-commit/szymon-off/vMessage)
 
-> 🎉 **250 DOWNLOADS:** Thank you all for the amazing support - enjoy the latest update!
+> 🎉🎉🎉 **300 DOWNLOADS:** Thank you all for the amazing support - enjoy the latest update!
 
 > ⚠️ **Warning:** LiteBans mute support hasn't been tested yet. If you encounter any issues, please create an [issue](https://github.com/szymon-off/vMessage/issues) or reach out to me on Discord: `szymon.off`
 
