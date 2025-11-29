@@ -82,8 +82,8 @@ class CommandsConfig {
 @ConfigSerializable
 class BroadcastConfig {
     var enabled = true
-    @Comment("%message% - Message")
-    var format = "<bold><#00ffff>Server:<reset> %message%"
+    @Comment("%player% - Player\n%message% - Message\n%server% - Player's Current Server\n%prefix% - LuckPerms Prefix\n%suffix% - LuckPerms Suffix")
+    var format = "<b><#00ffff>%player%:</b> %message%"
     @Comment("Whether to allow players to use MiniMessage in their broadcast messages\nMiniMessage is always allowed for console broadcasts")
     var allowMiniMessage = true
 }

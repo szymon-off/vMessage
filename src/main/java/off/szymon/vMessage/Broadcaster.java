@@ -196,6 +196,8 @@ public class Broadcaster {
         if (player != null) {
             if (!ConfigManager.get().getConfig().getCommands().getBroadcast().getAllowMiniMessage()) {
                 msg = msg.replace("%message%", MiniMessage.miniMessage().escapeTags(message));
+            } else {
+                msg = msg.replace("%message%", message);
             }
             msg = msg
                 .replace("%player%", player.getUsername())
@@ -217,8 +219,8 @@ public class Broadcaster {
         } else {
             msg = msg
                 .replace("%message%", message)
-                .replace("%player%", "")
-                .replace("%server%", "")
+                .replace("%player%", "Server")
+                .replace("%server%", "Server")
                 .replace("%suffix%", "")
                 .replace("%prefix%", "");
             for (String key : metaPlaceholders.keySet()) {
