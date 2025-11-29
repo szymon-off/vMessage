@@ -28,6 +28,7 @@ import off.szymon.vMessage.compatibility.mute.LibertyBansCompatibilityProvider;
 import off.szymon.vMessage.compatibility.mute.LiteBansCompatibilityProvider;
 import off.szymon.vMessage.compatibility.mute.MutePluginCompatibilityProvider;
 import off.szymon.vMessage.config.ConfigManager;
+import org.bstats.charts.AdvancedPie;
 import org.bstats.charts.SimplePie;
 import org.bstats.velocity.Metrics;
 import org.jetbrains.annotations.Nullable;
@@ -35,6 +36,7 @@ import org.slf4j.Logger;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.Map;
 
 @Plugin(
@@ -154,6 +156,18 @@ public class VMessagePlugin {
                 pluginName = "LiteBans";
             }
             return pluginName;
+        }));
+        metrics.addCustomChart(new AdvancedPie("enabled_features", () -> {
+            Map<String, Integer> features = new HashMap<>();
+            features.put("Chat Messages", ConfigManager.get().getConfig().getMessages().getChat().getEnabled() ? 1 : 0);
+            features.put("Join Messages", ConfigManager.get().getConfig().getMessages().getJoin().getEnabled() ? 1 : 0);
+            features.put("Leave Messages", ConfigManager.get().getConfig().getMessages().getLeave().getEnabled() ? 1 : 0);
+            features.put("Server Change Messages", ConfigManager.get().getConfig().getMessages().getChange().getEnabled() ? 1 : 0);
+            features.put("Broadcast Command", ConfigManager.get().getConfig().getCommands().getBroadcast().getEnabled() ? 1 : 0);
+            features.put("Message Command", ConfigManager.get().getConfig().getCommands().getMessage().getEnabled() ? 1 : 0);
+            features.put("Reply Command", ConfigManager.get().getConfig().getCommands().getMessage().getEnableReplyCommand() ? 1 : 0);
+            features.put("LuckPerms Integration", lpCompatibilityProvider != null ? 1 : 0);
+            return features;
         }));
     }
 
