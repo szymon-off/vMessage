@@ -219,10 +219,15 @@ public class VMessagePlugin {
     }
 
     private void checkForUpdates() {
-        if (plugin.getDescription().getVersion().get().toLowerCase().contains("dev")) {
+        String pluginVersion = plugin.getDescription().getVersion().get();
+
+
+        if (pluginVersion.toLowerCase().contains("dev")) {
             logger.info("Skipping update check (development build detected).");
             return;
         }
+
+        logger.info("Checking for updates... (current version: " + pluginVersion + ")");
 
         try {
             String url = "https://api.modrinth.com/v2/project/ZIxTT2xI/version";
@@ -255,18 +260,18 @@ public class VMessagePlugin {
                 return;
             }
 
-            if (isVersionGreater(latestRelease, plugin.getDescription().getVersion().get())) {
-                logger.info("New version available on Modrinth: " + latestRelease + " (current: " + plugin.getDescription().getVersion().get() + ")");
+            if (isVersionGreater(latestRelease, pluginVersion)) {
+                logger.info("New version available on Modrinth: " + latestRelease + " (current: " + pluginVersion + ")");
+                logger.info("Download it from: https://modrinth.com/plugin/vmessage/version/" + latestRelease);
+            } else if (latestRelease.equals(pluginVersion)) {
+                logger.info("You are running the latest version ("+ latestRelease + ").");
             } else {
-                logger.info("You are running the latest version.");
+                logger.info("You are running a development version ahead of the latest release (latest release: " + latestRelease + ").");
             }
-
         } catch (Exception ex) {
             logger.warn("Failed to check for updates: ", ex);
         }
     }
-
-
 
     private boolean isVersionGreater(String a, String b) {
         String[] as = a.split("\\.");
