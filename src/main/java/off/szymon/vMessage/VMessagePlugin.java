@@ -12,6 +12,10 @@
 
 package off.szymon.vMessage;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
@@ -34,7 +38,11 @@ import org.bstats.velocity.Metrics;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
@@ -146,6 +154,8 @@ public class VMessagePlugin {
 
         CommandRegisterer.registerCommands();
 
+        checkForUpdates();
+
         Metrics metrics = metricsFactory.make(this, 27241);
 
         metrics.addCustomChart(new SimplePie("mute_plugin", () -> {
@@ -207,4 +217,79 @@ public class VMessagePlugin {
     public PluginContainer getPlugin() {
         return plugin;
     }
+
+    private void checkForUpdates() {
+        if (plugin.getDescription().getVersion().get().toLowerCase().contains("dev")) {
+            logger.info("Skipping update check (development build detected).");
+            return;
+        }
+
+        try {
+            String url = "https://api.modrinth.com/v2/project/ZIxTT2xI/version";
+
+            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("User-Agent", "vMessage-Plugin UpdateChecker");
+            connection.connect();
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            JsonArray versions = new Gson().fromJson(reader, JsonArray.class);
+            reader.close();
+
+            String latestRelease = null;
+
+            for (JsonElement element : versions) {
+                JsonObject obj = element.getAsJsonObject();
+
+                if (!obj.get("version_type").getAsString().equalsIgnoreCase("release"))
+                    continue;
+
+                String version = obj.get("version_number").getAsString();
+
+                if (latestRelease == null || isVersionGreater(version, latestRelease))
+                    latestRelease = version;
+            }
+
+            if (latestRelease == null) {
+                logger.warn("No Modrinth release versions found.");
+                return;
+            }
+
+            if (isVersionGreater(latestRelease, plugin.getDescription().getVersion().get())) {
+                logger.info("New version available on Modrinth: " + latestRelease + " (current: " + plugin.getDescription().getVersion().get() + ")");
+            } else {
+                logger.info("You are running the latest version.");
+            }
+
+        } catch (Exception ex) {
+            logger.warn("Failed to check for updates: ", ex);
+        }
+    }
+
+
+
+    private boolean isVersionGreater(String a, String b) {
+        String[] as = a.split("\\.");
+        String[] bs = b.split("\\.");
+
+        int max = Math.max(as.length, bs.length);
+
+        for (int i = 0; i < max; i++) {
+            int ai = (i < as.length) ? parseDigit(as[i]) : 0;
+            int bi = (i < bs.length) ? parseDigit(bs[i]) : 0;
+
+            if (ai > bi) return true;
+            if (ai < bi) return false;
+        }
+        return false;
+    }
+
+    private int parseDigit(String s) {
+        try {
+            return Integer.parseInt(s.replaceAll("[^0-9]", ""));
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
 }
