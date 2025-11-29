@@ -169,6 +169,7 @@ public class VMessagePlugin {
         }));
         metrics.addCustomChart(new AdvancedPie("enabled_features", () -> {
             Map<String, Integer> features = new HashMap<>();
+
             features.put("Chat Messages", ConfigManager.get().getConfig().getMessages().getChat().getEnabled() ? 1 : 0);
             features.put("Join Messages", ConfigManager.get().getConfig().getMessages().getJoin().getEnabled() ? 1 : 0);
             features.put("Leave Messages", ConfigManager.get().getConfig().getMessages().getLeave().getEnabled() ? 1 : 0);
