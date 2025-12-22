@@ -99,6 +99,9 @@ If you want to build vMessage yourself:
   ```
 - The built jar will be in the `target` directory.
 
+## Usage Statistics
+![bStats](https://bstats.org/signatures/velocity/vMessage%20Velocity.svg)
+
 ## License
 
 - Versions **≤ 1.6.1** are licensed under the **MIT License**.
