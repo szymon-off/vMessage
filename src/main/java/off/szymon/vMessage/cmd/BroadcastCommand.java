@@ -19,13 +19,15 @@ import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import off.szymon.vMessage.VMessagePlugin;
+import off.szymon.vMessage.config.ConfigManager;
 
 public class BroadcastCommand {
 
     public BrigadierCommand createCommand() {
         return new BrigadierCommand(
                 LiteralArgumentBuilder.<CommandSource>literal("broadcast")
-                        .requires(src -> src.hasPermission("vmessage.command.broadcast"))
+                        .requires(src -> CommandHandler.requiresPermission(src, "vmessage.command.broadcast",
+                                ConfigManager.get().getConfig().getCommands().getBroadcast().getAllowByDefault()))
                         .then(RequiredArgumentBuilder.<CommandSource, String>argument("message", StringArgumentType.greedyString())
                                 .executes(ctx -> {
                                     String message = StringArgumentType.getString(ctx, "message");

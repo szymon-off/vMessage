@@ -84,6 +84,9 @@ class BroadcastConfig {
     var enabled = true
     @Comment("%player% - Player\n%message% - Message\n%server% - Player's Current Server\n%prefix% - LuckPerms Prefix\n%suffix% - LuckPerms Suffix")
     var format = "<b><#00ffff>%player%:</b> %message%"
+    @Comment("If false, players will need the permission 'vmessage.command.broadcast' to use the /broadcast command\n" +
+            "If true, all players can use the /broadcast command by default unless they have the permission 'vmessage.command.broadcast' set to false")
+    var allowByDefault = false
     @Comment("Whether to allow players to use MiniMessage in their broadcast messages\nMiniMessage is always allowed for console broadcasts")
     var allowMiniMessage = true
 }
@@ -95,6 +98,10 @@ class MessageConfig {
     var format = MessageFormatConfig()
     @Comment("Whether to allow players to use MiniMessage in their private messages")
     var allowMiniMessage = false
+    @Comment("If false, players will need the permission 'vmessage.command.message' to use the /message command\n" +
+            "If true, all players can use the /message command by default unless they have the permission 'vmessage.command.message' set to false\n" +
+            "This also affects the /reply command")
+    var allowByDefault = false
     @Comment("Whether to enable the /reply command\nIt will reply to the last person who sent you a message")
     var enableReplyCommand = true
 }

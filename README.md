@@ -62,7 +62,7 @@ vMessage provides several administrative commands for advanced usage and configu
 
 - `/message <player> <message>`  
   Sends a private message to a specific player across the network.  
-  **Permission:** `vmessage.command.msg`  
+  **Permission:** `vmessage.command.message`  
   **Aliases:** `/msg`, `/tell`, `/whisper`, `/w`
 
 - `/reply <message>`  

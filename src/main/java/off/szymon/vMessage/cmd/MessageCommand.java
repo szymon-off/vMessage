@@ -35,7 +35,8 @@ public class MessageCommand {
     public BrigadierCommand createCommand() {
         return new BrigadierCommand(
                 LiteralArgumentBuilder.<CommandSource>literal("message")
-                        .requires(src -> src.hasPermission("vmessage.command.message"))
+                        .requires(src -> CommandHandler.requiresPermission(src, "vmessage.command.message",
+                                ConfigManager.get().getConfig().getCommands().getMessage().getAllowByDefault()))
                         .then(RequiredArgumentBuilder.<CommandSource, String>argument("player", StringArgumentType.word())
                                 .suggests(
                                         (ctx, builder) -> {
@@ -154,5 +155,7 @@ public class MessageCommand {
                         )
         );
     }
+
+
 
 }

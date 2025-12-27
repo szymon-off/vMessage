@@ -42,7 +42,8 @@ public class ReplyCommand {
     public BrigadierCommand createCommand() {
         return new BrigadierCommand(
                 LiteralArgumentBuilder.<CommandSource>literal("reply")
-                        .requires(src -> src.hasPermission("vmessage.command.reply"))
+                        .requires(src -> CommandHandler.requiresPermission(src, "vmessage.command.reply",
+                                ConfigManager.get().getConfig().getCommands().getMessage().getAllowByDefault()))
                         .then(RequiredArgumentBuilder.<CommandSource, String>argument("message", StringArgumentType.greedyString())
                                 .executes( ctx -> {
                                     String senderFormat = ConfigManager.get().getConfig().getCommands().getMessage().getFormat().getSender();

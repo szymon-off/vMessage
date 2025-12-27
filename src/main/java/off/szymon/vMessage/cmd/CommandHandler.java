@@ -13,10 +13,13 @@
 package off.szymon.vMessage.cmd;
 
 import com.velocitypowered.api.command.CommandManager;
+import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.permission.Tristate;
+import com.velocitypowered.api.proxy.Player;
 import off.szymon.vMessage.VMessagePlugin;
 import off.szymon.vMessage.config.ConfigManager;
 
-public class CommandRegisterer {
+public class CommandHandler {
 
     public static void registerCommands() {
         VMessagePlugin vMessage = VMessagePlugin.get();
@@ -52,6 +55,18 @@ public class CommandRegisterer {
                     new ReplyCommand().createCommand()
             );
         }
+    }
+
+    public static boolean requiresPermission(CommandSource src, String perm, boolean defaultValue) {
+        if (!(src instanceof Player player)) {
+            return true;
+        }
+
+        var value = player.getPermissionValue(perm);
+        if (!Tristate.UNDEFINED.equals(value)) {
+            return value.asBoolean();
+        }
+        return defaultValue;
     }
 
 }
