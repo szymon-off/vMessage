@@ -2,9 +2,7 @@
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/szymon-off/vMessage) ![Modrinth Downloads](https://img.shields.io/modrinth/dt/ZIxTT2xI?logo=modrinth&color=%2300AF5C) ![GitHub issues](https://img.shields.io/github/issues/szymon-off/vMessage) ![GitHub](https://img.shields.io/github/license/szymon-off/vMessage) ![GitHub last commit](https://img.shields.io/github/last-commit/szymon-off/vMessage)
 
-> 🎉 **250 DOWNLOADS:** Thank you all for the amazing support - enjoy the latest update!
-
-> ⚠️ **Warning:** LiteBans mute support hasn't been tested yet. If you encounter any issues, please create an [issue](https://github.com/szymon-off/vMessage/issues) or reach out to me on Discord: `szymon.off`
+> 🆕 Hey, I'm SzymON/OFF! If you found **vMessage** useful please don't hesitate to also try [vHubs](https://modrinth.com/plugin/vhubs)! It allows you to create multiple hub servers accesible with player commands (e.g. `/hub`, `/lobby`, `/survival`).
 
 **vMessage** is the best Velocity plugin for synchronizing chat and player events across your entire proxy network. It is designed for server administrators who want seamless, reliable, and configurable message syncing without unnecessary complexity.
 
@@ -100,6 +98,9 @@ If you want to build vMessage yourself:
   mvn clean package
   ```
 - The built jar will be in the `target` directory.
+
+## Usage Statistics
+![bStats](https://bstats.org/signatures/velocity/vMessage%20Velocity.svg)
 
 ## License
 
