@@ -12,7 +12,7 @@
 
 plugins {
     kotlin("jvm") version "2.2.21"
-    id("com.gradleup.shadow") version "8.3.8"
+    id("com.gradleup.shadow") version "9.3.0"
 }
 
 group = "off.szymon"
