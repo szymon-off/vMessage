@@ -44,6 +44,12 @@ jobs:
         run: |
           ./gradlew build -PpluginVersion=${{ steps.vars.outputs.version }}
 
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: vMessage-${{ steps.vars.outputs.version }}
+          path: build/libs/*.jar
+
       - name: Generate changelog link
         id: changelog
         run: |

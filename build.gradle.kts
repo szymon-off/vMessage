@@ -56,6 +56,10 @@ dependencies {
         exclude(group = "org.spongepowered", module = "configurate-core")
         exclude(group = "org.spongepowered", module = "configurate-yaml")
     }
+    annotationProcessor("com.velocitypowered:velocity-api:3.4.0-SNAPSHOT") {
+        exclude(group = "org.spongepowered", module = "configurate-core")
+        exclude(group = "org.spongepowered", module = "configurate-yaml")
+    }
 
     /* Plugin Compatibility APIs */
     compileOnly("net.luckperms:api:5.4")

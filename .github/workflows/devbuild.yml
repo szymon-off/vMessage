@@ -53,6 +53,12 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build -PpluginVersion=${{ steps.version.outputs.dev_version }}
 
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: vMessage-${{ steps.version.outputs.dev_version }}
+          path: build/libs/*.jar
+
       - name: Get commit message
         id: message
         run: |
