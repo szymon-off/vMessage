@@ -72,6 +72,8 @@ You can also use `/vmsg` or `/vm` as an alias for `/vmessage` for convenience.
 
 Make sure to assign the appropriate permissions to your staff or admin roles in your Velocity configuration.
 
+For `/broadcast`, `/message`, and `/reply`, you can set `allow-by-default` to `true` in the config file to let all players use these commands without needing explicit permissions.
+
 ## Configuration
 
 vMessage provides a powerful and easy-to-use configuration file. You can customize message formats, toggle features, and more. Look at the wiki for detailed configuration options: [vMessage Wiki](https://github.com/szymon-off/vMessage/wiki/Configuration-(config.yml))
