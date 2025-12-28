@@ -10,11 +10,11 @@
  * See the LICENSE file in the project root for details.
  */
 
-package off.szymon.vMessage.config
+package off.szymon.vmessage.config
 
 import com.google.common.io.Files
-import off.szymon.vMessage.VMessagePlugin
-import off.szymon.vMessage.config.tree.MainConfig
+import off.szymon.vmessage.VMessagePlugin
+import off.szymon.vmessage.config.tree.MainConfig
 import org.spongepowered.configurate.CommentedConfigurationNode
 import org.spongepowered.configurate.loader.HeaderMode
 import org.spongepowered.configurate.yaml.NodeStyle

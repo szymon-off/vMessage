@@ -10,14 +10,14 @@
  * See the LICENSE file in the project root for details.
  */
 
-package off.szymon.vMessage.cmd;
+package off.szymon.vmessage.cmd;
 
 import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.permission.Tristate;
 import com.velocitypowered.api.proxy.Player;
-import off.szymon.vMessage.VMessagePlugin;
-import off.szymon.vMessage.config.ConfigManager;
+import off.szymon.vmessage.VMessagePlugin;
+import off.szymon.vmessage.config.ConfigManager;
 
 public class CommandHandler {
 

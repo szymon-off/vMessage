@@ -10,7 +10,7 @@
  * See the LICENSE file in the project root for details.
  */
 
-package off.szymon.vMessage;
+package off.szymon.vmessage;
 
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
@@ -19,9 +19,9 @@ import com.velocitypowered.api.event.player.ServerPostConnectEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import off.szymon.vMessage.compatibility.LuckPermsCompatibilityProvider;
-import off.szymon.vMessage.compatibility.mute.MutePluginCompatibilityProvider;
-import off.szymon.vMessage.config.ConfigManager;
+import off.szymon.vmessage.compatibility.LuckPermsCompatibilityProvider;
+import off.szymon.vmessage.compatibility.mute.MutePluginCompatibilityProvider;
+import off.szymon.vmessage.config.ConfigManager;
 
 import java.util.Map;
 import java.util.Optional;

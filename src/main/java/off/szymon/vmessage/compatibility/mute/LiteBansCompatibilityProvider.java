@@ -10,7 +10,7 @@
  * See the LICENSE file in the project root for details.
  */
 
-package off.szymon.vMessage.compatibility.mute;
+package off.szymon.vmessage.compatibility.mute;
 
 import com.velocitypowered.api.proxy.Player;
 import litebans.api.Database;

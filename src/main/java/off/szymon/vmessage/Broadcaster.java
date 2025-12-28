@@ -10,12 +10,12 @@
  * See the LICENSE file in the project root for details.
  */
 
-package off.szymon.vMessage;
+package off.szymon.vmessage;
 
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import off.szymon.vMessage.compatibility.LuckPermsCompatibilityProvider;
-import off.szymon.vMessage.config.ConfigManager;
+import off.szymon.vmessage.compatibility.LuckPermsCompatibilityProvider;
+import off.szymon.vmessage.config.ConfigManager;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 

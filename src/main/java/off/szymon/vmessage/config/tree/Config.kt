@@ -12,7 +12,7 @@
 
 @file:Suppress("unused")
 
-package off.szymon.vMessage.config.tree
+package off.szymon.vmessage.config.tree
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable
 import org.spongepowered.configurate.objectmapping.meta.Comment

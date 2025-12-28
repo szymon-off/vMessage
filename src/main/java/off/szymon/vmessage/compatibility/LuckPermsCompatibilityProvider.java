@@ -10,7 +10,7 @@
  * See the LICENSE file in the project root for details.
  */
 
-package off.szymon.vMessage.compatibility;
+package off.szymon.vmessage.compatibility;
 
 import com.velocitypowered.api.proxy.Player;
 import net.luckperms.api.LuckPerms;

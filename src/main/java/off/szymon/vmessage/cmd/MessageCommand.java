@@ -10,7 +10,7 @@
  * See the LICENSE file in the project root for details.
  */
 
-package off.szymon.vMessage.cmd;
+package off.szymon.vmessage.cmd;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -20,9 +20,9 @@ import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import off.szymon.vMessage.VMessagePlugin;
-import off.szymon.vMessage.compatibility.LuckPermsCompatibilityProvider;
-import off.szymon.vMessage.config.ConfigManager;
+import off.szymon.vmessage.VMessagePlugin;
+import off.szymon.vmessage.compatibility.LuckPermsCompatibilityProvider;
+import off.szymon.vmessage.config.ConfigManager;
 
 public class MessageCommand {
 
