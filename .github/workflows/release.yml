@@ -1,0 +1,87 @@
+name: Publish Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+          cache: gradle
+
+      - name: Extract version from tag
+        id: vars
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          VERSION="${TAG#v}"
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          build-scan-publish: true
+          build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
+          build-scan-terms-of-use-agree: "yes"
+
+      - name: Grant execute permission for Gradle wrapper
+        run: chmod +x ./gradlew
+
+      - name: Build with Gradle
+        run: |
+          ./gradlew build -PpluginVersion=${{ steps.vars.outputs.version }}
+
+      - name: Generate changelog link
+        id: changelog
+        run: |
+          LAST_TAG=$(git describe --tags --abbrev=0 HEAD^)
+          echo "url=https://github.com/${GITHUB_REPOSITORY}/compare/${LAST_TAG}...${{ steps.vars.outputs.tag }}" >> $GITHUB_OUTPUT
+
+      - name: Get sanitized commit title
+        id: commit_title
+        run: |
+          TITLE=$(echo "${GITHUB_EVENT_HEAD_COMMIT_MESSAGE:-$(git log -1 --pretty=%B)}" | head -n1 | sed -E 's/^#+[ ]*//')
+          echo "title=$TITLE" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.vars.outputs.tag }}
+          name: ${{ steps.commit_title.outputs.title }}
+          body: |
+            ${{ github.event.head_commit.message }}
+
+            **Full Changelog:** ${{ steps.changelog.outputs.url }}
+          files: |
+            build/libs/*.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Modrinth Publish
+        uses: cloudnode-pro/modrinth-publish@v2.1.4
+        with:
+          token: ${{ secrets.MODRINTH_TOKEN }}
+          project: ZIxTT2xI
+          name: ${{ steps.commit_title.outputs.title }}
+          version: ${{ steps.vars.outputs.version }}
+          channel: release
+          changelog: |
+            ${{ github.event.head_commit.message }}
+
+            **Full Changelog:** ${{ steps.changelog.outputs.url }}
+          loaders: velocity
+          game-versions: '["1.21.x","1.20.x","1.19.x","1.18.x","1.17.x","1.16.x","1.15.x","1.14.x","1.13.x","1.12.x","1.11.x","1.10.x","1.9.x","1.8.x","1.7.x"]'
+          files: build/libs/vMessage-${{ steps.vars.outputs.version }}.jar

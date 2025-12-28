@@ -1,0 +1,79 @@
+name: Publish Dev Build
+
+on:
+  push:
+    branches:
+      - "**"    # Any branch
+    tags-ignore:
+      - "v*"    # Skip real releases
+
+jobs:
+  build-dev:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+          cache: gradle
+
+      - name: Get latest version tag v*
+        id: tag
+        run: |
+          LAST_TAG=$(git describe --tags --match "v*" --abbrev=0)
+          echo "tag=$LAST_TAG" >> $GITHUB_OUTPUT
+          VERSION="${LAST_TAG#v}"
+          echo "base_version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Get short commit hash
+        id: commit
+        run: |
+          HASH=$(git rev-parse --short HEAD)
+          echo "hash=$HASH" >> $GITHUB_OUTPUT
+
+      - name: Compute dev version
+        id: version
+        run: |
+          DEV_VERSION="${{ steps.tag.outputs.base_version }}+${{ steps.commit.outputs.hash }}-dev"
+          echo "dev_version=$DEV_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Grant execute permission for Gradle wrapper
+        run: chmod +x ./gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build -PpluginVersion=${{ steps.version.outputs.dev_version }}
+
+      - name: Get commit message
+        id: message
+        run: |
+          MSG=$(git log -1 --pretty=%B)
+          echo "message<<EOF" >> $GITHUB_OUTPUT
+          echo "$MSG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Modrinth Publish (Dev)
+        uses: cloudnode-pro/modrinth-publish@v2.1.4
+        with:
+          token: ${{ secrets.MODRINTH_TOKEN }}
+          project: ZIxTT2xI
+          name: "vMessage ${{ steps.version.outputs.dev_version }}"
+          version: ${{ steps.version.outputs.dev_version }}
+          channel: alpha
+          changelog: |
+            ${{ steps.message.outputs.message }}
+
+            _Be careful: This version is not production-ready!_  
+            _Automated development build from commit ${{ steps.commit.outputs.hash }}._
+          loaders: velocity
+          game-versions: '["1.21.x","1.20.x","1.19.x","1.18.x","1.17.x","1.16.x","1.15.x","1.14.x","1.13.x","1.12.x","1.11.x","1.10.x","1.9.x","1.8.x","1.7.x"]'
+          files: build/libs/vMessage-${{ steps.version.outputs.dev_version }}.jar

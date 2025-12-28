@@ -1,0 +1,23 @@
+name: Update Modrinth Description
+
+on:
+  push:
+    paths:
+      - "README.md"
+    branches:
+      - master
+
+jobs:
+  update-description:
+    name: Update Modrinth Project Description
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update Modrinth description
+        uses: funnyboy-roks/modrinth-auto-desc@v1.7
+        with:
+          auth-token: ${{ secrets.MODRINTH_TOKEN }}
+          slug: ZIxTT2xI
