@@ -224,13 +224,13 @@ public class VMessagePlugin {
     private void checkForUpdates() {
         String pluginVersion = plugin.getDescription().getVersion().get();
 
-
         if (pluginVersion.toLowerCase().contains("dev")) {
             logger.info("Skipping update check (development build detected).");
             return;
         }
 
-        logger.info("Checking for updates... (current version: " + pluginVersion + ")");
+        logger.info("Checking for updates... (requesting Modrinth API)");
+        logger.info("Current version: " + pluginVersion);
 
         try {
             String url = "https://api.modrinth.com/v2/project/ZIxTT2xI/version";
@@ -263,13 +263,15 @@ public class VMessagePlugin {
                 return;
             }
 
+            logger.info("Latest release: " + latestRelease);
+
             if (isVersionGreater(latestRelease, pluginVersion)) {
-                logger.info("New version available on Modrinth: " + latestRelease + " (current: " + pluginVersion + ")");
+                logger.info("New version available on Modrinth.");
                 logger.info("Download it from: https://modrinth.com/plugin/vmessage/version/" + latestRelease);
             } else if (latestRelease.equals(pluginVersion)) {
-                logger.info("You are running the latest version ("+ latestRelease + ").");
+                logger.info("You are running the latest version.");
             } else {
-                logger.info("You are running a development version ahead of the latest release (latest release: " + latestRelease + ").");
+                logger.info("You are running a development version ahead of the latest release.");
             }
         } catch (Exception ex) {
             logger.warn("Failed to check for updates: ", ex);
