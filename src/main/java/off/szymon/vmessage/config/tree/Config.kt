@@ -14,11 +14,13 @@
 
 package off.szymon.vmessage.config.tree
 
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import org.spongepowered.configurate.objectmapping.ConfigSerializable
 import org.spongepowered.configurate.objectmapping.meta.Comment
 
 @ConfigSerializable
 class MainConfig {
+    var textComponentSettings = TextComponentConfig()
     var messages = MessagesConfig()
     var commands = CommandsConfig()
     @Comment("If you want to use additional LuckPerms meta values you can add them here\nYou can then use them in placeholder format like this: &custom_name& [AMPERSAND not PERCENT]")
@@ -27,6 +29,16 @@ class MainConfig {
     var serverAliases = ServerAliasesConfig()
     @Comment("This option is here for safety when updating the plugin from an older version\nWARNING: This will overwrite the previous backup (config.yml.bak)")
     var backupConfig = true
+}
+
+@ConfigSerializable
+class TextComponentConfig {
+    @Comment("Recommended to use\nTry out MiniMessage here: https://webui.advntr.dev")
+    var parseMiniMessage = true
+
+    var parseLegacyText = false
+    @Comment("The character used for legacy text formatting (e.g. &c for red)\nThis is only used if parseLegacyText is true\nPlease consider using MiniMessage, as it is much more modern and advanced\nWARNING: Do not set this to '&' if you want to use custom LuckPerms meta placeholders as they also use the '&' character (e.g. &custom_name&)")
+    var legacyTextCharacter = LegacyComponentSerializer.SECTION_CHAR.toString()
 }
 
 /* Messages Config */

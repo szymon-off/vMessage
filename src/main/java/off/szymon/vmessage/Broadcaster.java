@@ -13,9 +13,12 @@
 package off.szymon.vmessage;
 
 import com.velocitypowered.api.proxy.Player;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import off.szymon.vmessage.compatibility.LuckPermsCompatibilityProvider;
 import off.szymon.vmessage.config.ConfigManager;
+import off.szymon.vmessage.config.tree.TextComponentConfig;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 
@@ -65,7 +68,8 @@ public class Broadcaster {
                 );
             }
         }
-        VMessagePlugin.get().getServer().sendMessage(MiniMessage.miniMessage().deserialize(msg));
+
+        VMessagePlugin.get().getServer().sendMessage(deserializeTextComponents(msg));
     }
 
     public void join(Player player) {
@@ -94,7 +98,7 @@ public class Broadcaster {
                 );
             }
         }
-        VMessagePlugin.get().getServer().sendMessage(MiniMessage.miniMessage().deserialize(msg));
+        VMessagePlugin.get().getServer().sendMessage(deserializeTextComponents(msg));
     }
 
     public void leave(Player player) {
@@ -131,7 +135,7 @@ public class Broadcaster {
                 );
             }
         }
-        VMessagePlugin.get().getServer().sendMessage(MiniMessage.miniMessage().deserialize(msg));
+        VMessagePlugin.get().getServer().sendMessage(deserializeTextComponents(msg));
     }
 
     public void change(Player player, String oldServer) {
@@ -164,7 +168,7 @@ public class Broadcaster {
                 );
             }
         }
-        VMessagePlugin.get().getServer().sendMessage(MiniMessage.miniMessage().deserialize(msg));
+        VMessagePlugin.get().getServer().sendMessage(deserializeTextComponents(msg));
     }
 
     public void reload() {
@@ -228,7 +232,7 @@ public class Broadcaster {
             }
         }
 
-        VMessagePlugin.get().getServer().sendMessage(MiniMessage.miniMessage().deserialize(msg));
+        VMessagePlugin.get().getServer().sendMessage(deserializeTextComponents(msg));
     }
 
     public String parseAlias(String serverName) {
@@ -249,4 +253,19 @@ public class Broadcaster {
     private String escapeMiniMessage(String input) {
         return ConfigManager.get().getConfig().getMessages().getChat().getAllowMiniMessage() ? input : MiniMessage.miniMessage().escapeTags(input);
     }
+
+    private Component deserializeTextComponents(String input) {
+        TextComponentConfig textSettings = ConfigManager.get().getConfig().getTextComponentSettings();
+        if (textSettings.getParseLegacyText()) {
+            input = MiniMessage.miniMessage().serialize(
+                    LegacyComponentSerializer.legacy(textSettings.getLegacyTextCharacter().charAt(0)
+                    ).deserialize(input));
+        }
+        if (textSettings.getParseMiniMessage()) {
+            return MiniMessage.miniMessage().deserialize(input);
+        } else {
+            return Component.text(input);
+        }
+    }
+
 }
