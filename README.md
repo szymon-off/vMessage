@@ -92,14 +92,14 @@ Contributions are welcome! Please open issues or submit pull requests for improv
 
 If you want to build vMessage yourself:
 
-- Prerequisites: Java 17 or higher, Maven
+- Prerequisites: Java 17 or higher
 - Clone the repository and build:
   ```bash
   git clone https://github.com/szymon-off/vMessage.git
   cd vMessage
-  mvn clean package
+  ./gradlew build
   ```
-- The built jar will be in the `target` directory.
+- The built jar file will be in the `build/libs/vMessage-0.0.0-UNKNOWN.jar`.
 
 ## Usage Statistics
 ![bStats](https://bstats.org/signatures/velocity/vMessage%20Velocity.svg)
