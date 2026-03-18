@@ -6,6 +6,9 @@ on:
       - "**"    # Any branch
     tags-ignore:
       - "v*"    # Skip real releases
+    paths-ignore:
+      - "README.md"
+      - ".github/workflows/**"
 
 jobs:
   build-dev:
