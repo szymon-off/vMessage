@@ -254,7 +254,7 @@ public class Broadcaster {
         return ConfigManager.get().getConfig().getMessages().getChat().getAllowMiniMessage() ? input : MiniMessage.miniMessage().escapeTags(input);
     }
 
-    private Component deserializeTextComponents(String input) {
+    public Component deserializeTextComponents(String input) {
         TextComponentConfig textSettings = ConfigManager.get().getConfig().getTextComponentSettings();
 
         return switch (textSettings.getTextDeserializer().toLowerCase()) {

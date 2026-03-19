@@ -143,6 +143,7 @@ public class MessageCommand {
                                                         .replace("%receiver-suffix%", "");
                                             }
 
+                                            // TODO: Add support for Legacy formatting codes (https://github.com/szymon-off/vMessage/issues/17)
                                             sender.sendRichMessage(senderFormat);
                                             receiver.sendRichMessage(receiverFormat);
 
