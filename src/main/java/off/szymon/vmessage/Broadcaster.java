@@ -256,16 +256,15 @@ public class Broadcaster {
 
     private Component deserializeTextComponents(String input) {
         TextComponentConfig textSettings = ConfigManager.get().getConfig().getTextComponentSettings();
-        if (textSettings.getParseLegacyText()) {
-            input = MiniMessage.miniMessage().serialize(
-                    LegacyComponentSerializer.legacy(textSettings.getLegacyTextCharacter().charAt(0)
-                    ).deserialize(input));
-        }
-        if (textSettings.getParseMiniMessage()) {
-            return MiniMessage.miniMessage().deserialize(input);
-        } else {
-            return Component.text(input);
-        }
+
+        return switch (textSettings.getTextDeserializer().toLowerCase()) {
+            case "minimessage" -> MiniMessage.miniMessage().deserialize(input);
+            case "legacy" -> LegacyComponentSerializer.legacy(textSettings.getLegacyTextCharacter().charAt(0)).deserialize(input);
+            default -> {
+                VMessagePlugin.get().getLogger().warn("Invalid text deserializer specified in config: {}. Defaulting to plain text.", textSettings.getTextDeserializer());
+                yield Component.text(input);
+            }
+        };
     }
 
 }
