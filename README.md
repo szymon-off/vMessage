@@ -17,7 +17,7 @@
 ## Installing
 
 1. Place `vMessage.jar` into your Velocity `plugins` folder.
-2. Install the appropriate versions of [SignedVelocity](https://modrinth.com/plugin/signedvelocity) on your proxy and backends.
+2. Install the appropriate versions of [SignedVelocity](https://modrinth.com/plugin/signedvelocity) on your proxy AND backends.
 3. Start or restart your Velocity proxy.
 4. Edit the generated configuration file (`plugins/vMessage/config.yml`) to suit your preferences.
 
