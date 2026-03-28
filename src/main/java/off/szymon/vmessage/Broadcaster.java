@@ -257,14 +257,21 @@ public class Broadcaster {
     public Component deserializeTextComponents(String input) {
         TextComponentConfig textSettings = ConfigManager.get().getConfig().getTextComponentSettings();
 
-        return switch (textSettings.getTextDeserializer().toLowerCase()) {
-            case "minimessage" -> MiniMessage.miniMessage().deserialize(input);
-            case "legacy" -> LegacyComponentSerializer.legacy(textSettings.getLegacyTextCharacter().charAt(0)).deserialize(input);
-            default -> {
-                VMessagePlugin.get().getLogger().warn("Invalid text deserializer specified in config: {}. Defaulting to plain text.", textSettings.getTextDeserializer());
-                yield Component.text(input);
-            }
-        };
+        try {
+            return switch (textSettings.getTextDeserializer().toLowerCase()) {
+                case "minimessage" -> MiniMessage.miniMessage().deserialize(input);
+                case "legacy" -> LegacyComponentSerializer.legacy(textSettings.getLegacyTextCharacter().charAt(0)).deserialize(input);
+                default -> {
+                    VMessagePlugin.get().getLogger().warn("Invalid text deserializer specified in config: {}. Defaulting to plain text.", textSettings.getTextDeserializer());
+                    yield Component.text(input);
+                }
+            };
+        } catch (Exception e) {
+            VMessagePlugin.get().getLogger().error("Error while deserializing text component: {}. Input: {}", e.getMessage(), input);
+            e.printStackTrace();
+            return Component.text(input);
+        }
+
     }
 
 }

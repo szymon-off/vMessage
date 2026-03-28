@@ -33,7 +33,7 @@ class MainConfig {
 
 @ConfigSerializable
 class TextComponentConfig {
-    @Comment("The text deserializer to use for parsing player messages and broadcast messages from the console\nRecommended to use 'minimessage' as it is the most modern and advanced solution\nTry out MiniMessage here: https://webui.advntr.dev\nIf you want to use legacy text formatting (e.g. &c for red), set this to 'legacy'")
+    @Comment("The text deserializer to use for parsing player messages and broadcast messages from the console\nRecommended to use 'minimessage' as it is the most modern and advanced solution\nTry out MiniMessage here: https://webui.advntr.dev\nIf you want to use legacy text formatting (e.g. &c for red), set this to 'legacy'. Keep in mind that this is not fully supported and may cause issues with certain features")
     var textDeserializer = "minimessage"
     @Comment("The character used for legacy text formatting (e.g. &c for red)\nThis is only used if text-deserializer is set to 'legacy' above\nWARNING: Do not set this to '&' if you want to use custom LuckPerms meta placeholders as they also use the '&' character (e.g. &custom_name&)")
     var legacyTextCharacter = LegacyComponentSerializer.SECTION_CHAR.toString()
