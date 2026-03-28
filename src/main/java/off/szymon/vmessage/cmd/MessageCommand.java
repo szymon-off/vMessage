@@ -20,6 +20,7 @@ import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import off.szymon.vmessage.Broadcaster;
 import off.szymon.vmessage.VMessagePlugin;
 import off.szymon.vmessage.compatibility.LuckPermsCompatibilityProvider;
 import off.szymon.vmessage.config.ConfigManager;
@@ -143,9 +144,9 @@ public class MessageCommand {
                                                         .replace("%receiver-suffix%", "");
                                             }
 
-                                            // TODO: Add support for Legacy formatting codes (https://github.com/szymon-off/vMessage/issues/17)
-                                            sender.sendRichMessage(senderFormat);
-                                            receiver.sendRichMessage(receiverFormat);
+                                            Broadcaster bcaster = VMessagePlugin.get().getBroadcaster();
+                                            sender.sendMessage(bcaster.deserializeTextComponents(senderFormat));
+                                            receiver.sendMessage(bcaster.deserializeTextComponents(receiverFormat));
 
                                             if (senderPlayer != null) {
                                                 ReplyCommand.messageSent(senderPlayer.getUniqueId(), receiver.getUniqueId());

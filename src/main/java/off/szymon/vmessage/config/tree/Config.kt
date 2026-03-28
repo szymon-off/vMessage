@@ -52,7 +52,7 @@ class MessagesConfig {
 class ChatConfig {
     var enabled = true
     @Comment("%player% - Player\n%message% - Message\n%server% - Player's Current Server\n%prefix% - LuckPerms Prefix\n%suffix% - LuckPerms Suffix")
-    var format = "%prefix% <b>%player%:</b> %message%"
+    var format = "%prefix%<b>%player%:</b> %message%"
     @Comment("Whether to allow players to use MiniMessage in their messages")
     var allowMiniMessage = false
     @Comment("The message to send when a muted player tries to send a message\n%player% - Player\n%message% - Message\n%server% - Player's Current Server\n%prefix% - LuckPerms Prefix\n%suffix% - LuckPerms Suffix\n%reason% - Reason for muting\n%end-date% - End date of the mute\n%moderator% - Moderator who muted the player")
