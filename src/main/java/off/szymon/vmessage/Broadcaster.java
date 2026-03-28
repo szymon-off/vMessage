@@ -259,7 +259,12 @@ public class Broadcaster {
 
         try {
             return switch (textSettings.getTextDeserializer().toLowerCase()) {
-                case "minimessage" -> MiniMessage.miniMessage().deserialize(input);
+                case "minimessage" -> {
+                    if (input.contains("§")) {
+                        VMessagePlugin.get().getLogger().warn("Input message might contain legacy color codes. If any issues occur here, remove color codes from the message or change the text deserializer to 'legacy' in the config.");
+                    }
+                    yield MiniMessage.miniMessage().deserialize(input);
+                }
                 case "legacy" -> LegacyComponentSerializer.legacy(textSettings.getLegacyTextCharacter().charAt(0)).deserialize(input);
                 default -> {
                     VMessagePlugin.get().getLogger().warn("Invalid text deserializer specified in config: {}. Defaulting to plain text.", textSettings.getTextDeserializer());
@@ -267,8 +272,7 @@ public class Broadcaster {
                 }
             };
         } catch (Exception e) {
-            VMessagePlugin.get().getLogger().error("Error while deserializing text component: {}. Input: {}", e.getMessage(), input);
-            e.printStackTrace();
+            VMessagePlugin.get().getLogger().error("Error while deserializing text component: {}. \nDefaulting to plain text.", e.getMessage());
             return Component.text(input);
         }
 
