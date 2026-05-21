@@ -85,7 +85,6 @@ public class VMessagePlugin {
         this.dataFolder = new File(dataFolder.toFile().getParentFile(), this.getClass().getAnnotation(Plugin.class).name());
         this.plugin = plugin;
         this.metricsFactory = metricsFactory;
-
         this.name = this.getClass().getAnnotation(Plugin.class).name();
     }
 
