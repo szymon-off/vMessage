@@ -30,6 +30,8 @@ public class Listener {
 
     @Subscribe
     private void onMessageSend(PlayerChatEvent e) {
+        if (!ConfigManager.get().getConfig().getMessages().getChat().getEnabled()) return;
+
         //noinspection deprecation - SignedVelocity is installed
         e.setResult(PlayerChatEvent.ChatResult.denied());
 

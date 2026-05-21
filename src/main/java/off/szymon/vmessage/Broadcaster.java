@@ -45,8 +45,6 @@ public class Broadcaster {
     }
 
     public void message(Player player, String message) {
-        if (!ConfigManager.get().getConfig().getMessages().getChat().getEnabled()) return;
-
         String msg = ConfigManager.get().getConfig().getMessages().getChat().getFormat();
 
         //noinspection OptionalGetWithoutIsPresent
