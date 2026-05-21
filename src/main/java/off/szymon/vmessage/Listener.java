@@ -36,7 +36,6 @@ public class Listener {
         e.setResult(PlayerChatEvent.ChatResult.denied());
 
         Player player = e.getPlayer();
-
         MutePluginCompatibilityProvider mpcp = VMessagePlugin.get().getMutePluginCompatibilityProvider();
 
         mpcp.isMuted(player).thenAcceptAsync(isMuted -> {
