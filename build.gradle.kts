@@ -73,22 +73,22 @@ dependencies {
 /* Generate Version.java */
 
 val generateVersion by tasks.registering {
-    val outputDir = layout.buildDirectory.dir("generated/source/version/java")
+    val outputDir = layout.buildDirectory.dir("generated/source/version/kotlin")
 
     outputs.dir(outputDir)
 
     doLast {
         val versionFile = outputDir.get()
-            .file("off/szymon/vmessage/generated/Version.java")
+            .file("off/szymon/vmessage/generated/Version.kt")
             .asFile
 
         versionFile.parentFile.mkdirs()
         versionFile.writeText(
             """
-            package off.szymon.vmessage.generated;
+            package off.szymon.vmessage.generated
 
-            public final class Version {
-                public static final String VERSION = "$version";
+            object Version {
+                const val VERSION: String = "$version"
             }
             """.trimIndent()
         )

@@ -34,7 +34,7 @@ public class VMessageCommand {
                             ctx.getSource().sendMessage(MiniMessage.miniMessage().deserialize("""
                         <#00ffff>vMessage</#00ffff> by <#00ffff>%s</#00ffff>
                         Version: <#00ffff>%s</#00ffff>"""
-                                    .formatted(String.join(",",VMessagePlugin.get().getPlugin().getDescription().getAuthors()),VMessagePlugin.get().getPlugin().getDescription().getVersion().get())));
+                                    .formatted(String.join(",", VMessagePlugin.get().getPlugin().getDescription().getAuthors()), VMessagePlugin.get().getPlugin().getDescription().getVersion().get())));
                             return 1;
                         })
 
