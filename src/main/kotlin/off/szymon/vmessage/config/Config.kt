@@ -23,8 +23,8 @@ import kotlin.jvm.java
 class Config : FishySerializedConfigurateFile<YamlConfigurationLoader, CommentedConfigurationNode, YamlConfigurationLoader.Builder, MainConfig> (
     "config.yml", VMessage.get().dataDir, YamlConfigurationLoader.Builder::class.java, MainConfig::class.java,
     """
-        # vMessage Config
-        # Thanks for downloading my plugin! I hope you like it!
+        vMessage Config
+        Thanks for downloading my plugin! I hope you like it!
     """.trimIndent()
 ) {
 
