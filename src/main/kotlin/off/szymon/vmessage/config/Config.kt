@@ -14,7 +14,7 @@ package off.szymon.vmessage.config
 
 import off.szymon.fishy.api.file.FishySerializedConfigurateFile
 import off.szymon.vmessage.VMessage
-import off.szymon.old_java.config.tree.MainConfig
+import off.szymon.vmessage.config.tree.MainConfig
 import org.spongepowered.configurate.CommentedConfigurationNode
 import org.spongepowered.configurate.ConfigurationOptions
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader
@@ -42,8 +42,9 @@ class Config : FishySerializedConfigurateFile<YamlConfigurationLoader, Commented
         instance = this
     }
 
-//    override fun applyMoreAdditionalOptions(options: ConfigurationOptions): ConfigurationOptions {
-//        return options
-//    }
+    override fun applyMoreAdditionalOptions(options: ConfigurationOptions): ConfigurationOptions {
+        return options
+            .implicitInitialization(true)
+    }
 
 }

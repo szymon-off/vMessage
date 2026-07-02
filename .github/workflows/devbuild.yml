@@ -3,9 +3,7 @@ name: Publish Dev Build
 on:
   push:
     branches:
-      - "**"    # Any branch
-    tags-ignore:
-      - "v*"    # Skip real releases
+      - "develop"    # Any branch
     paths-ignore:
       - "README.md"
       - ".github/workflows/**"

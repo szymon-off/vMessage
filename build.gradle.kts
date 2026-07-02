@@ -129,7 +129,7 @@ tasks.build {
 /* Sources */
 sourceSets {
     main {
-//        java.srcDirs("src/main/java")
+        java.setSrcDirs(emptyList<String>()) // Force disable src/main/java because of old code. TODO: remove before release
         kotlin.srcDirs("src/main/kotlin")
         resources.srcDirs("src/main/resources")
     }
