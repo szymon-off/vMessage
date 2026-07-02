@@ -10,15 +10,15 @@
  * See the LICENSE file in the project root for details.
  */
 
-package off.szymon.vmessage;
+package off.szymon.old_java;
 
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import off.szymon.vmessage.compatibility.LuckPermsCompatibilityProvider;
-import off.szymon.vmessage.config.ConfigManager;
-import off.szymon.vmessage.config.tree.TextComponentConfig;
+import off.szymon.old_java.compatibility.LuckPermsCompatibilityProvider;
+import off.szymon.old_java.config.ConfigManager;
+import off.szymon.old_java.config.tree.TextComponentConfig;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 

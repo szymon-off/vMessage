@@ -12,7 +12,7 @@
 
 @file:Suppress("unused")
 
-package off.szymon.vmessage.config.tree
+package off.szymon.old_java.config.tree
 
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import org.spongepowered.configurate.objectmapping.ConfigSerializable

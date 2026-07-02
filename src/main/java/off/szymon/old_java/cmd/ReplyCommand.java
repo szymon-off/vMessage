@@ -1,6 +1,6 @@
 /*
  * vMessage
- * Copyright (c) 2025.
+ * Copyright (c) 2025-2026.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -10,7 +10,7 @@
  * See the LICENSE file in the project root for details.
  */
 
-package off.szymon.vmessage.cmd;
+package off.szymon.old_java.cmd;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -20,10 +20,10 @@ import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import off.szymon.vmessage.Broadcaster;
-import off.szymon.vmessage.VMessagePlugin;
-import off.szymon.vmessage.compatibility.LuckPermsCompatibilityProvider;
-import off.szymon.vmessage.config.ConfigManager;
+import off.szymon.old_java.Broadcaster;
+import off.szymon.old_java.VMessagePlugin;
+import off.szymon.old_java.compatibility.LuckPermsCompatibilityProvider;
+import off.szymon.old_java.config.ConfigManager;
 
 import java.util.HashMap;
 import java.util.Map;

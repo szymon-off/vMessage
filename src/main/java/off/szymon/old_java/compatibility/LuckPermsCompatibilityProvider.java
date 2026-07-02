@@ -1,6 +1,6 @@
 /*
  * vMessage
- * Copyright (c) 2025.
+ * Copyright (c) 2025-2026.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -10,7 +10,7 @@
  * See the LICENSE file in the project root for details.
  */
 
-package off.szymon.vmessage.compatibility;
+package off.szymon.old_java.compatibility;
 
 import com.velocitypowered.api.proxy.Player;
 import net.luckperms.api.LuckPerms;

@@ -1,0 +1,60 @@
+# vMessage Config
+# Thanks for downloading my plugin! I hope you like it!
+
+messages:
+  chat:
+    priority: 0 # TODO: check whether event has been cancelled according to this
+    enabled: true
+
+    # Available placeholders: $player$, $message$, $server$, $prefix$, $suffix$, (custom luckperms metas)
+    format: '%prefix% <b>%player%:</b> %message%'
+
+    # Whether to allow players to use MiniMessage in their messages
+    # This may break your formatting, so it is recommended to keep this disabled.
+    allow-mini-message: false
+
+    # PLACEHOLDER: MUTED SETTINGS
+  join:
+    enabled: true
+
+    # Available placeholders: $player$, $server$, $prefix$, $suffix$, (custom luckperms metas)
+    format: <dark_gray>(<green>+<dark_gray>) <gray>%player%
+  leave:
+    enabled: true
+
+    # Available placeholders: $player$, $server$, $prefix$, $suffix$, (custom luckperms metas)
+    format: <dark_gray>(<red>-<dark_gray>) <gray>%player%
+  change:
+    enabled: true
+
+    # $player$ - Player
+    # $old_server$ - Player's Previous Server
+    # $new_server$ - Player's New Server
+    # $prefix$ - LuckPerms Prefix
+    # $suffix$ - LuckPerms Suffix
+    format: <dark_gray>(<gold>•<dark_gray>) <gray>%player% <dark_gray>(<gold>%old_server%→%new_server%<dark_gray>)
+
+commands:
+  # TODO
+
+server-aliases:
+  lobby: Lobby
+  lobby1: Lobby
+  lobby2: Lobby
+
+# two types of integrations: "mute", "placeholder"
+integrations: # TODO: make integrations open class and extend
+  placeholder:
+    luckperms:
+      enabled: true
+      # You must predefine your custom metas here to use them in your messages.
+      custom-meta:
+        custom1: meta_key1 # Used as &custom1&
+        custom2: meta_key2 # Used as &custom2& etc.
+    placeholderapi: # via PAPIProxyBridge
+      enabled: true
+  mute: # Punishment plugin integration like LiteBans, LibertyBans
+    libertybans:
+      enabled: true
+    litebans: # experimental, not tested since I don't own a copy
+      enabled: true

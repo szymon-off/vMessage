@@ -1,0 +1,158 @@
+/*
+ * vMessage
+ * Copyright (c) 2026.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * See the LICENSE file in the project root for details.
+ */
+
+package off.szymon.vmessage.config.tree
+
+import org.spongepowered.configurate.objectmapping.ConfigSerializable
+import org.spongepowered.configurate.objectmapping.meta.Comment
+
+@ConfigSerializable
+class MainConfig {
+
+    var messages = MessagesConfig()
+    var commands = CommandsConfig()
+    var serverAliases = ServerAliasesConfig()
+    var integrations = IntegrationsConfig()
+
+}
+
+@ConfigSerializable
+class MessagesConfig {
+
+    var chat = ChatConfig()
+    var join = JoinConfig()
+    var leave = LeaveConfig()
+    var change = ChangeConfig()
+
+}
+
+@ConfigSerializable
+class ChatConfig {
+
+    var enabled = true
+    @Comment("") // TODO
+    var priority = 0 // TODO
+    @Comment($$"Available placeholders: $player$, $message$, $server$, $prefix$, $suffix$, (custom luckperms metas)")
+    var format = $$"$prefix$ <b>$player$:</b> $message$"
+    @Comment("Whether to allow players to use MiniMessage in their messages\nThis may break your formatting, so it is recommended to keep this disabled.")
+    var allowMiniMessage = false
+
+}
+
+@ConfigSerializable
+class JoinConfig {
+    var enabled = true
+    @Comment("") // TODO
+    var priority = 0 // TODO
+    @Comment($$"Available placeholders: $player$, $server$, $prefix$, $suffix$, (custom luckperms metas)")
+    var format = $$"<dark_gray>(<green>+<dark_gray>) <gray>$player$"
+}
+
+@ConfigSerializable
+class LeaveConfig {
+
+    var enabled = true
+    @Comment("") // TODO
+    var priority = 0 // TODO
+    @Comment($$"Available placeholders: $player$, $server$, $prefix$, $suffix$, (custom luckperms metas)")
+    var format = $$"<dark_gray>(<red>-<dark_gray>) <gray>$player$"
+
+}
+
+@ConfigSerializable
+class ChangeConfig {
+    var enabled = true
+    @Comment("") // TODO
+    var priority = 0 // TODO
+    @Comment($$"Available placeholders: $player$, $old_server$, $new_server$, $prefix$, $suffix$, (custom luckperms metas)")
+    var format = $$"<dark_gray>(<gold>•<dark_gray>) <gray>$player$ <dark_gray>(<gold>$old_server$→$new_server$<dark_gray>)"
+}
+
+@ConfigSerializable
+class CommandsConfig {
+    // TODO
+}
+
+@ConfigSerializable
+class ServerAliasesConfig {
+
+    var lobby = "Lobby"
+    var lobby1 = "Lobby"
+    var lobby2 = "Lobby"
+
+}
+
+@ConfigSerializable
+class IntegrationsConfig {
+
+    @Comment("Plugins providing placeholders for vMessage")
+    var placeholder = PlaceholderConfig()
+    @Comment("Punishment plugin integration like LiteBans, LibertyBans")
+    var mute = MuteConfig()
+
+}
+
+@ConfigSerializable
+class PlaceholderConfig {
+
+    var luckPerms = LuckPermsConfig()
+    @Comment("via PAPIProxyBridge")
+    var placeholderapi = PlaceholderApiConfig()
+
+}
+
+@ConfigSerializable
+class LuckPermsConfig {
+
+    var enabled = true
+    @Comment("You must predefine your custom metas here to use them in your formats.")
+    var customMeta = CustomMetaConfig()
+}
+
+@ConfigSerializable
+class CustomMetaConfig {
+
+    @Comment("Used as &custom1&")
+    var custom1 = "meta_key1"
+    @Comment("Used as &custom2& etc.")
+    var custom2 = "meta_key2"
+
+}
+
+@ConfigSerializable
+class PlaceholderApiConfig {
+
+    var enabled = true
+
+}
+
+@ConfigSerializable
+class MuteConfig {
+
+    var libertyBans = LibertyBansConfig()
+    var liteBans = LiteBansConfig()
+
+}
+
+@ConfigSerializable
+class LibertyBansConfig {
+
+    var enabled = true
+
+}
+
+@ConfigSerializable
+class LiteBansConfig {
+
+    var enabled = true
+
+}

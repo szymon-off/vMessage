@@ -10,7 +10,7 @@
  * See the LICENSE file in the project root for details.
  */
 
-package off.szymon.vmessage;
+package off.szymon.old_java;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -25,13 +25,13 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
-import off.szymon.vmessage.cmd.CommandHandler;
-import off.szymon.vmessage.compatibility.LuckPermsCompatibilityProvider;
-import off.szymon.vmessage.compatibility.mute.EmptyMuteCompatibilityProvider;
-import off.szymon.vmessage.compatibility.mute.LibertyBansCompatibilityProvider;
-import off.szymon.vmessage.compatibility.mute.LiteBansCompatibilityProvider;
-import off.szymon.vmessage.compatibility.mute.MutePluginCompatibilityProvider;
-import off.szymon.vmessage.config.ConfigManager;
+import off.szymon.old_java.cmd.CommandHandler;
+import off.szymon.old_java.compatibility.LuckPermsCompatibilityProvider;
+import off.szymon.old_java.compatibility.mute.EmptyMuteCompatibilityProvider;
+import off.szymon.old_java.compatibility.mute.LibertyBansCompatibilityProvider;
+import off.szymon.old_java.compatibility.mute.LiteBansCompatibilityProvider;
+import off.szymon.old_java.compatibility.mute.MutePluginCompatibilityProvider;
+import off.szymon.old_java.config.ConfigManager;
 import org.bstats.charts.AdvancedPie;
 import org.bstats.charts.SimplePie;
 import org.bstats.velocity.Metrics;
