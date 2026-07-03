@@ -24,7 +24,6 @@ package off.szymon.vmessage/*
 
 import com.google.inject.Inject
 import com.velocitypowered.api.event.Subscribe
-import com.velocitypowered.api.event.player.PlayerChatEvent
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent
 import com.velocitypowered.api.plugin.Dependency
 import com.velocitypowered.api.plugin.Plugin
@@ -34,6 +33,7 @@ import com.velocitypowered.api.proxy.ProxyServer
 import off.szymon.fishy.api.FishyAPI
 import off.szymon.vmessage.config.Config
 import off.szymon.vmessage.generated.Version
+import off.szymon.vmessage.messages.HandlerManager
 import org.bstats.velocity.Metrics
 import org.slf4j.Logger
 import java.nio.file.Path
@@ -84,6 +84,7 @@ class VMessage @Inject constructor(
 
     fun initialize() {
         Config()
+        HandlerManager()
     }
 
 }
