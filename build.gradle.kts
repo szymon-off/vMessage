@@ -32,26 +32,13 @@ repositories {
     maven("https://jitpack.io/")
 //    maven("https://mvn-repo.arim.space/lesser-gpl3/")
 //    maven("https://mvn-repo.arim.space/gpl3/")
-//    maven("https://mvn-repo.arim.space/affero-gpl3/")
+    maven("https://mvn-repo.arim.space/affero-gpl3/")
+    maven("https://repo.william278.net/releases/")
     maven("https://repo.szymonoff.me/repository/maven-dependencies/")
     maven("https://repo.szymonoff.me/repository/maven-releases/")
 }
 
 dependencies {
-//    /* Configurate */
-//    /*
-//    - The 4.2.0+YAML_COMMENTS version is a custom build that includes YAML comments support.
-//    - It is hosted in my personal Maven repository at https://repo.szymonoff.me/repository/fishy-dependencies/
-//    - It is based on this PR: https://github.com/SpongePowered/Configurate/pull/410 by @Tim203
-//     */
-//    implementation("org.spongepowered:configurate-core:4.2.0+YAML_COMMENTS")
-//    implementation("org.spongepowered:configurate-yaml:4.2.0+YAML_COMMENTS") {
-//        exclude(group = "org.spongepowered", module = "configurate-core")
-//    }
-//    implementation("org.spongepowered:configurate-extra-kotlin:4.2.0+YAML_COMMENTS") {
-//        exclude(group = "org.spongepowered", module = "configurate-core")
-//    }
-
     /* Fishy API */
     implementation("off.szymon:fishy-api:0.8.1")
 
@@ -65,19 +52,21 @@ dependencies {
         exclude(group = "org.spongepowered", module = "configurate-yaml")
     }
 
-    /* Plugin Compatibility APIs */
-    // LuckPerms
+    /* Plugin Integration APIs */
+    // Placeholder Plugins
     compileOnly("net.luckperms:api:5.4")
+    compileOnly("net.william278:papiproxybridge:1.8")
     // Mute Plugins
-//    compileOnly("space.arim.libertybans:bans-api:1.1.0")
+    compileOnly("space.arim.libertybans:bans-api:1.1.0")
     compileOnly("com.gitlab.ruany:LiteBansAPI:0.6.1")
 
     /* Usage Statistics */
     implementation("org.bstats:bstats-velocity:3.1.0")
 }
 
-/* Generate Version.java */
+/* Generate Version.kt: build/generated/source/version/kotlin/off/szymon/vmessage/generated/Version.kt -> Treated as a source */
 val generateVersion by tasks.registering {
+    description = "Generates a Version.kt file containing the plugin version."
     val outputDir = layout.buildDirectory.dir("generated/source/version/kotlin")
 
     outputs.dir(outputDir)

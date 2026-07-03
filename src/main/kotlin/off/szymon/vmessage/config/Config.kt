@@ -29,13 +29,11 @@ class Config : FishySerializedConfigurateFile<YamlConfigurationLoader, Commented
 ) {
 
     companion object {
-
         @JvmStatic
         private lateinit var instance: Config
 
         @JvmStatic
         fun get(): Config = instance
-
     }
 
     init {

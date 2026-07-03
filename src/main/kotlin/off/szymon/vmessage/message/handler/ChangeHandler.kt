@@ -10,8 +10,10 @@
  * See the LICENSE file in the project root for details.
  */
 
-package off.szymon.vmessage.messages
+package off.szymon.vmessage.message.handler
 
-abstract class MessagesHandler(val id: String) {
+import off.szymon.vmessage.message.MessagesHandler
+
+class ChangeHandler : MessagesHandler("change") {
 
 }

@@ -10,9 +10,9 @@
  * See the LICENSE file in the project root for details.
  */
 
-package off.szymon.vmessage.messages.handler
+package off.szymon.vmessage.message
 
-import off.szymon.vmessage.messages.MessagesHandler
+import net.kyori.adventure.text.Component
+import off.szymon.fishy.api.messenger.FishyMessenger
 
-class JoinHandler : MessagesHandler("join") {
-}
+abstract class MessagesHandler(val id: String) : FishyMessenger(Component.empty())

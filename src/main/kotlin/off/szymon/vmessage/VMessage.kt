@@ -33,7 +33,7 @@ import com.velocitypowered.api.proxy.ProxyServer
 import off.szymon.fishy.api.FishyAPI
 import off.szymon.vmessage.config.Config
 import off.szymon.vmessage.generated.Version
-import off.szymon.vmessage.messages.HandlerManager
+import off.szymon.vmessage.message.HandlerManager
 import org.bstats.velocity.Metrics
 import org.slf4j.Logger
 import java.nio.file.Path
@@ -61,13 +61,11 @@ class VMessage @Inject constructor(
 ) {
 
     companion object {
-
         @JvmStatic
         private lateinit var instance: VMessage
 
         @JvmStatic
         fun get(): VMessage = instance
-
     }
 
     init {
@@ -78,11 +76,11 @@ class VMessage @Inject constructor(
     fun onProxyInitialization(event: ProxyInitializeEvent) {
         logger.info("Initializing vMessage v${Version.VERSION} by SzymON/OFF")
         logger.info("Powered by: FishyAPI v${FishyAPI.VERSION} by SzymON/OFF")
-        initialize()
+        initializeVMessage()
         logger.info("Initialization complete! Ready to serve chat messages!")
     }
 
-    fun initialize() {
+    fun initializeVMessage() {
         Config()
         HandlerManager()
     }

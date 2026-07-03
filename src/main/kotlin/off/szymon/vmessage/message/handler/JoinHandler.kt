@@ -10,10 +10,9 @@
  * See the LICENSE file in the project root for details.
  */
 
-package off.szymon.vmessage.messages.handler
+package off.szymon.vmessage.message.handler
 
-import off.szymon.vmessage.messages.MessagesHandler
+import off.szymon.vmessage.message.MessagesHandler
 
-class ChangeHandler : MessagesHandler("change") {
-
+class JoinHandler : MessagesHandler("join") {
 }

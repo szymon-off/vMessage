@@ -10,14 +10,14 @@
  * See the LICENSE file in the project root for details.
  */
 
-package off.szymon.vmessage.messages
+package off.szymon.vmessage.message
 
 import off.szymon.vmessage.VMessage
 import off.szymon.vmessage.config.Config
-import off.szymon.vmessage.messages.handler.ChangeHandler
-import off.szymon.vmessage.messages.handler.ChatHandler
-import off.szymon.vmessage.messages.handler.JoinHandler
-import off.szymon.vmessage.messages.handler.LeaveHandler
+import off.szymon.vmessage.message.handler.ChangeHandler
+import off.szymon.vmessage.message.handler.ChatHandler
+import off.szymon.vmessage.message.handler.JoinHandler
+import off.szymon.vmessage.message.handler.LeaveHandler
 
 class HandlerManager {
 
@@ -25,20 +25,16 @@ class HandlerManager {
     val vMessage = VMessage.get()
 
     companion object {
-
         @JvmStatic
         private lateinit var instance: HandlerManager
 
         @JvmStatic
         fun get(): HandlerManager = instance
-
     }
 
     init {
-
         instance = this
         loadHandlers()
-
     }
 
     fun loadHandlers() {
