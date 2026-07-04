@@ -12,8 +12,30 @@
 
 package off.szymon.vmessage.message.handler
 
+import com.velocitypowered.api.event.Subscribe
+import com.velocitypowered.api.event.player.ServerPostConnectEvent
+import off.szymon.fishy.api.messenger.parser.PlaceholderParser
+import off.szymon.vmessage.VMessage
+import off.szymon.vmessage.config.Config
 import off.szymon.vmessage.message.MessagesHandler
+import kotlin.jvm.optionals.getOrNull
 
 class ChangeHandler : MessagesHandler("change") {
+
+    @Subscribe
+    fun onJoin(event: ServerPostConnectEvent) {
+        if (event.previousServer != null) {
+            val format = Config.get().tree.messages.change.format
+            sendMessage(VMessage.get().server, format, PlaceholderParser(getPlaceholders(event))) // TODO + integration placeholders
+        } // else it's a join
+    }
+
+    fun getPlaceholders(event: ServerPostConnectEvent): Map<String, String> {
+        val placeholders = mutableMapOf<String, String>()
+        placeholders[$$"$player$"] = event.player.username
+        placeholders[$$"$old_server$"] = event.previousServer?.serverInfo?.name ?: "Unknown" // TODO configurable default value
+        placeholders[$$"$new_server$"] = event.player.currentServer.getOrNull()?.serverInfo?.name ?: "Unknown" // TODO configurable default value
+        return placeholders.toMap()
+    }
 
 }
