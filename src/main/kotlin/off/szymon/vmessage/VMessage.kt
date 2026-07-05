@@ -73,6 +73,7 @@ class VMessage @Inject constructor(
         instance = this
     }
 
+    // TODO update checker
     @Subscribe
     fun onProxyInitialization(event: ProxyInitializeEvent) {
         val description = plugin.description

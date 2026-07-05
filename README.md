@@ -1,6 +1,6 @@
 # vMessage
 
-TODO: Ai transparency
+TODO: Ai transparency, recommended velocity 3.4.0+
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/szymon-off/vMessage) ![Modrinth Downloads](https://img.shields.io/modrinth/dt/ZIxTT2xI?logo=modrinth&color=%2300AF5C) ![GitHub issues](https://img.shields.io/github/issues/szymon-off/vMessage) ![GitHub](https://img.shields.io/github/license/szymon-off/vMessage) ![GitHub last commit](https://img.shields.io/github/last-commit/szymon-off/vMessage)
 

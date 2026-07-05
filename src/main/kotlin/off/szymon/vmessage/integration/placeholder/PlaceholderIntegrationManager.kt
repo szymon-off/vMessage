@@ -12,6 +12,7 @@
 
 package off.szymon.vmessage.integration.placeholder
 
+import off.szymon.fishy.api.messenger.parser.MultiParser
 import off.szymon.vmessage.VMessage
 import off.szymon.vmessage.config.Config
 import off.szymon.vmessage.integration.IntegrationManager
@@ -69,6 +70,10 @@ class PlaceholderIntegrationManager : IntegrationManager<PlaceholderIntegration>
     override fun <I : PlaceholderIntegration> getIntegration(clazz: Class<I>): I? {
         val handler: PlaceholderIntegration = integrations[clazz] ?: return null
         return handler as? I
+    }
+
+    fun getMultiParser(): MultiParser {
+        return MultiParser(integrations.values)
     }
 
 }
