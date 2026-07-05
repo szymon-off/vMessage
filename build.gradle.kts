@@ -34,7 +34,7 @@ repositories {
 //    maven("https://mvn-repo.arim.space/gpl3/")
     maven("https://mvn-repo.arim.space/affero-gpl3/")
     maven("https://repo.william278.net/releases/")
-    maven("https://repo.szymonoff.me/repository/maven-dependencies/")
+//    maven("https://repo.szymonoff.me/repository/maven-dependencies/")
     maven("https://repo.szymonoff.me/repository/maven-releases/")
 }
 
