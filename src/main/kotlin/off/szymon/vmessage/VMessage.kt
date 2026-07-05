@@ -33,6 +33,7 @@ import com.velocitypowered.api.proxy.ProxyServer
 import off.szymon.fishy.api.FishyAPI
 import off.szymon.vmessage.config.Config
 import off.szymon.vmessage.generated.Version
+import off.szymon.vmessage.integration.placeholder.PlaceholderIntegrationManager
 import off.szymon.vmessage.message.HandlerManager
 import org.bstats.velocity.Metrics
 import org.slf4j.Logger
@@ -43,7 +44,7 @@ import java.nio.file.Path
     name = "vMessage",
     description = "vMessage is the best Velocity plugin for synchronizing chat and player events across your entire proxy network",
     version = Version.VERSION, // Your IDE may show an error here, but it will compile fine. This is generated during build. Run the generateVersion task if needed.
-    authors = ["SzymON_OFF"],
+    authors = ["SzymON/OFF"],
     url = "https://szymonoff.me/projects/vmessage.html",
     dependencies = [
         Dependency(id = "signedvelocity", optional = true),
@@ -57,7 +58,7 @@ class VMessage @Inject constructor(
     val logger: Logger,
     @param:DataDirectory val dataDir: Path,
     val plugin: PluginContainer,
-    val metricsFactory: Metrics.Factory
+    val metricsFactory: Metrics.Factory // TODO
 ) {
 
     companion object {
@@ -74,7 +75,8 @@ class VMessage @Inject constructor(
 
     @Subscribe
     fun onProxyInitialization(event: ProxyInitializeEvent) {
-        logger.info("Initializing vMessage v${Version.VERSION} by SzymON/OFF")
+        val description = plugin.description
+        logger.info("Initializing ${description.name} v${description.version} by ${description.authors.joinToString(", ")}")
         logger.info("Powered by: FishyAPI v${FishyAPI.VERSION} by SzymON/OFF")
         initializeVMessage()
         logger.info("Initialization complete! Ready to serve chat messages!")
@@ -82,6 +84,7 @@ class VMessage @Inject constructor(
 
     fun initializeVMessage() {
         Config()
+        PlaceholderIntegrationManager()
         HandlerManager()
     }
 
