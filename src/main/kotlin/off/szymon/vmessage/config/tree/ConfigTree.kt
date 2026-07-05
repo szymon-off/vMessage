@@ -20,7 +20,6 @@ class MainConfig {
 
     var messages = MessagesConfig()
     var commands = CommandsConfig()
-    var serverAliases = ServerAliasesConfig()
     var integrations = IntegrationsConfig()
 
 }
@@ -83,15 +82,6 @@ class CommandsConfig {
 }
 
 @ConfigSerializable
-class ServerAliasesConfig {
-
-    var lobby = "Lobby"
-    var lobby1 = "Lobby"
-    var lobby2 = "Lobby"
-
-}
-
-@ConfigSerializable
 class IntegrationsConfig {
 
     @Comment("Plugins providing placeholders for vMessage")
@@ -104,9 +94,20 @@ class IntegrationsConfig {
 @ConfigSerializable
 class PlaceholderConfig {
 
+    @Comment("For technical reasons this is here even though it's not really an integration with another plugin.")
+    var serverAliases = ServerAliasesConfig()
     var luckPerms = LuckPermsConfig()
     @Comment("via PAPIProxyBridge")
     var placeholderapi = PlaceholderApiConfig()
+
+}
+
+@ConfigSerializable
+class ServerAliasesConfig {
+
+    var lobby = "Lobby"
+    var lobby1 = "Lobby"
+    var lobby2 = "Lobby"
 
 }
 

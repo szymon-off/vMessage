@@ -45,10 +45,9 @@ class HandlerManager {
     }
 
     fun unLoadHandlers() {
-        unloadHandler(ChatHandler::class.java)
-        unloadHandler(JoinHandler::class.java)
-        unloadHandler(LeaveHandler::class.java)
-        unloadHandler(ChangeHandler::class.java)
+        for (handlerClass in handlers.keys) {
+            unloadHandler(handlerClass)
+        }
     }
 
     fun reloadHandlers() {
