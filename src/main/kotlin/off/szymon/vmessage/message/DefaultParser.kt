@@ -14,6 +14,7 @@ package off.szymon.vmessage.message
 
 import net.kyori.adventure.audience.Audience
 import off.szymon.fishy.api.messenger.parser.MessageParser
+import off.szymon.vmessage.integration.placeholder.PlaceholderIntegrationManager
 
 class DefaultParser(val handlerPlaceholders: Map<String, String>) : MessageParser {
 
@@ -22,6 +23,7 @@ class DefaultParser(val handlerPlaceholders: Map<String, String>) : MessageParse
         handlerPlaceholders.forEach {
             output = output.replace(it.key, it.value)
         }
+        output = PlaceholderIntegrationManager.get().getMultiParser().parse(output, audience)
         return output
     }
 
