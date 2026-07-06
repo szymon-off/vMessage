@@ -47,10 +47,9 @@ import java.nio.file.Path
     authors = ["SzymON/OFF"],
     url = "https://szymonoff.me/projects/vmessage.html",
     dependencies = [
-        Dependency(id = "signedvelocity", optional = true),
+        Dependency(id = "signedvelocity", optional = true), // TODO WARNING WHEN NO SIGNED VELOCITY
         Dependency(id = "luckperms", optional = true),
-        Dependency(id = "libertybans", optional = true),
-        Dependency(id = "litebans", optional = true)
+        Dependency(id = "papiproxybridge", optional = true),
     ]
 )
 class VMessage @Inject constructor(
