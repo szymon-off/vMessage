@@ -13,14 +13,6 @@
 package off.szymon.vmessage.message
 
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.minimessage.MiniMessage
 import off.szymon.fishy.api.messenger.FishyMessenger
-import off.szymon.vmessage.VMessage
 
-abstract class MessagesHandler(val id: String) : FishyMessenger(Component.empty()) {
-
-    fun sendMessage(format: String, parser: DefaultParser) {
-        VMessage.get().server.sendMessage(MiniMessage.miniMessage().deserialize(parser.parse(format)))
-    }
-
-}
+abstract class MessagesHandler(val id: String) : FishyMessenger(Component.empty())

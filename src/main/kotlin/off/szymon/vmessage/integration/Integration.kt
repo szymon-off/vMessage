@@ -13,7 +13,6 @@
 package off.szymon.vmessage.integration
 
 import com.velocitypowered.api.proxy.Player
+import off.szymon.fishy.api.messenger.parser.MessageParser
 
-abstract class Integration(val id: String, val pluginId: String) {
-    abstract fun parse(string: String, player: Player): String
-}
+abstract class Integration(val id: String, val pluginId: String, val player: Player) : MessageParser
