@@ -44,14 +44,14 @@ class HandlerManager {
         loadHandlerIfEnabled("change", ChangeHandler::class.java)
     }
 
-    fun unLoadHandlers() {
+    fun unloadHandlers() {
         for (handlerClass in handlers.keys) {
             unloadHandler(handlerClass)
         }
     }
 
     fun reloadHandlers() {
-        unLoadHandlers()
+        unloadHandlers()
         loadHandlers()
     }
 

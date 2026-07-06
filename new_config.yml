@@ -3,17 +3,18 @@
 
 messages:
   chat:
-    priority: 0 # TODO: check whether event has been cancelled according to this
+    # This is to give way to other plugins that may want to handle chat messages before vMessage does.
+
+    # For example punishment plugins like LiteBans or LibertyBans may want to handle chat messages first.
+    event-order: LAST
     enabled: true
 
-    # Available placeholders: $player$, $message$, $server$, $prefix$, $suffix$, (custom luckperms metas)
+    # Available placeholders: $player$, $message$, $server$, $prefix$, $suffix$, (custom luckperms metas), (PlaceholderAPI placeholders)
     format: '%prefix% <b>%player%:</b> %message%'
 
     # Whether to allow players to use MiniMessage in their messages
     # This may break your formatting, so it is recommended to keep this disabled.
     allow-mini-message: false
-
-    # PLACEHOLDER: MUTED SETTINGS
   join:
     enabled: true
 
@@ -55,8 +56,3 @@ integrations:
       lobby: Lobby
       lobby1: Lobby
       lobby2: Lobby
-  mute: # Punishment plugin integration like LiteBans, LibertyBans
-    libertybans:
-      enabled: true
-    litebans: # experimental, not tested since I don't own a copy
-      enabled: true

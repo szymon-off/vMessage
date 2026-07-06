@@ -12,21 +12,68 @@
 
 package off.szymon.vmessage.integration
 
-interface IntegrationManager<T : Integration> {
+import com.velocitypowered.api.proxy.Player
+import off.szymon.fishy.api.messenger.parser.MultiParser
+import off.szymon.vmessage.VMessage
+import off.szymon.vmessage.config.Config
 
-    fun loadIntegrations()
+class IntegrationManager {
 
-    fun unloadIntegrations()
+    val vMessage = VMessage.get()
+    val config = Config.get()
 
-    fun reloadIntegrations() {
-        unloadIntegrations()
+    val integrations = mutableListOf<Class<out Integration>>()
+
+    companion object {
+        @JvmStatic
+        private lateinit var instance: IntegrationManager
+
+        @JvmStatic
+        fun get(): IntegrationManager = instance
+    }
+
+    init {
+        instance = this
         loadIntegrations()
     }
 
-    fun loadIntegrationIfEnabled(clazz: Class<out T>)
+    fun loadIntegrations() {
+        loadIntegrationIfEnabled(ServerAliasesIntegration::class.java)
+        loadIntegrationIfEnabled(LuckPermsIntegration::class.java)
+        loadIntegrationIfEnabled(PlaceholderApiIntegration::class.java)
+    }
 
-    fun unloadIntegration(clazz: Class<out T>)
+    fun unloadIntegrations() {
+        for (integrationClass in integrations) {
+            unloadIntegration(integrationClass)
+        }
+    }
 
-    fun <I : T> getIntegration(clazz: Class<I>): I?
+    fun loadIntegrationIfEnabled(clazz: Class<out Integration>) {
+        val integration = clazz.getDeclaredConstructor().newInstance()
+        val pluginEnabled = vMessage.server.pluginManager.isLoaded(integration.pluginId)
+        if (pluginEnabled && config.root.node("integrations","placeholder",integration.id,"enabled").getBoolean(true)) {
+            vMessage.logger.info("Loading '${integration.id}' integration...")
+            integrations.add(clazz)
+        } else {
+            vMessage.logger.info("Skipping '${integration.id}' integration...")
+        }
+    }
+
+    fun unloadIntegration(clazz: Class<out Integration>) {
+        val integration = clazz.getDeclaredConstructor().newInstance() ?: return
+        vMessage.logger.info("Unloading '${integration.id}' integration...")
+        integrations.remove(clazz)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    fun <I : Integration> getIntegration(clazz: Class<I>): I? {
+        val handler: Integration = clazz.getDeclaredConstructor().newInstance() ?: return null
+        return handler as? I
+    }
+
+    fun getMultiParser(player: Player): MultiParser {
+        return MultiParser(integrations.map { it.getDeclaredConstructor().newInstance(player) })
+    }
 
 }

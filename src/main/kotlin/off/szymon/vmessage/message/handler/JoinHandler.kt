@@ -24,10 +24,10 @@ class JoinHandler : MessagesHandler("join") {
 
     @Subscribe
     fun onJoin(event: ServerPostConnectEvent) {
-        if (event.previousServer == null) {
-            val format = Config.get().tree.messages.join.format
-            sendMessage(VMessage.get().server, format, DefaultParser(getPlaceholders(event)))
-        } // else it's a server change, not a join
+        if (event.previousServer != null) return // else it's a server change, not a join
+
+        val format = Config.get().tree.messages.join.format
+        sendMessage(VMessage.get().server, format, DefaultParser(getPlaceholders(event), event.player))
     }
 
     fun getPlaceholders(event: ServerPostConnectEvent): Map<String, String> {

@@ -10,31 +10,22 @@
  * See the LICENSE file in the project root for details.
  */
 
-package off.szymon.vmessage.integration.placeholder
+package off.szymon.vmessage.integration
 
+import com.velocitypowered.api.proxy.Player
 import net.kyori.adventure.audience.Audience
-import off.szymon.fishy.api.messenger.parser.PlaceholderParser
 import off.szymon.fishy.api.messenger.parser.PlaceholderParserBuilder
 import off.szymon.vmessage.config.Config
 
-class ServerAliasesIntegration : PlaceholderIntegration() {
+class ServerAliasesIntegration(player: Player) : Integration("server-aliases", "vmessage", player) {
 
-    override val id: String = "server-aliases"
-    override val pluginId: String = "vmessage"
-
-    lateinit var parser: PlaceholderParser
-
-    override fun onEnable() {
+    override fun parse(string: String, audience: Audience): String {
         val builder = PlaceholderParserBuilder()
         Config.get().root.node("integrations","placeholder",id,"aliases").childrenMap().forEach { (key, value) ->
             builder.addPlaceholder(key.toString(), value.toString())
         }
-        parser = builder.build()
-    }
-
-    override fun parse(string: String, audience: Audience): String {
+        val parser = builder.build()
         return parser.parse(string, audience)
     }
-
 
 }

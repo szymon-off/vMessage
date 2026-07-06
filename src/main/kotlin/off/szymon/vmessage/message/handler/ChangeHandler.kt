@@ -24,10 +24,10 @@ class ChangeHandler : MessagesHandler("change") {
 
     @Subscribe
     fun onJoin(event: ServerPostConnectEvent) {
-        if (event.previousServer != null) {
-            val format = Config.get().tree.messages.change.format
-            sendMessage(VMessage.get().server, format, DefaultParser(getPlaceholders(event)))
-        } // else it's a join
+        if (event.previousServer != null) return // else it's a join
+
+        val format = Config.get().tree.messages.change.format
+        sendMessage(VMessage.get().server, format, DefaultParser(getPlaceholders(event), event.player))
     }
 
     fun getPlaceholders(event: ServerPostConnectEvent): Map<String, String> {

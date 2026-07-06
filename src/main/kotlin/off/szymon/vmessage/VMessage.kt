@@ -33,7 +33,7 @@ import com.velocitypowered.api.proxy.ProxyServer
 import off.szymon.fishy.api.FishyAPI
 import off.szymon.vmessage.config.Config
 import off.szymon.vmessage.generated.Version
-import off.szymon.vmessage.integration.placeholder.PlaceholderIntegrationManager
+import off.szymon.vmessage.integration.IntegrationManager
 import off.szymon.vmessage.message.HandlerManager
 import org.bstats.velocity.Metrics
 import org.slf4j.Logger
@@ -85,7 +85,7 @@ class VMessage @Inject constructor(
 
     fun initializeVMessage() {
         Config()
-        PlaceholderIntegrationManager()
+        IntegrationManager()
         HandlerManager()
     }
 

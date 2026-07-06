@@ -30,9 +30,6 @@ repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://jitpack.io/")
-//    maven("https://mvn-repo.arim.space/lesser-gpl3/")
-//    maven("https://mvn-repo.arim.space/gpl3/")
-    maven("https://mvn-repo.arim.space/affero-gpl3/")
     maven("https://repo.william278.net/releases/")
 //    maven("https://repo.szymonoff.me/repository/maven-dependencies/")
     maven("https://repo.szymonoff.me/repository/maven-releases/")
@@ -54,11 +51,8 @@ dependencies {
 
     /* Plugin Integration APIs */
     // Placeholder Plugins
-    compileOnly("net.luckperms:api:5.4")
+    compileOnly("net.luckperms:api:5.5")
     compileOnly("net.william278:papiproxybridge:1.8")
-    // Mute Plugins
-    compileOnly("space.arim.libertybans:bans-api:1.1.0")
-    compileOnly("com.gitlab.ruany:LiteBansAPI:0.6.1")
 
     /* Usage Statistics */
     implementation("org.bstats:bstats-velocity:3.1.0")

@@ -20,7 +20,7 @@ class MainConfig {
 
     var messages = MessagesConfig()
     var commands = CommandsConfig()
-    var integrations = IntegrationsConfig()
+    var placeholders = PlaceholdersConfig()
 
 }
 
@@ -38,9 +38,11 @@ class MessagesConfig {
 class ChatConfig {
 
     var enabled = true
-    @Comment("") // TODO
-    var priority = 0 // TODO
-    @Comment($$"Available placeholders: $player$, $message$, $server$, $prefix$, $suffix$, (custom luckperms metas)")
+    @Comment("This is to give way to other plugins that may want to handle chat messages before vMessage does.\n" +
+            "For example punishment plugins like LiteBans or LibertyBans may want to prevent chat messages from being sent if sender is muted.\n" +
+            "Available options (in order): FIRST, EARLY, NORMAL, LATE, LAST")
+    var order = "LAST"
+    @Comment($$"Available placeholders: $player$, $message$, $server$, $prefix$, $suffix$, (custom luckperms metas), (PlaceholderAPI placeholders)")
     var format = $$"$prefix$ <b>$player$:</b> $message$"
     @Comment("Whether to allow players to use MiniMessage in their messages\nThis may break your formatting, so it is recommended to keep this disabled.")
     var allowMiniMessage = false
@@ -50,9 +52,7 @@ class ChatConfig {
 @ConfigSerializable
 class JoinConfig {
     var enabled = true
-    @Comment("") // TODO
-    var priority = 0 // TODO
-    @Comment($$"Available placeholders: $player$, $server$, $prefix$, $suffix$, (custom luckperms metas)")
+    @Comment($$"Available placeholders: $player$, $server$, $prefix$, $suffix$, (custom luckperms metas), (PlaceholderAPI placeholders)")
     var format = $$"<dark_gray>(<green>+<dark_gray>) <gray>$player$"
 }
 
@@ -60,9 +60,7 @@ class JoinConfig {
 class LeaveConfig {
 
     var enabled = true
-    @Comment("") // TODO
-    var priority = 0 // TODO
-    @Comment($$"Available placeholders: $player$, $server$, $prefix$, $suffix$, (custom luckperms metas)")
+    @Comment($$"Available placeholders: $player$, $server$, $prefix$, $suffix$, (custom luckperms metas), (PlaceholderAPI placeholders)")
     var format = $$"<dark_gray>(<red>-<dark_gray>) <gray>$player$"
 
 }
@@ -70,9 +68,7 @@ class LeaveConfig {
 @ConfigSerializable
 class ChangeConfig {
     var enabled = true
-    @Comment("") // TODO
-    var priority = 0 // TODO
-    @Comment($$"Available placeholders: $player$, $old_server$, $new_server$, $prefix$, $suffix$, (custom luckperms metas)")
+    @Comment($$"Available placeholders: $player$, $old_server$, $new_server$, $prefix$, $suffix$, (custom luckperms metas), (PlaceholderAPI placeholders)")
     var format = $$"<dark_gray>(<gold>•<dark_gray>) <gray>$player$ <dark_gray>(<gold>$old_server$→$new_server$<dark_gray>)"
 }
 
@@ -82,23 +78,13 @@ class CommandsConfig {
 }
 
 @ConfigSerializable
-class IntegrationsConfig {
-
-    @Comment("Plugins providing placeholders for vMessage")
-    var placeholder = PlaceholderConfig()
-    @Comment("Punishment plugin integration like LiteBans, LibertyBans")
-    var mute = MuteConfig()
-
-}
-
-@ConfigSerializable
-class PlaceholderConfig {
+class PlaceholdersConfig {
 
     @Comment("For technical reasons this is here even though it's not really an integration with another plugin.")
     var serverAliases = ServerAliasesConfig()
     var luckPerms = LuckPermsConfig()
     @Comment("via PAPIProxyBridge")
-    var placeholderapi = PlaceholderApiConfig()
+    var placeholderApi = PlaceholderApiConfig()
 
 }
 
@@ -131,28 +117,6 @@ class CustomMetaConfig {
 
 @ConfigSerializable
 class PlaceholderApiConfig {
-
-    var enabled = true
-
-}
-
-@ConfigSerializable
-class MuteConfig {
-
-    var libertyBans = LibertyBansConfig()
-    var liteBans = LiteBansConfig()
-
-}
-
-@ConfigSerializable
-class LibertyBansConfig {
-
-    var enabled = true
-
-}
-
-@ConfigSerializable
-class LiteBansConfig {
 
     var enabled = true
 

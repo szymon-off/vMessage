@@ -10,22 +10,19 @@
  * See the LICENSE file in the project root for details.
  */
 
-package off.szymon.vmessage.message
+package off.szymon.vmessage.integration
 
 import com.velocitypowered.api.proxy.Player
 import net.kyori.adventure.audience.Audience
-import off.szymon.fishy.api.messenger.parser.MessageParser
-import off.szymon.vmessage.integration.IntegrationManager
+import net.william278.papiproxybridge.api.PlaceholderAPI
 
-class DefaultParser(val handlerPlaceholders: Map<String, String>, val player: Player) : MessageParser {
+
+class PlaceholderApiIntegration(player: Player) : Integration("placeholder-api", "papiproxybridge", player) {
+
+    val api = PlaceholderAPI.createInstance()
 
     override fun parse(string: String, audience: Audience): String {
-        var output = string
-        handlerPlaceholders.forEach {
-            output = output.replace(it.key, it.value)
-        }
-        output = IntegrationManager.get().getMultiParser(player).parse(output, audience)
-        return output
+        return api.formatPlaceholders(string, player.uniqueId).join() // async this shit, cause this is ridiculous
     }
 
 }

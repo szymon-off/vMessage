@@ -25,7 +25,7 @@ class LeaveHandler : MessagesHandler("leave") {
     @Subscribe
     fun onLeave(event: DisconnectEvent) {
         val format = Config.get().tree.messages.leave.format
-        sendMessage(VMessage.get().server, format, DefaultParser(getPlaceholders(event)))
+        sendMessage(VMessage.get().server, format, DefaultParser(getPlaceholders(event), event.player))
     }
 
     fun getPlaceholders(event: DisconnectEvent): Map<String, String> {
