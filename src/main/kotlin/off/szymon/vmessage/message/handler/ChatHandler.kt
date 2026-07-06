@@ -41,7 +41,7 @@ class ChatHandler : MessagesHandler("chat") {
         // Cancel possible because of Signed Velocity Dependency
         event.result = PlayerChatEvent.ChatResult.denied()
         val format = Config.get().tree.messages.chat.format
-        sendMessage(VMessage.get().server, format, DefaultParser(getPlaceholders(event), event.player))
+        sendMessage(format, DefaultParser(getPlaceholders(event), event.player))
     }
 
     fun getPlaceholders(event: PlayerChatEvent): Map<String, String> {

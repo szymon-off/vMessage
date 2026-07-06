@@ -14,7 +14,6 @@ package off.szymon.vmessage.message.handler
 
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.player.ServerPostConnectEvent
-import off.szymon.vmessage.VMessage
 import off.szymon.vmessage.config.Config
 import off.szymon.vmessage.message.DefaultParser
 import off.szymon.vmessage.message.MessagesHandler
@@ -27,7 +26,7 @@ class ChangeHandler : MessagesHandler("change") {
         if (event.previousServer != null) return // else it's a join
 
         val format = Config.get().tree.messages.change.format
-        sendMessage(VMessage.get().server, format, DefaultParser(getPlaceholders(event), event.player))
+        sendMessage(format, DefaultParser(getPlaceholders(event), event.player))
     }
 
     fun getPlaceholders(event: ServerPostConnectEvent): Map<String, String> {

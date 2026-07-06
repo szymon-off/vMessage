@@ -18,12 +18,12 @@ import net.luckperms.api.LuckPermsProvider
 import off.szymon.fishy.api.messenger.parser.PlaceholderParserBuilder
 import off.szymon.vmessage.config.Config
 
-class LuckPermsIntegration(player: Player) : Integration("luck-perms", "luckperms", player) {
+class LuckPermsIntegration : Integration("luck-perms", "luckperms") {
 
     val api = LuckPermsProvider.get()
     val playerAdapter = api.getPlayerAdapter(Player::class.java)
 
-    override fun parse(string: String, audience: Audience): String {
+    override fun parse(string: String, player: Player): String {
         val metaData = playerAdapter.getMetaData(player)
 
         val builder = PlaceholderParserBuilder()
@@ -36,7 +36,7 @@ class LuckPermsIntegration(player: Player) : Integration("luck-perms", "luckperm
             builder.addPlaceholder("&$metaKey&", metaValue)
         }
 
-        return builder.build().parse(string, audience)
+        return builder.build().parse(string, Audience.empty())
     }
 
 }

@@ -57,7 +57,7 @@ class VMessage @Inject constructor(
     val logger: Logger,
     @param:DataDirectory val dataDir: Path,
     val plugin: PluginContainer,
-    val metricsFactory: Metrics.Factory // TODO
+    val metrics: Metrics.Factory // TODO
 ) {
 
     companion object {
@@ -74,7 +74,7 @@ class VMessage @Inject constructor(
 
     // TODO update checker
     @Subscribe
-    fun onProxyInitialization(event: ProxyInitializeEvent) {
+    fun onProxyInitialization(@Suppress("unused") event: ProxyInitializeEvent) {
         val description = plugin.description
         logger.info("Initializing ${description.name} v${description.version} by ${description.authors.joinToString(", ")}")
         logger.info("Powered by: FishyAPI v${FishyAPI.VERSION} by SzymON/OFF")

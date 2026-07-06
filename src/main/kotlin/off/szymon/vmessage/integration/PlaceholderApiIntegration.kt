@@ -13,15 +13,14 @@
 package off.szymon.vmessage.integration
 
 import com.velocitypowered.api.proxy.Player
-import net.kyori.adventure.audience.Audience
 import net.william278.papiproxybridge.api.PlaceholderAPI
 
 
-class PlaceholderApiIntegration(player: Player) : Integration("placeholder-api", "papiproxybridge", player) {
+class PlaceholderApiIntegration : Integration("placeholder-api", "papiproxybridge") {
 
     val api = PlaceholderAPI.createInstance()
 
-    override fun parse(string: String, audience: Audience): String {
+    override fun parse(string: String, player: Player): String {
         return api.formatPlaceholders(string, player.uniqueId).join() // async this shit, cause this is ridiculous
     }
 
