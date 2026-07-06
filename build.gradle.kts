@@ -37,7 +37,7 @@ repositories {
 
 dependencies {
     /* Fishy API */
-    implementation("off.szymon:fishy-api:0.9.0")
+    implementation("off.szymon:fishy-api:0.9.1")
 
     /* Velocity API */
     compileOnly("com.velocitypowered:velocity-api:3.4.0-SNAPSHOT") {

@@ -84,8 +84,8 @@ class VMessage @Inject constructor(
 
     fun initializeVMessage() {
         Config()
-        HandlerManager()
         IntegrationManager()
+        HandlerManager()
     }
 
 }
