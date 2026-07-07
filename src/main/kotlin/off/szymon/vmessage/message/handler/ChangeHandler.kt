@@ -34,17 +34,13 @@ class ChangeHandler : MessagesHandler("change") {
             sendMessage(
                 VMessage.get().server,
                 format,
-                DefaultParser(getPlaceholders(event), event.player)
+                DefaultParser(mapOf(
+                    $$"$player$" to event.player.username,
+                    $$"$old_server$" to serverAliases.getServerName(event.previousServer),
+                    $$"$new_server$" to serverAliases.getServerName(event.player.currentServer)
+                ), event.player)
             )
         }
-    }
-
-    fun getPlaceholders(event: ServerPostConnectEvent): Map<String, String> {
-        val placeholders = mutableMapOf<String, String>()
-        placeholders[$$"$player$"] = event.player.username
-        placeholders[$$"$old_server$"] = serverAliases.getServerName(event.previousServer)
-        placeholders[$$"$new_server$"] = serverAliases.getServerName(event.player.currentServer)
-        return placeholders.toMap()
     }
 
 }

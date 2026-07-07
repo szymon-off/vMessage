@@ -27,21 +27,18 @@ class LeaveHandler : MessagesHandler("leave") {
 
     @Subscribe
     fun onLeave(event: DisconnectEvent): EventTask {
+        @Suppress("DuplicatedCode")
         return EventTask.async {
             val format = Config.get().tree.messages.leave.format
             sendMessage(
                 VMessage.get().server,
                 format,
-                DefaultParser(getPlaceholders(event), event.player)
+                DefaultParser(mapOf(
+                    $$"$player$" to event.player.username,
+                    $$"$server$" to serverAliases.getServerName(event.player.currentServer)
+                ), event.player)
             )
         }
-    }
-
-    fun getPlaceholders(event: DisconnectEvent): Map<String, String> {
-        val placeholders = mutableMapOf<String, String>()
-        placeholders[$$"$player$"] = event.player.username
-        placeholders[$$"$server$"] = serverAliases.getServerName(event.player.currentServer)
-        return placeholders.toMap()
     }
 
 }

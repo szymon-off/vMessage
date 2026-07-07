@@ -29,21 +29,18 @@ class JoinHandler : MessagesHandler("join") {
     fun onJoin(event: ServerPostConnectEvent): EventTask? {
         if (event.previousServer != null) return null // else it's a server change, not a join
 
+        @Suppress("DuplicatedCode")
         return EventTask.async {
             val format = Config.get().tree.messages.join.format
             sendMessage(
                 VMessage.get().server,
                 format,
-                DefaultParser(getPlaceholders(event), event.player)
+                DefaultParser(mapOf(
+                    $$"$player$" to event.player.username,
+                    $$"$server$" to serverAliases.getServerName(event.player.currentServer)
+                ), event.player)
             )
         }
-    }
-
-    fun getPlaceholders(event: ServerPostConnectEvent): Map<String, String> {
-        val placeholders = mutableMapOf<String, String>()
-        placeholders[$$"$player$"] = event.player.username
-        placeholders[$$"$server$"] = serverAliases.getServerName(event.player.currentServer)
-        return placeholders.toMap()
     }
 
 }
