@@ -21,7 +21,7 @@ import off.szymon.vmessage.VMessage
 import off.szymon.vmessage.config.Config
 import off.szymon.vmessage.message.DefaultParser
 import off.szymon.vmessage.message.MessagesHandler
-import kotlin.jvm.optionals.getOrNull
+import off.szymon.vmessage.message.ServerAliasesHolder
 
 class ChatHandler : MessagesHandler("chat") {
 
@@ -51,7 +51,7 @@ class ChatHandler : MessagesHandler("chat") {
         val placeholders = mutableMapOf<String, String>()
         placeholders[$$"$player$"] = event.player.username
         placeholders[$$"$message$"] = if (Config.get().tree.messages.chat.allowMiniMessage) event.message else MiniMessage.miniMessage().escapeTags(event.message)
-        placeholders[$$"$server$"] = event.player.currentServer.getOrNull()?.serverInfo?.name ?: "Unknown" // TODO configurable default value
+        placeholders[$$"$server$"] = ServerAliasesHolder.getServerName(event.player.currentServer)
         return placeholders
     }
 

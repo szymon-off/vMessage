@@ -19,7 +19,7 @@ import off.szymon.vmessage.VMessage
 import off.szymon.vmessage.config.Config
 import off.szymon.vmessage.message.DefaultParser
 import off.szymon.vmessage.message.MessagesHandler
-import kotlin.jvm.optionals.getOrNull
+import off.szymon.vmessage.message.ServerAliasesHolder
 
 class LeaveHandler : MessagesHandler("leave") {
 
@@ -38,7 +38,7 @@ class LeaveHandler : MessagesHandler("leave") {
     fun getPlaceholders(event: DisconnectEvent): Map<String, String> {
         val placeholders = mutableMapOf<String, String>()
         placeholders[$$"$player$"] = event.player.username
-        placeholders[$$"$server$"] = event.player.currentServer.getOrNull()?.serverInfo?.name ?: "Unknown" // TODO configurable default value
+        placeholders[$$"$server$"] = ServerAliasesHolder.getServerName(event.player.currentServer)
         return placeholders.toMap()
     }
 

@@ -19,7 +19,7 @@ import off.szymon.vmessage.VMessage
 import off.szymon.vmessage.config.Config
 import off.szymon.vmessage.message.DefaultParser
 import off.szymon.vmessage.message.MessagesHandler
-import kotlin.jvm.optionals.getOrNull
+import off.szymon.vmessage.message.ServerAliasesHolder
 
 class ChangeHandler : MessagesHandler("change") {
 
@@ -40,8 +40,8 @@ class ChangeHandler : MessagesHandler("change") {
     fun getPlaceholders(event: ServerPostConnectEvent): Map<String, String> {
         val placeholders = mutableMapOf<String, String>()
         placeholders[$$"$player$"] = event.player.username
-        placeholders[$$"$old_server$"] = event.previousServer?.serverInfo?.name ?: "Unknown" // TODO configurable default value
-        placeholders[$$"$new_server$"] = event.player.currentServer.getOrNull()?.serverInfo?.name ?: "Unknown" // TODO configurable default value
+        placeholders[$$"$old_server$"] = ServerAliasesHolder.getServerName(event.previousServer)
+        placeholders[$$"$new_server$"] = ServerAliasesHolder.getServerName(event.player.currentServer)
         return placeholders.toMap()
     }
 

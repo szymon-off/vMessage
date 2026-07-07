@@ -39,7 +39,10 @@ messages:
 commands:
   # TODO
 
-
+server-aliases:
+  lobby: Lobby
+  lobby1: Lobby
+  lobby2: Lobby
 
 # two types of integrations: "mute", "placeholder"
 integrations:
@@ -52,8 +55,3 @@ integrations:
         custom2: meta_key2 # Used as &custom2& etc.
     placeholderapi: # via PAPIProxyBridge
       enabled: true
-    # For technical reasons this is here even though it's not really an integration with another plugin.
-    server-aliases:
-      lobby: Lobby
-      lobby1: Lobby
-      lobby2: Lobby

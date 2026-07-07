@@ -20,9 +20,12 @@ class MainConfig {
 
     var messages = MessagesConfig()
     var commands = CommandsConfig()
+    var serverAliases = ServerAliasesConfig()
     var placeholders = PlaceholdersConfig()
 
 }
+
+
 
 @ConfigSerializable
 class MessagesConfig {
@@ -78,17 +81,6 @@ class CommandsConfig {
 }
 
 @ConfigSerializable
-class PlaceholdersConfig {
-
-    @Comment("For technical reasons this is here even though it's not really an integration with another plugin.")
-    var serverAliases = ServerAliasesConfig()
-    var luckPerms = LuckPermsConfig()
-    @Comment("via PAPIProxyBridge")
-    var placeholderApi = PlaceholderApiConfig()
-
-}
-
-@ConfigSerializable
 class ServerAliasesConfig {
 
     var lobby = "Lobby"
@@ -96,6 +88,17 @@ class ServerAliasesConfig {
     var lobby2 = "Lobby"
 
 }
+
+@ConfigSerializable
+class PlaceholdersConfig {
+
+    var luckPerms = LuckPermsConfig()
+    @Comment("via PAPIProxyBridge")
+    var placeholderApi = PlaceholderApiConfig()
+
+}
+
+
 
 @ConfigSerializable
 class LuckPermsConfig {
@@ -119,5 +122,7 @@ class CustomMetaConfig {
 class PlaceholderApiConfig {
 
     var enabled = true
+    @Comment("The time in milliseconds to wait for PAPIProxyBridge to format the placeholders before sending the message.")
+    var timeout = 500
 
 }
