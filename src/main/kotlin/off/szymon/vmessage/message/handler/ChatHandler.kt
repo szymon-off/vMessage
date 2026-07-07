@@ -12,6 +12,7 @@
 
 package off.szymon.vmessage.message.handler
 
+import com.velocitypowered.api.event.EventTask
 import com.velocitypowered.api.event.PostOrder
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.player.PlayerChatEvent
@@ -24,24 +25,26 @@ import kotlin.jvm.optionals.getOrNull
 
 class ChatHandler : MessagesHandler("chat") {
 
-    var order: PostOrder
-
-    init {
-        try {
-            order = PostOrder.valueOf(Config.get().tree.messages.chat.order)
-        } catch (e: IllegalArgumentException) {
-            VMessage.get().logger.warn("${e.message}: Invalid order value in config for chat messages: ${Config.get().tree.messages.chat.order}. Defaulting to LAST.")
-            order = PostOrder.LAST
-        }
+    val order: PostOrder = try {
+        PostOrder.valueOf(Config.get().tree.messages.chat.order.uppercase())
+    } catch (e: IllegalArgumentException) {
+        VMessage.get().logger.warn("Invalid order value in config for chat messages: ${Config.get().tree.messages.chat.order}. Defaulting to LAST.")
+        PostOrder.LAST
     }
 
-    fun onChat(event: PlayerChatEvent) {
-        if (event.result == PlayerChatEvent.ChatResult.denied()) return
+    fun onChat(event: PlayerChatEvent): EventTask? {
+        // If other plugins cancelled (like LibertyBans or LiteBans if the player is muted)
+        if (!event.result.isAllowed) return null
 
-        // Cancel possible because of Signed Velocity Dependency
-        event.result = PlayerChatEvent.ChatResult.denied()
-        val format = Config.get().tree.messages.chat.format
-        sendMessage(VMessage.get().server, format, DefaultParser(getPlaceholders(event), event.player))
+        return EventTask.async {
+            val placeholders = getPlaceholders(event)
+            val msg = DefaultParser(placeholders, event.player).parse(Config.get().tree.messages.chat.format)
+            try {
+                event.result = PlayerChatEvent.ChatResult.message(msg) // Possible because of Signed Velocity Dependency
+            } catch (e: Exception) {
+                VMessage.get().logger.error("Failed to inject signed chat modifications. Is SignedVelocity missing?", e)
+            }
+        }
     }
 
     fun getPlaceholders(event: PlayerChatEvent): Map<String, String> {
@@ -49,34 +52,24 @@ class ChatHandler : MessagesHandler("chat") {
         placeholders[$$"$player$"] = event.player.username
         placeholders[$$"$message$"] = if (Config.get().tree.messages.chat.allowMiniMessage) event.message else MiniMessage.miniMessage().escapeTags(event.message)
         placeholders[$$"$server$"] = event.player.currentServer.getOrNull()?.serverInfo?.name ?: "Unknown" // TODO configurable default value
-        return placeholders.toMap()
+        return placeholders
     }
 
-    // I had to do it this way because annotation args must be "compile-time static"
+    // I had to do it this way because annotation args must be compile-time static
 
     @Subscribe(order = PostOrder.FIRST)
-    fun onChatFirst(event: PlayerChatEvent) {
-        if (order == PostOrder.FIRST) { onChat(event) }
-    }
+    fun onChatFirst(event: PlayerChatEvent): EventTask? = if (order == PostOrder.FIRST) onChat(event) else null
 
     @Subscribe(order = PostOrder.EARLY)
-    fun onChatEarly(event: PlayerChatEvent) {
-        if (order == PostOrder.EARLY) { onChat(event) }
-    }
+    fun onChatEarly(event: PlayerChatEvent): EventTask? = if (order == PostOrder.EARLY) onChat(event) else null
 
     @Subscribe(order = PostOrder.NORMAL)
-    fun onChatNormal(event: PlayerChatEvent) {
-        if (order == PostOrder.NORMAL) { onChat(event) }
-    }
+    fun onChatNormal(event: PlayerChatEvent): EventTask? = if (order == PostOrder.NORMAL) onChat(event) else null
 
     @Subscribe(order = PostOrder.LATE)
-    fun onChatLate(event: PlayerChatEvent) {
-        if (order == PostOrder.LATE) { onChat(event) }
-    }
+    fun onChatLate(event: PlayerChatEvent): EventTask? = if (order == PostOrder.LATE) onChat(event) else null
 
     @Subscribe(order = PostOrder.LAST)
-    fun onChatLast(event: PlayerChatEvent) {
-        if (order == PostOrder.LAST) { onChat(event) }
-    }
+    fun onChatLast(event: PlayerChatEvent): EventTask? = if (order == PostOrder.LAST) onChat(event) else null
 
 }

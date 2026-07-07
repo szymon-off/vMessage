@@ -57,7 +57,7 @@ class VMessage @Inject constructor(
     val logger: Logger,
     @param:DataDirectory val dataDir: Path,
     val plugin: PluginContainer,
-    val metricsFactory: Metrics.Factory // TODO
+    val metrics: Metrics.Factory // TODO
 ) {
 
     companion object {

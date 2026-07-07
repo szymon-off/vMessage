@@ -12,6 +12,7 @@
 
 package off.szymon.vmessage.message.handler
 
+import com.velocitypowered.api.event.EventTask
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.connection.DisconnectEvent
 import off.szymon.vmessage.VMessage
@@ -23,9 +24,15 @@ import kotlin.jvm.optionals.getOrNull
 class LeaveHandler : MessagesHandler("leave") {
 
     @Subscribe
-    fun onLeave(event: DisconnectEvent) {
-        val format = Config.get().tree.messages.leave.format
-        sendMessage(VMessage.get().server, format, DefaultParser(getPlaceholders(event), event.player))
+    fun onLeave(event: DisconnectEvent): EventTask {
+        return EventTask.async {
+            val format = Config.get().tree.messages.leave.format
+            sendMessage(
+                VMessage.get().server,
+                format,
+                DefaultParser(getPlaceholders(event), event.player)
+            )
+        }
     }
 
     fun getPlaceholders(event: DisconnectEvent): Map<String, String> {

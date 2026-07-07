@@ -13,19 +13,18 @@
 package off.szymon.vmessage.integration
 
 import com.velocitypowered.api.proxy.Player
-import net.kyori.adventure.audience.Audience
 import off.szymon.fishy.api.messenger.parser.PlaceholderParserBuilder
 import off.szymon.vmessage.config.Config
 
 class ServerAliasesIntegration(player: Player) : Integration("server-aliases", "vmessage", player) {
 
-    override fun parse(string: String, audience: Audience): String {
+    override fun parse(string: String): String {
         val builder = PlaceholderParserBuilder()
         Config.get().root.node("integrations","placeholder",id,"aliases").childrenMap().forEach { (key, value) ->
             builder.addPlaceholder(key.toString(), value.toString())
         }
         val parser = builder.build()
-        return parser.parse(string, audience)
+        return parser.parse(string)
     }
 
 }

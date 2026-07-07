@@ -12,6 +12,7 @@
 
 package off.szymon.vmessage.message.handler
 
+import com.velocitypowered.api.event.EventTask
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.player.ServerPostConnectEvent
 import off.szymon.vmessage.VMessage
@@ -23,11 +24,17 @@ import kotlin.jvm.optionals.getOrNull
 class JoinHandler : MessagesHandler("join") {
 
     @Subscribe
-    fun onJoin(event: ServerPostConnectEvent) {
-        if (event.previousServer != null) return // else it's a server change, not a join
+    fun onJoin(event: ServerPostConnectEvent): EventTask? {
+        if (event.previousServer != null) return null // else it's a server change, not a join
 
-        val format = Config.get().tree.messages.join.format
-        sendMessage(VMessage.get().server, format, DefaultParser(getPlaceholders(event), event.player))
+        return EventTask.async {
+            val format = Config.get().tree.messages.join.format
+            sendMessage(
+                VMessage.get().server,
+                format,
+                DefaultParser(getPlaceholders(event), event.player)
+            )
+        }
     }
 
     fun getPlaceholders(event: ServerPostConnectEvent): Map<String, String> {

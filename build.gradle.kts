@@ -31,13 +31,12 @@ repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://jitpack.io/")
     maven("https://repo.william278.net/releases/")
-//    maven("https://repo.szymonoff.me/repository/maven-dependencies/")
-    maven("https://repo.szymonoff.me/repository/maven-releases/")
+    maven("https://repo.szymonoff.me/repository/maven-public/")
 }
 
 dependencies {
     /* Fishy API */
-    implementation("off.szymon:fishy-api:0.9.1")
+    implementation("off.szymon:fishy-api:0.9.3")
 
     /* Velocity API */
     compileOnly("com.velocitypowered:velocity-api:3.4.0-SNAPSHOT") {
@@ -84,13 +83,6 @@ val generateVersion by tasks.registering {
 }
 
 
-sourceSets {
-    named("main") {
-        kotlin.srcDir(generateVersion.map { it.outputs.files.singleFile })
-    }
-}
-
-
 tasks.compileJava {
     dependsOn(generateVersion)
 }
@@ -112,8 +104,9 @@ tasks.build {
 /* Sources */
 sourceSets {
     main {
-        java.setSrcDirs(emptyList<String>()) // Force disable src/main/java because of old code. TODO: remove before release
-        kotlin.srcDirs("src/main/kotlin")
-        resources.srcDirs("src/main/resources")
+        java.setSrcDirs(emptyList<String>()) // Disables src/main/java
+        kotlin.srcDir("src/main/kotlin")
+        kotlin.srcDir(generateVersion.map { it.outputs.files.singleFile })
+        resources.srcDir("src/main/resources")
     }
 }

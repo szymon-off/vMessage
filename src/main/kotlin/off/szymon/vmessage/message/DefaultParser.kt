@@ -13,19 +13,20 @@
 package off.szymon.vmessage.message
 
 import com.velocitypowered.api.proxy.Player
-import net.kyori.adventure.audience.Audience
 import off.szymon.fishy.api.messenger.parser.MessageParser
 import off.szymon.vmessage.integration.IntegrationManager
 
 class DefaultParser(val handlerPlaceholders: Map<String, String>, val player: Player) : MessageParser {
 
-    override fun parse(string: String, audience: Audience): String {
+    override fun parse(string: String): String {
         var output = string
+
         handlerPlaceholders.forEach {
             output = output.replace(it.key, it.value)
         }
-        output = IntegrationManager.get().getMultiParser(player).parse(output, audience)
-        return output
+
+        return IntegrationManager.get().getMultiParser(player).parse(output)
+
     }
 
 }

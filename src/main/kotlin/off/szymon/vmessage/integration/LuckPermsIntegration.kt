@@ -14,6 +14,7 @@ package off.szymon.vmessage.integration
 
 import com.velocitypowered.api.proxy.Player
 import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.audience.Audience.audience
 import net.luckperms.api.LuckPermsProvider
 import off.szymon.fishy.api.messenger.parser.PlaceholderParserBuilder
 import off.szymon.vmessage.config.Config
@@ -23,7 +24,7 @@ class LuckPermsIntegration(player: Player) : Integration("luck-perms", "luckperm
     val api = LuckPermsProvider.get()
     val playerAdapter = api.getPlayerAdapter(Player::class.java)
 
-    override fun parse(string: String, audience: Audience): String {
+    override fun parse(string: String): String {
         val metaData = playerAdapter.getMetaData(player)
 
         val builder = PlaceholderParserBuilder()
@@ -36,7 +37,7 @@ class LuckPermsIntegration(player: Player) : Integration("luck-perms", "luckperm
             builder.addPlaceholder("&$metaKey&", metaValue)
         }
 
-        return builder.build().parse(string, audience)
+        return builder.build().parse(string)
     }
 
 }
