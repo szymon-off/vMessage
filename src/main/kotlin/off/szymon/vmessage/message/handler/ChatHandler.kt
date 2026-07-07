@@ -21,11 +21,12 @@ import off.szymon.vmessage.VMessage
 import off.szymon.vmessage.config.Config
 import off.szymon.vmessage.message.DefaultParser
 import off.szymon.vmessage.message.MessagesHandler
-import off.szymon.vmessage.message.ServerAliasesHolder
+import off.szymon.vmessage.message.ServerAliases
 
 class ChatHandler : MessagesHandler("chat") {
 
-    val order: PostOrder = try {
+    private val serverAliases = ServerAliases.get()
+    private val order: PostOrder = try {
         PostOrder.valueOf(Config.get().tree.messages.chat.order.uppercase())
     } catch (e: IllegalArgumentException) {
         VMessage.get().logger.warn("Invalid order value in config for chat messages: ${Config.get().tree.messages.chat.order}. Defaulting to LAST.")
@@ -51,7 +52,7 @@ class ChatHandler : MessagesHandler("chat") {
         val placeholders = mutableMapOf<String, String>()
         placeholders[$$"$player$"] = event.player.username
         placeholders[$$"$message$"] = if (Config.get().tree.messages.chat.allowMiniMessage) event.message else MiniMessage.miniMessage().escapeTags(event.message)
-        placeholders[$$"$server$"] = ServerAliasesHolder.getServerName(event.player.currentServer)
+        placeholders[$$"$server$"] = serverAliases.getServerName(event.player.currentServer)
         return placeholders
     }
 

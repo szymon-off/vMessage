@@ -18,27 +18,28 @@ import off.szymon.vmessage.config.Config
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
-class ServerAliasesHolder {
+class ServerAliases {
 
     companion object {
-        private lateinit var aliases: MutableMap<String, String>
+        private lateinit var instance: ServerAliases
 
-        fun getServerName(server: Optional<ServerConnection>): String {
-            return getServerName(server.getOrNull()?.server)
-        }
-
-        fun getServerName(server: RegisteredServer?): String {
-            return aliases[server?.serverInfo?.name] ?: "Unknown"
-        }
+        fun get() = instance
     }
 
-    init {
-        aliases = mutableMapOf()
+    val aliases: MutableMap<String, String> = mutableMapOf()
 
+    init {
         Config.get().root.node("server-aliases").childrenMap().forEach { (key, value) ->
             aliases[key.toString()] = value.string ?: return@forEach
         }
     }
 
+    fun getServerName(server: Optional<ServerConnection>): String {
+        return getServerName(server.getOrNull()?.server)
+    }
+
+    fun getServerName(server: RegisteredServer?): String {
+        return aliases[server?.serverInfo?.name] ?: "Unknown"
+    }
 
 }

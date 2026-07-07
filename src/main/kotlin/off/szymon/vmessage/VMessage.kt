@@ -35,7 +35,7 @@ import off.szymon.vmessage.config.Config
 import off.szymon.vmessage.generated.Version
 import off.szymon.vmessage.integration.IntegrationManager
 import off.szymon.vmessage.message.HandlerManager
-import off.szymon.vmessage.message.ServerAliasesHolder
+import off.szymon.vmessage.message.ServerAliases
 import org.bstats.velocity.Metrics
 import org.slf4j.Logger
 import java.nio.file.Path
@@ -86,7 +86,7 @@ class VMessage @Inject constructor(
     fun initializeVMessage() {
         Config()
         IntegrationManager()
-        ServerAliasesHolder()
+        ServerAliases()
         HandlerManager()
     }
 

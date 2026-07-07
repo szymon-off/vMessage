@@ -19,9 +19,11 @@ import off.szymon.vmessage.VMessage
 import off.szymon.vmessage.config.Config
 import off.szymon.vmessage.message.DefaultParser
 import off.szymon.vmessage.message.MessagesHandler
-import off.szymon.vmessage.message.ServerAliasesHolder
+import off.szymon.vmessage.message.ServerAliases
 
 class JoinHandler : MessagesHandler("join") {
+
+    private val serverAliases = ServerAliases.get()
 
     @Subscribe
     fun onJoin(event: ServerPostConnectEvent): EventTask? {
@@ -40,7 +42,7 @@ class JoinHandler : MessagesHandler("join") {
     fun getPlaceholders(event: ServerPostConnectEvent): Map<String, String> {
         val placeholders = mutableMapOf<String, String>()
         placeholders[$$"$player$"] = event.player.username
-        placeholders[$$"$server$"] = ServerAliasesHolder.getServerName(event.player.currentServer)
+        placeholders[$$"$server$"] = serverAliases.getServerName(event.player.currentServer)
         return placeholders.toMap()
     }
 

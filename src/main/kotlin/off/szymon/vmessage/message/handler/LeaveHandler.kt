@@ -19,9 +19,11 @@ import off.szymon.vmessage.VMessage
 import off.szymon.vmessage.config.Config
 import off.szymon.vmessage.message.DefaultParser
 import off.szymon.vmessage.message.MessagesHandler
-import off.szymon.vmessage.message.ServerAliasesHolder
+import off.szymon.vmessage.message.ServerAliases
 
 class LeaveHandler : MessagesHandler("leave") {
+
+    private val serverAliases = ServerAliases.get()
 
     @Subscribe
     fun onLeave(event: DisconnectEvent): EventTask {
@@ -38,7 +40,7 @@ class LeaveHandler : MessagesHandler("leave") {
     fun getPlaceholders(event: DisconnectEvent): Map<String, String> {
         val placeholders = mutableMapOf<String, String>()
         placeholders[$$"$player$"] = event.player.username
-        placeholders[$$"$server$"] = ServerAliasesHolder.getServerName(event.player.currentServer)
+        placeholders[$$"$server$"] = serverAliases.getServerName(event.player.currentServer)
         return placeholders.toMap()
     }
 
