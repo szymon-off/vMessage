@@ -20,11 +20,9 @@ import off.szymon.vmessage.VMessage
 import off.szymon.vmessage.config.Config
 import off.szymon.vmessage.message.ChatParser
 import off.szymon.vmessage.message.MessagesHandler
-import off.szymon.vmessage.message.ServerAliases
 
 class ChatHandler : MessagesHandler("chat") {
 
-    private val serverAliases = ServerAliases.get()
     private val order: PostOrder = try {
         PostOrder.valueOf(Config.get().tree.messages.chat.order.uppercase())
     } catch (e: IllegalArgumentException) {
@@ -37,21 +35,18 @@ class ChatHandler : MessagesHandler("chat") {
         if (!event.result.isAllowed) return null
 
         return EventTask.async {
-            val placeholders = getPlaceholders(event)
-            val msg = ChatParser(event).parse(Config.get().tree.messages.chat.format)
             try {
                 event.result = PlayerChatEvent.ChatResult.denied() // Possible because of Signed Velocity Dependency
+                val format = Config.get().tree.messages.chat.format
+                sendMessage(
+                    VMessage.get().server,
+                    format,
+                    ChatParser(event)
+                )
             } catch (e: Exception) {
                 VMessage.get().logger.error("Failed to cancel chat event for player ${event.player.username}. Is SignedVelocity missing?: ${e.message}")
             }
         }
-    }
-
-    fun getPlaceholders(event: PlayerChatEvent): Map<String, String> {
-        val placeholders = mutableMapOf<String, String>()
-        placeholders[$$"$player$"] = event.player.username
-        placeholders[$$"$server$"] = serverAliases.getServerName(event.player.currentServer)
-        return placeholders
     }
 
     // I had to do it this way because annotation args must be compile-time static
