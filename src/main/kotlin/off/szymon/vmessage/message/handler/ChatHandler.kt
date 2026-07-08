@@ -16,10 +16,9 @@ import com.velocitypowered.api.event.EventTask
 import com.velocitypowered.api.event.PostOrder
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.player.PlayerChatEvent
-import net.kyori.adventure.text.minimessage.MiniMessage
 import off.szymon.vmessage.VMessage
 import off.szymon.vmessage.config.Config
-import off.szymon.vmessage.message.DefaultParser
+import off.szymon.vmessage.message.ChatParser
 import off.szymon.vmessage.message.MessagesHandler
 import off.szymon.vmessage.message.ServerAliases
 
@@ -34,16 +33,16 @@ class ChatHandler : MessagesHandler("chat") {
     }
 
     fun onChat(event: PlayerChatEvent): EventTask? {
-        // If other plugins cancelled (like LibertyBans or LiteBans if the player is muted)
+        // If other plugins canceled (like LibertyBans or LiteBans if the player is muted)
         if (!event.result.isAllowed) return null
 
         return EventTask.async {
             val placeholders = getPlaceholders(event)
-            val msg = DefaultParser(placeholders, event.player).parse(Config.get().tree.messages.chat.format)
+            val msg = ChatParser(event).parse(Config.get().tree.messages.chat.format)
             try {
-                event.result = PlayerChatEvent.ChatResult.message(msg) // Possible because of Signed Velocity Dependency
+                event.result = PlayerChatEvent.ChatResult.denied() // Possible because of Signed Velocity Dependency
             } catch (e: Exception) {
-                VMessage.get().logger.error("Failed to inject signed chat modifications. Is SignedVelocity missing?", e)
+                VMessage.get().logger.error("Failed to cancel chat event for player ${event.player.username}. Is SignedVelocity missing?: ${e.message}")
             }
         }
     }
@@ -51,7 +50,6 @@ class ChatHandler : MessagesHandler("chat") {
     fun getPlaceholders(event: PlayerChatEvent): Map<String, String> {
         val placeholders = mutableMapOf<String, String>()
         placeholders[$$"$player$"] = event.player.username
-        placeholders[$$"$message$"] = if (Config.get().tree.messages.chat.allowMiniMessage) event.message else MiniMessage.miniMessage().escapeTags(event.message)
         placeholders[$$"$server$"] = serverAliases.getServerName(event.player.currentServer)
         return placeholders
     }

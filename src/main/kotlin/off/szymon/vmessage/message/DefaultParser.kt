@@ -19,7 +19,6 @@ import off.szymon.vmessage.integration.IntegrationManager
 
 class DefaultParser(val handlerPlaceholders: Map<String, String>, val player: Player) : MessageParser {
 
-    // only parse $message$ at the end to avoid papi and other placeholders being exposed to players
     override fun parse(string: String): String {
         val parser = PlaceholderParser(handlerPlaceholders)
 
