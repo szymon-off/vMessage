@@ -54,7 +54,7 @@ import java.nio.file.Path
     ]
 )
 class VMessage @Inject constructor(
-    val server: ProxyServer,
+    val proxy: ProxyServer,
     val logger: Logger,
     @param:DataDirectory val dataDir: Path,
     val plugin: PluginContainer,

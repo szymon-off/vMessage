@@ -15,11 +15,12 @@ package off.szymon.vmessage.message.handler
 import com.velocitypowered.api.event.EventTask
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.player.ServerPostConnectEvent
+import com.velocitypowered.api.proxy.Player
 import off.szymon.vmessage.VMessage
 import off.szymon.vmessage.config.Config
-import off.szymon.vmessage.message.DefaultParser
 import off.szymon.vmessage.message.MessagesHandler
 import off.szymon.vmessage.message.ServerAliases
+import off.szymon.vmessage.message.parser.DefaultParser
 
 class JoinHandler : MessagesHandler("join") {
 
@@ -29,18 +30,19 @@ class JoinHandler : MessagesHandler("join") {
     fun onJoin(event: ServerPostConnectEvent): EventTask? {
         if (event.previousServer != null) return null // else it's a server change, not a join
 
-        @Suppress("DuplicatedCode")
-        return EventTask.async {
-            val format = Config.get().tree.messages.join.format
-            sendMessage(
-                VMessage.get().server,
-                format,
-                DefaultParser(mapOf(
-                    $$"$player$" to event.player.username,
-                    $$"$server$" to serverAliases.getServerName(event.player.currentServer)
-                ), event.player)
-            )
-        }
+        return EventTask.async { broadcast(event.player) }
+    }
+
+    fun broadcast(player: Player) {
+        val format = Config.get().tree.messages.join.format
+        sendMessage(
+            VMessage.get().proxy,
+            format,
+            DefaultParser(mapOf(
+                $$"$player$" to player.username,
+                $$"$server$" to serverAliases.getServerName(player.currentServer)
+            ), player)
+        )
     }
 
 }

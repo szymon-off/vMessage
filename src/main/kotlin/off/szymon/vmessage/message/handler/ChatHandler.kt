@@ -16,10 +16,11 @@ import com.velocitypowered.api.event.EventTask
 import com.velocitypowered.api.event.PostOrder
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.player.PlayerChatEvent
+import com.velocitypowered.api.proxy.Player
 import off.szymon.vmessage.VMessage
 import off.szymon.vmessage.config.Config
-import off.szymon.vmessage.message.ChatParser
 import off.szymon.vmessage.message.MessagesHandler
+import off.szymon.vmessage.message.parser.ChatParser
 
 class ChatHandler : MessagesHandler("chat") {
 
@@ -37,16 +38,20 @@ class ChatHandler : MessagesHandler("chat") {
         return EventTask.async {
             try {
                 event.result = PlayerChatEvent.ChatResult.denied() // Possible because of Signed Velocity Dependency
-                val format = Config.get().tree.messages.chat.format
-                sendMessage(
-                    VMessage.get().server,
-                    format,
-                    ChatParser(event)
-                )
+                broadcast(event.player, event.message)
             } catch (e: Exception) {
                 VMessage.get().logger.error("Failed to cancel chat event for player ${event.player.username}. Is SignedVelocity missing?: ${e.message}")
             }
         }
+    }
+
+    fun broadcast(player: Player, message: String) {
+        val format = Config.get().tree.messages.chat.format
+        sendMessage(
+            VMessage.get().proxy,
+            format,
+            ChatParser(player, message),
+        )
     }
 
     // I had to do it this way because annotation args must be compile-time static

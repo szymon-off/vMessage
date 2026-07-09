@@ -55,21 +55,21 @@ class HandlerManager {
         loadHandlers()
     }
 
-    fun loadHandlerIfEnabled(name: String, handlerClass: Class<out MessagesHandler>) {
-        if (Config.get().root.node("messages",name,"enabled").getBoolean(false)) {
-            vMessage.logger.info("Loading '$name' handler...")
+    fun loadHandlerIfEnabled(id: String, handlerClass: Class<out MessagesHandler>) {
+        if (Config.get().root.node("messages",id,"enabled").getBoolean(false)) {
+            vMessage.logger.info("Loading '$id' handler...")
             val handler = handlerClass.getDeclaredConstructor().newInstance()
-            vMessage.server.eventManager.register(vMessage, handler)
+            vMessage.proxy.eventManager.register(vMessage, handler)
             handlers[handlerClass] = handler
         } else {
-            vMessage.logger.info("Skipping '$name' handler...")
+            vMessage.logger.info("Skipping '$id' handler...")
         }
     }
 
     fun unloadHandler(handlerClass: Class<out MessagesHandler>) {
         val handler = handlers[handlerClass] ?: return
         vMessage.logger.info("Unloading '${handler.id}' handler...")
-        vMessage.server.eventManager.unregisterListener(vMessage, handler)
+        vMessage.proxy.eventManager.unregisterListener(vMessage, handler)
         handlers.remove(handlerClass)
     }
 

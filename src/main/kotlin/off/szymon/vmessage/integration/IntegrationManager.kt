@@ -38,7 +38,6 @@ class IntegrationManager {
     }
 
     fun loadIntegrations() {
-        loadIntegrationIfEnabled(ServerAliasesIntegration::class.java)
         loadIntegrationIfEnabled(LuckPermsIntegration::class.java)
         loadIntegrationIfEnabled(PlaceholderApiIntegration::class.java)
     }
@@ -51,7 +50,7 @@ class IntegrationManager {
 
     fun loadIntegrationIfEnabled(clazz: Class<out Integration>) {
         val integration = clazz.getDeclaredConstructor().newInstance()
-        val pluginEnabled = vMessage.server.pluginManager.isLoaded(integration.pluginId)
+        val pluginEnabled = vMessage.proxy.pluginManager.isLoaded(integration.pluginId)
         if (pluginEnabled && config.root.node("integrations","placeholder",integration.id,"enabled").getBoolean(true)) {
             vMessage.logger.info("Loading '${integration.id}' integration...")
             integrations.add(clazz)

@@ -10,7 +10,7 @@
  * See the LICENSE file in the project root for details.
  */
 
-package off.szymon.vmessage.message
+package off.szymon.vmessage.message.parser
 
 import com.velocitypowered.api.proxy.Player
 import off.szymon.fishy.api.messenger.parser.MessageParser
