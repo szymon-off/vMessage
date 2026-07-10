@@ -21,7 +21,6 @@ class PlaceholderApiIntegration : Integration("placeholder-api", "papiproxybridg
 
     val api = PlaceholderAPI.createInstance()
 
-
     override fun parse(string: String, player: Player): String {
         return try {
             api

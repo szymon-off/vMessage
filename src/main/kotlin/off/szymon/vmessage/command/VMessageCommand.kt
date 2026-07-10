@@ -19,9 +19,9 @@ import com.velocitypowered.api.command.CommandSource
 import off.szymon.fishy.api.FishyAPI
 import off.szymon.vmessage.VMessage
 
-class VMessageCommand {
+class VMessageCommand : PluginCommand {
 
-    fun createCommand(): BrigadierCommand {
+    override fun createCommand(): BrigadierCommand {
         return BrigadierCommand(
             LiteralArgumentBuilder.literal<CommandSource>("vmessage")
 //                .requires { src -> src.hasPermission("vmessage.command.vmessage") }
@@ -32,9 +32,20 @@ class VMessageCommand {
                         <dark_gray>▎</dark_gray><bold><#00ffff>vMessage</#00ffff></bold> <white>»</white> <gray>by</gray> <#00ffff>$authors</#00ffff>
                         <dark_gray>▎</dark_gray><gray>Version</gray> <white>»</white> <#00ffff>${description.version}</#00ffff>
                         <dark_gray>▎</dark_gray><gray>Powered by</gray> <white>»</white> <#00ffff>FishyAPI</#00ffff> <gray>v${FishyAPI.VERSION}</gray>
+                        <dark_gray>▎</dark_gray><gray>Links</gray> <white>»</white> <gray><u><click:open_url:'https://github.com/szymon-off/vMessage/'>ⒼGitHub</click></u> <u><click:open_url:'https://modrinth.com/plugin/vmessage'>ⓂModrinth</click></u></gray>
                     """.trimIndent())
                     return@executes Command.SINGLE_SUCCESS
                 }
+                .then(LiteralArgumentBuilder.literal<CommandSource>("reload")
+                    .requires { src -> src.hasPermission("vmessage.command.vmessage.reload") }
+                    .executes { ctx ->
+                        VMessage.get().reloadVMessage()
+                        ctx.source.sendRichMessage("""
+                            <dark_gray>▎</dark_gray><#00ffff>vMessage</#00ffff> <white>»</white> <gray>Reloaded</gray>
+                        """.trimIndent())
+                        return@executes Command.SINGLE_SUCCESS
+                    }
+                )
                 .build()
         )
     }
