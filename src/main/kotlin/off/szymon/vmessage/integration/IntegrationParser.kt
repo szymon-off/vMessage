@@ -12,4 +12,10 @@
 
 package off.szymon.vmessage.integration
 
-abstract class Integration(val id: String, val pluginId: String) : IntegrationParser
+import com.velocitypowered.api.proxy.Player
+
+interface IntegrationParser {
+
+    fun parse(string: String, player: Player): String
+
+}

@@ -29,9 +29,7 @@ class ServerAliases {
     val aliases: MutableMap<String, String> = mutableMapOf()
 
     init {
-        Config.get().root.node("server-aliases").childrenMap().forEach { (key, value) ->
-            aliases[key.toString()] = value.string ?: return@forEach
-        }
+        loadAliases()
     }
 
     fun getServerName(server: Optional<ServerConnection>): String {
@@ -40,6 +38,12 @@ class ServerAliases {
 
     fun getServerName(server: RegisteredServer?): String {
         return aliases[server?.serverInfo?.name] ?: "Unknown"
+    }
+
+    fun loadAliases() {
+        Config.get().root.node("server-aliases").childrenMap().forEach { (key, value) ->
+            aliases[key.toString()] = value.string ?: return@forEach
+        }
     }
 
 }

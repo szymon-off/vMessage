@@ -14,15 +14,19 @@ package off.szymon.vmessage.message.parser
 
 import com.velocitypowered.api.proxy.Player
 import off.szymon.fishy.api.messenger.parser.MessageParser
+import off.szymon.fishy.api.messenger.parser.MultiParser
 import off.szymon.fishy.api.messenger.parser.PlaceholderParser
 import off.szymon.vmessage.integration.IntegrationManager
 
 class DefaultParser(val handlerPlaceholders: Map<String, String>, val player: Player) : MessageParser {
 
     override fun parse(string: String): String {
-        val parser = PlaceholderParser(handlerPlaceholders)
+        val placeholderParser = PlaceholderParser(handlerPlaceholders)
 
-        return IntegrationManager.get().getMultiParser(player).parse(parser.parse(string))
+        return MultiParser(
+            placeholderParser,
+            IntegrationManager.get().asMessageParser(player)
+        ).parse(string)
     }
 
 }

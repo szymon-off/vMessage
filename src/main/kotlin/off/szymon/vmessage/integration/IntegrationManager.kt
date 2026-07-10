@@ -13,16 +13,16 @@
 package off.szymon.vmessage.integration
 
 import com.velocitypowered.api.proxy.Player
-import off.szymon.fishy.api.messenger.parser.MultiParser
+import off.szymon.fishy.api.messenger.parser.MessageParser
 import off.szymon.vmessage.VMessage
 import off.szymon.vmessage.config.Config
 
-class IntegrationManager {
+class IntegrationManager : IntegrationParser {
 
     val vMessage = VMessage.get()
     val config = Config.get()
 
-    val integrations = mutableListOf<Class<out Integration>>()
+    val integrations = mutableMapOf<Class<out Integration>, Integration>()
 
     companion object {
         @JvmStatic
@@ -43,9 +43,14 @@ class IntegrationManager {
     }
 
     fun unloadIntegrations() {
-        for (integrationClass in integrations) {
+        for (integrationClass in integrations.keys) {
             unloadIntegration(integrationClass)
         }
+    }
+
+    fun reloadIntegrations() {
+        unloadIntegrations()
+        loadIntegrations()
     }
 
     fun loadIntegrationIfEnabled(clazz: Class<out Integration>) {
@@ -53,26 +58,38 @@ class IntegrationManager {
         val pluginEnabled = vMessage.proxy.pluginManager.isLoaded(integration.pluginId)
         if (pluginEnabled && config.root.node("integrations","placeholder",integration.id,"enabled").getBoolean(true)) {
             vMessage.logger.info("Loading '${integration.id}' integration...")
-            integrations.add(clazz)
+            integrations[clazz] = integration
         } else {
             vMessage.logger.info("Skipping '${integration.id}' integration...")
         }
     }
 
     fun unloadIntegration(clazz: Class<out Integration>) {
-        val integration = clazz.getDeclaredConstructor().newInstance() ?: return
+        val integration = integrations[clazz] ?: return
         vMessage.logger.info("Unloading '${integration.id}' integration...")
         integrations.remove(clazz)
     }
 
     @Suppress("UNCHECKED_CAST")
     fun <I : Integration> getIntegration(clazz: Class<I>): I? {
-        val handler: Integration = clazz.getDeclaredConstructor().newInstance() ?: return null
-        return handler as? I
+        val integration: Integration = integrations[clazz] ?: return null
+        return integration as I
     }
 
-    fun getMultiParser(player: Player): MultiParser {
-        return MultiParser(integrations.map { it.getDeclaredConstructor().newInstance(player) })
+    override fun parse(string: String, player: Player): String {
+        var output = string
+        for (i in integrations.values) {
+            output = i.parse(output, player)
+        }
+        return output
+    }
+
+    fun asMessageParser(player: Player): MessageParser {
+        return object : MessageParser {
+            override fun parse(string: String): String {
+                return parse(string, player)
+            }
+        }
     }
 
 }

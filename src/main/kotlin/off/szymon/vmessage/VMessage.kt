@@ -85,9 +85,16 @@ class VMessage @Inject constructor(
 
     fun initializeVMessage() {
         Config()
-        IntegrationManager()
         ServerAliases()
+        IntegrationManager()
         HandlerManager()
+    }
+
+    fun reloadVMessage() {
+        Config.get().load()
+        ServerAliases.get().loadAliases()
+        IntegrationManager.get().reloadIntegrations()
+        HandlerManager.get().reloadHandlers()
     }
 
 }

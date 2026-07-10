@@ -17,12 +17,12 @@ import net.william278.papiproxybridge.api.PlaceholderAPI
 import off.szymon.vmessage.VMessage
 import java.util.concurrent.TimeUnit
 
-class PlaceholderApiIntegration(player: Player) : Integration("placeholder-api", "papiproxybridge", player) {
+class PlaceholderApiIntegration : Integration("placeholder-api", "papiproxybridge") {
 
     val api = PlaceholderAPI.createInstance()
 
 
-    override fun parse(string: String): String {
+    override fun parse(string: String, player: Player): String {
         return try {
             api
                 .formatPlaceholders(string, player.uniqueId)

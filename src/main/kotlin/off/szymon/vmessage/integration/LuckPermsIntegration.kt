@@ -13,18 +13,16 @@
 package off.szymon.vmessage.integration
 
 import com.velocitypowered.api.proxy.Player
-import net.kyori.adventure.audience.Audience
-import net.kyori.adventure.audience.Audience.audience
 import net.luckperms.api.LuckPermsProvider
 import off.szymon.fishy.api.messenger.parser.PlaceholderParserBuilder
 import off.szymon.vmessage.config.Config
 
-class LuckPermsIntegration(player: Player) : Integration("luck-perms", "luckperms", player) {
+class LuckPermsIntegration() : Integration("luck-perms", "luckperms") {
 
     val api = LuckPermsProvider.get()
     val playerAdapter = api.getPlayerAdapter(Player::class.java)
 
-    override fun parse(string: String): String {
+    override fun parse(string: String, player: Player): String {
         val metaData = playerAdapter.getMetaData(player)
 
         val builder = PlaceholderParserBuilder()

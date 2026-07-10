@@ -38,7 +38,7 @@ class ChatParser(val player: Player, val message: String): MessageParser {
 
         return MultiParser(
             builder.build(),
-            IntegrationManager.get().getMultiParser(player),
+            IntegrationManager.get().asMessageParser(player),
             PlaceholderParser($$"$message$" to message), // parse message at the end
         ).parse(string)
     }
