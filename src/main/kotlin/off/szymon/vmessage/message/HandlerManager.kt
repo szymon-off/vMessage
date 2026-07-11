@@ -21,14 +21,15 @@ import off.szymon.vmessage.message.handler.LeaveHandler
 
 class HandlerManager {
 
+    private val vMessage = VMessage.get()
+
     private val handlers = mutableMapOf<Class<out MessagesHandler>, MessagesHandler>()
-    private val defaultHandlers = mapOf(
+    val defaultHandlers = mapOf(
         "chat" to ChatHandler::class.java,
         "join" to JoinHandler::class.java,
         "leave" to LeaveHandler::class.java,
         "change" to ChangeHandler::class.java,
     )
-    private val vMessage = VMessage.get()
 
     companion object {
         @JvmStatic

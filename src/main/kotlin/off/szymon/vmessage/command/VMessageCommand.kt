@@ -18,6 +18,7 @@ import com.velocitypowered.api.command.BrigadierCommand
 import off.szymon.fishy.api.FishyAPI
 import off.szymon.vmessage.VMessage
 import off.szymon.vmessage.message.HandlerManager
+import off.szymon.vmessage.message.handler.ChatHandler
 
 class VMessageCommand : PluginCommand {
 
@@ -69,17 +70,40 @@ class VMessageCommand : PluginCommand {
                             }
                             .then(BrigadierCommand.requiredArgumentBuilder("message", StringArgumentType.greedyString())
                                 .executes { ctx ->
-                                    // TODO broadcast pretend chat with message
+                                    val type = ctx.getArgument("type", String::class.java).lowercase()
+                                    if (type != "chat") {
+                                        ctx.source.sendRichMessage("<dark_gray>▎</dark_gray><gray>Too many arguments provided for '<#00ffff>$type</#00ffff>'</gray>")
+                                        return@executes Command.SINGLE_SUCCESS // handled properly
+                                    }
+
+                                    val playerString = ctx.getArgument("player", String::class.java).lowercase()
+                                    val player = VMessage.get().proxy.allPlayers.find { it.username == playerString } ?: run {
+                                        ctx.source.sendRichMessage("<dark_gray>▎</dark_gray><gray>Invalid argument provided for '<#00ffff>player</#00ffff>'</gray>")
+                                        return@executes Command.SINGLE_SUCCESS // handled properly
+                                    }
+
+                                    val message = ctx.getArgument("message", String::class.java).lowercase()
+
+                                    val handler = HandlerManager.get().getHandler(ChatHandler::class.java) ?: run {
+                                        ctx.source.sendRichMessage("<dark_gray>▎</dark_gray><gray>Invalid argument provided for '<#00ffff>type</#00ffff>'</gray>")
+                                        return@executes Command.SINGLE_SUCCESS // handled properly
+                                    }
+
+                                    handler.broadcast(player, message)
+                                    ctx.source.sendRichMessage("<dark_gray>▎</dark_gray><gray>Sent pretend '<#00ffff>chat</#00ffff>' message as</gray> <#00ffff>${player.username}</#00ffff>")
+
                                     return@executes Command.SINGLE_SUCCESS
                                 }
                             )
                             .suggests { _, builder ->
-                                // TODO suggest players
+                                VMessage.get().proxy.allPlayers.forEach { builder.suggest(it.username) }
                                 return@suggests builder.buildFuture()
                             }
                         )
                         .suggests { _, builder ->
-                            // TODO suggest types
+                            val types = HandlerManager.get().defaultHandlers.keys.toMutableSet()
+                            types.remove("chat")
+                            types.forEach { builder.suggest(it) }
                             return@suggests builder.buildFuture()
                         }
                     )
