@@ -33,7 +33,7 @@ class JoinHandler : MessagesHandler("join") {
         return EventTask.async { broadcast(event.player) }
     }
 
-    fun broadcast(player: Player) {
+    override fun broadcast(player: Player) {
         val format = Config.get().tree.messages.join.format
         sendMessage(
             VMessage.get().proxy,

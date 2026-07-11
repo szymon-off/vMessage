@@ -12,7 +12,14 @@
 
 package off.szymon.vmessage.message
 
+import com.velocitypowered.api.proxy.Player
 import net.kyori.adventure.text.Component
 import off.szymon.fishy.api.messenger.FishyMessenger
 
-abstract class MessagesHandler(val id: String) : FishyMessenger(Component.empty())
+abstract class MessagesHandler(val id: String) : FishyMessenger(Component.empty()) {
+
+    open fun broadcast(player: Player) {
+        throw UnsupportedOperationException("This message handler ($id) doesn't support traditional broadcast")
+    }
+
+}

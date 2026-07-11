@@ -21,8 +21,14 @@ import off.szymon.vmessage.message.handler.LeaveHandler
 
 class HandlerManager {
 
-    val handlers = mutableMapOf<Class<out MessagesHandler>, MessagesHandler>()
-    val vMessage = VMessage.get()
+    private val handlers = mutableMapOf<Class<out MessagesHandler>, MessagesHandler>()
+    private val defaultHandlers = mapOf(
+        "chat" to ChatHandler::class.java,
+        "join" to JoinHandler::class.java,
+        "leave" to LeaveHandler::class.java,
+        "change" to ChangeHandler::class.java,
+    )
+    private val vMessage = VMessage.get()
 
     companion object {
         @JvmStatic
@@ -38,10 +44,9 @@ class HandlerManager {
     }
 
     fun loadHandlers() {
-        loadHandlerIfEnabled("chat", ChatHandler::class.java)
-        loadHandlerIfEnabled("join", JoinHandler::class.java)
-        loadHandlerIfEnabled("leave", LeaveHandler::class.java)
-        loadHandlerIfEnabled("change", ChangeHandler::class.java)
+        for (e in defaultHandlers.entries) {
+            loadHandlerIfEnabled(e.key, e.value)
+        }
     }
 
     fun unloadHandlers() {
@@ -77,6 +82,10 @@ class HandlerManager {
     fun <T : MessagesHandler> getHandler(handlerClass: Class<T>): T? {
         val handler: MessagesHandler = handlers[handlerClass] ?: return null
         return handler as? T
+    }
+
+    fun getHandler(id: String): MessagesHandler? {
+        return handlers.values.find { it.id == id }
     }
 
 }

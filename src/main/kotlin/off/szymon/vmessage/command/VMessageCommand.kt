@@ -13,17 +13,17 @@
 package off.szymon.vmessage.command
 
 import com.mojang.brigadier.Command
-import com.mojang.brigadier.builder.LiteralArgumentBuilder
+import com.mojang.brigadier.arguments.StringArgumentType
 import com.velocitypowered.api.command.BrigadierCommand
-import com.velocitypowered.api.command.CommandSource
 import off.szymon.fishy.api.FishyAPI
 import off.szymon.vmessage.VMessage
+import off.szymon.vmessage.message.HandlerManager
 
 class VMessageCommand : PluginCommand {
 
     override fun createCommand(): BrigadierCommand {
         return BrigadierCommand(
-            LiteralArgumentBuilder.literal<CommandSource>("vmessage")
+            BrigadierCommand.literalArgumentBuilder("vmessage")
 //                .requires { src -> src.hasPermission("vmessage.command.vmessage") }
                 .executes { ctx ->
                     val description = VMessage.get().plugin.description
@@ -36,7 +36,7 @@ class VMessageCommand : PluginCommand {
                     """.trimIndent())
                     return@executes Command.SINGLE_SUCCESS
                 }
-                .then(LiteralArgumentBuilder.literal<CommandSource>("reload")
+                .then(BrigadierCommand.literalArgumentBuilder("reload")
                     .requires { src -> src.hasPermission("vmessage.command.vmessage.reload") }
                     .executes { ctx ->
                         VMessage.get().reloadVMessage()
@@ -45,6 +45,44 @@ class VMessageCommand : PluginCommand {
                         """.trimIndent())
                         return@executes Command.SINGLE_SUCCESS
                     }
+                )
+                .then(BrigadierCommand.literalArgumentBuilder("pretend")
+                    .requires { src -> src.hasPermission("vmessage.command.vmessage.pretend") }
+                    .then(BrigadierCommand.requiredArgumentBuilder("type", StringArgumentType.word())
+                        .then(BrigadierCommand.requiredArgumentBuilder("player", StringArgumentType.word())
+                            .executes { ctx ->
+                                val playerString = ctx.getArgument("player", String::class.java).lowercase()
+                                val player = VMessage.get().proxy.allPlayers.find { it.username.lowercase() == playerString } ?: run {
+                                    ctx.source.sendRichMessage("<dark_gray>▎</dark_gray><gray>Invalid argument provided for '<#00ffff>player</#00ffff>'</gray>")
+                                    return@executes Command.SINGLE_SUCCESS // handled properly
+                                }
+
+                                val type = ctx.getArgument("type", String::class.java).lowercase()
+                                val handler = HandlerManager.get().getHandler(type) ?: run {
+                                    ctx.source.sendRichMessage("<dark_gray>▎</dark_gray><gray>Invalid argument provided for '<#00ffff>type</#00ffff>'</gray>")
+                                    return@executes Command.SINGLE_SUCCESS // handled properly
+                                }
+
+                                handler.broadcast(player)
+                                ctx.source.sendRichMessage("<dark_gray>▎</dark_gray><gray>Sent pretend '<#00ffff>$type</#00ffff>' message as</gray> <#00ffff>${player.username}</#00ffff>")
+                                return@executes Command.SINGLE_SUCCESS
+                            }
+                            .then(BrigadierCommand.requiredArgumentBuilder("message", StringArgumentType.greedyString())
+                                .executes { ctx ->
+                                    // TODO broadcast pretend chat with message
+                                    return@executes Command.SINGLE_SUCCESS
+                                }
+                            )
+                            .suggests { _, builder ->
+                                // TODO suggest players
+                                return@suggests builder.buildFuture()
+                            }
+                        )
+                        .suggests { _, builder ->
+                            // TODO suggest types
+                            return@suggests builder.buildFuture()
+                        }
+                    )
                 )
                 .build()
         )

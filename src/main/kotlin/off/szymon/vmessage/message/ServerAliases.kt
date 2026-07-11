@@ -36,8 +36,12 @@ class ServerAliases {
         return getServerName(server.getOrNull()?.server)
     }
 
+    fun getServerName(server: Optional<RegisteredServer>): String {
+        return getServerName(server.getOrNull())
+    }
+
     fun getServerName(server: RegisteredServer?): String {
-        return aliases[server?.serverInfo?.name] ?: "Unknown"
+        return aliases[server?.serverInfo?.name] ?: "Unknown" // TODO configurable default value
     }
 
     fun loadAliases() {

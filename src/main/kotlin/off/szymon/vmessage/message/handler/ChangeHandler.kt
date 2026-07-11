@@ -16,7 +16,6 @@ import com.velocitypowered.api.event.EventTask
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.player.ServerPostConnectEvent
 import com.velocitypowered.api.proxy.Player
-import com.velocitypowered.api.proxy.server.RegisteredServer
 import off.szymon.vmessage.VMessage
 import off.szymon.vmessage.config.Config
 import off.szymon.vmessage.message.MessagesHandler
@@ -29,19 +28,20 @@ class ChangeHandler : MessagesHandler("change") {
 
     @Subscribe
     fun onJoin(event: ServerPostConnectEvent): EventTask? {
-        if (event.previousServer == null) return null
+        if (event.previousServer == null) return null // otherwise this is a join
 
-        return EventTask.async { broadcast(event.player, event.previousServer!!) }
+        return EventTask.async { broadcast(event.player) }
     }
 
-    fun broadcast(player: Player, previousServer: RegisteredServer) {
+    override fun broadcast(player: Player) {
         val format = Config.get().tree.messages.change.format
+
         sendMessage(
             VMessage.get().proxy,
             format,
             DefaultParser(mapOf(
                 $$"$player$" to player.username,
-                $$"$old_server$" to serverAliases.getServerName(previousServer),
+                $$"$old_server$" to serverAliases.getServerName(player.currentServer.flatMap { serverConnection -> serverConnection.previousServer }),
                 $$"$new_server$" to serverAliases.getServerName(player.currentServer)
             ), player)
         )

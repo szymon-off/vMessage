@@ -34,7 +34,7 @@ class LeaveHandler : MessagesHandler("leave") {
         }
     }
 
-    fun broadcast(player: Player) {
+    override fun broadcast(player: Player) {
         val format = Config.get().tree.messages.leave.format
         sendMessage(
             VMessage.get().proxy,
