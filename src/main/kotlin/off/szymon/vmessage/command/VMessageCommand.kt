@@ -47,8 +47,8 @@ class VMessageCommand : PluginCommand {
                         return@executes Command.SINGLE_SUCCESS
                     }
                 )
-                .then(BrigadierCommand.literalArgumentBuilder("pretend")
-                    .requires { src -> src.hasPermission("vmessage.command.vmessage.pretend") }
+                .then(BrigadierCommand.literalArgumentBuilder("fake")
+                    .requires { src -> src.hasPermission("vmessage.command.vmessage.fake") }
                     .then(BrigadierCommand.requiredArgumentBuilder("type", StringArgumentType.word())
                         .then(BrigadierCommand.requiredArgumentBuilder("player", StringArgumentType.word())
                             .executes { ctx ->
@@ -65,7 +65,7 @@ class VMessageCommand : PluginCommand {
                                 }
 
                                 handler.broadcast(player)
-                                ctx.source.sendRichMessage("<dark_gray>▎</dark_gray><gray>Sent pretend '<#00ffff>$type</#00ffff>' message as</gray> <#00ffff>${player.username}</#00ffff>")
+                                ctx.source.sendRichMessage("<dark_gray>▎</dark_gray><gray>Sent fake '<#00ffff>$type</#00ffff>' message as</gray> <#00ffff>${player.username}</#00ffff>")
                                 return@executes Command.SINGLE_SUCCESS
                             }
                             .then(BrigadierCommand.requiredArgumentBuilder("message", StringArgumentType.greedyString())
@@ -90,7 +90,7 @@ class VMessageCommand : PluginCommand {
                                     }
 
                                     handler.broadcast(player, message)
-                                    ctx.source.sendRichMessage("<dark_gray>▎</dark_gray><gray>Sent pretend '<#00ffff>chat</#00ffff>' message as</gray> <#00ffff>${player.username}</#00ffff>")
+                                    ctx.source.sendRichMessage("<dark_gray>▎</dark_gray><gray>Sent fake '<#00ffff>chat</#00ffff>' message as</gray> <#00ffff>${player.username}</#00ffff>")
 
                                     return@executes Command.SINGLE_SUCCESS
                                 }
@@ -107,6 +107,19 @@ class VMessageCommand : PluginCommand {
                             return@suggests builder.buildFuture()
                         }
                     )
+                )
+                .then(BrigadierCommand.literalArgumentBuilder("help")
+                    .requires { src -> src.hasPermission("vmessage.command.vmessage.help") }
+                    .executes { ctx ->
+                        ctx.source.sendRichMessage("""
+                            <dark_gray>▎</dark_gray><b><#00ffff>vMessage</#00ffff></b> <white>»</white> <b><gray>Help</gray></b>
+                            <dark_gray>▎</dark_gray><gray>/vmessage <white>»</white> Show plugin information</gray>
+                            <dark_gray>▎</dark_gray><gray>/vmessage reload <white>»</white> Reload from config</gray>
+                            <dark_gray>▎</dark_gray><gray>/vmessage fake <type> <player> [message] <white>»</white> Send a fake message</gray>
+                            <dark_gray>▎</dark_gray><gray>/vmessage help <white>»</white> Show this help message</gray>
+                        """.trimIndent())
+                        return@executes Command.SINGLE_SUCCESS
+                    }
                 )
                 .build()
         )

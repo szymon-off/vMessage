@@ -76,6 +76,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+# TODO: dependencies: signedvelocity, luckperms
       - name: Modrinth Publish
         uses: cloudnode-pro/modrinth-publish@v2.1.4
         with:
