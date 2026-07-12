@@ -20,11 +20,11 @@ import off.szymon.vmessage.VMessage
 import off.szymon.vmessage.message.HandlerManager
 import off.szymon.vmessage.message.handler.ChatHandler
 
-class VMessageCommand : PluginCommand {
+class VMessageCommand : PluginCommand("vmessage", "vmsg", "vm") {
 
     override fun createCommand(): BrigadierCommand {
         return BrigadierCommand(
-            BrigadierCommand.literalArgumentBuilder("vmessage")
+            BrigadierCommand.literalArgumentBuilder(name)
 //                .requires { src -> src.hasPermission("vmessage.command.vmessage") }
                 .executes { ctx ->
                     val description = VMessage.get().plugin.description
@@ -38,7 +38,7 @@ class VMessageCommand : PluginCommand {
                     return@executes Command.SINGLE_SUCCESS
                 }
                 .then(BrigadierCommand.literalArgumentBuilder("reload")
-                    .requires { src -> src.hasPermission("vmessage.command.vmessage.reload") }
+                    .requires { it.hasPermission("vmessage.command.vmessage.reload") }
                     .executes { ctx ->
                         VMessage.get().reloadVMessage()
                         ctx.source.sendRichMessage("""
@@ -48,10 +48,11 @@ class VMessageCommand : PluginCommand {
                     }
                 )
                 .then(BrigadierCommand.literalArgumentBuilder("fake")
-                    .requires { src -> src.hasPermission("vmessage.command.vmessage.fake") }
+                    .requires { it.hasPermission("vmessage.command.vmessage.fake") }
                     .then(BrigadierCommand.requiredArgumentBuilder("type", StringArgumentType.word())
                         .then(BrigadierCommand.requiredArgumentBuilder("player", StringArgumentType.word())
                             .executes { ctx ->
+                                @Suppress("DuplicatedCode")
                                 val playerString = ctx.getArgument("player", String::class.java).lowercase()
                                 val player = VMessage.get().proxy.allPlayers.find { it.username.lowercase() == playerString } ?: run {
                                     ctx.source.sendRichMessage("<dark_gray>▎</dark_gray><gray>Invalid argument provided for '<#00ffff>player</#00ffff>'</gray>")
@@ -109,7 +110,7 @@ class VMessageCommand : PluginCommand {
                     )
                 )
                 .then(BrigadierCommand.literalArgumentBuilder("help")
-                    .requires { src -> src.hasPermission("vmessage.command.vmessage.help") }
+                    .requires { it.hasPermission("vmessage.command.vmessage.help") }
                     .executes { ctx ->
                         ctx.source.sendRichMessage("""
                             <dark_gray>▎</dark_gray><b><#00ffff>vMessage</#00ffff></b> <white>»</white> <b><gray>Help</gray></b>

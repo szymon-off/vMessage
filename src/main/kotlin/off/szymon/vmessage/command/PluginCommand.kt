@@ -14,7 +14,9 @@ package off.szymon.vmessage.command
 
 import com.velocitypowered.api.command.BrigadierCommand
 
-interface PluginCommand {
 
-    fun createCommand(): BrigadierCommand
+abstract class PluginCommand(val name: String, vararg val aliases: String) {
+
+    abstract fun createCommand(): BrigadierCommand
+
 }
