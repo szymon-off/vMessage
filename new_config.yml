@@ -37,7 +37,12 @@ messages:
     format: <dark_gray>(<gold>•<dark_gray>) <gray>%player% <dark_gray>(<gold>%old_server%→%new_server%<dark_gray>)
 
 commands:
-  # TODO
+  message:
+    enabled: true
+    # Available placeholders: $sender$, $receiver$, $prefix$, $suffix$, (custom luckperms metas), (PlaceholderAPI placeholders)
+    format:
+      sender: "(<b><#00ffff>You</b> → <b><#00ffff>$receiver$</b>): $message$"
+      receiver: "(<b><#00ffff>$sender$</b> → <b><#00ffff>You</b>): $message$"
 
 server-aliases:
   lobby: Lobby

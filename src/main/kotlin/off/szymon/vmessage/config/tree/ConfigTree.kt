@@ -10,6 +10,8 @@
  * See the LICENSE file in the project root for details.
  */
 
+@file:Suppress("unused")
+
 package off.szymon.vmessage.config.tree
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable
@@ -46,7 +48,7 @@ class ChatConfig {
             "Available options (in order): FIRST, EARLY, NORMAL, LATE, LAST")
     var order = "LAST"
     @Comment($$"Available placeholders: $player$, $message$, $server$, $prefix$, $suffix$, (custom luckperms metas), (PlaceholderAPI placeholders)")
-    var format = $$"$prefix$ <b>$player$:</b> $message$"
+    var format = $$"$prefix$ <b>$player$</b>: $message$"
     @Comment("Whether to allow players to use MiniMessage in their messages\nThis may break your formatting, so it is recommended to keep this disabled.")
     var allowMiniMessage = false
 
@@ -77,32 +79,39 @@ class ChangeConfig {
 
 @ConfigSerializable
 class CommandsConfig {
-    // TODO
+    @Comment("/message, /msg, /whisper, /w, /tell")
+    var message = MessageConfig()
+}
+
+@ConfigSerializable
+class MessageConfig {
+    var enabled = true
+    @Comment($$"Available placeholders: $sender$, $receiver$, $prefix$, $suffix$, (custom luckperms metas), (PlaceholderAPI placeholders)")
+    var format = MessageFormatConfig()
+}
+
+@ConfigSerializable
+class MessageFormatConfig {
+    var sender = $$"(<b><#00ffff>You</b> → <b><#00ffff>$receiver$</b>): $message$"
+    var receiver = $$"(<b><#00ffff>$sender$</b> → <b><#00ffff>You</b>): $message$"
 }
 
 @ConfigSerializable
 class ServerAliasesConfig {
-
     var lobby = "Lobby"
     var lobby1 = "Lobby"
     var lobby2 = "Lobby"
-
 }
 
 @ConfigSerializable
 class PlaceholdersConfig {
-
     var luckPerms = LuckPermsConfig()
     @Comment("via PAPIProxyBridge")
     var placeholderApi = PlaceholderApiConfig()
-
 }
-
-
 
 @ConfigSerializable
 class LuckPermsConfig {
-
     var enabled = true
     @Comment("You must predefine your custom metas here to use them in your formats.")
     var customMeta = CustomMetaConfig()
@@ -110,19 +119,15 @@ class LuckPermsConfig {
 
 @ConfigSerializable
 class CustomMetaConfig {
-
     @Comment("Used as &custom1&")
     var custom1 = "meta_key1"
     @Comment("Used as &custom2& etc.")
     var custom2 = "meta_key2"
-
 }
 
 @ConfigSerializable
 class PlaceholderApiConfig {
-
     var enabled = true
     @Comment("The time in milliseconds to wait for PAPIProxyBridge to format the placeholders before sending the message.")
     var timeout = 500
-
 }

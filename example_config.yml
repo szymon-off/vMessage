@@ -15,7 +15,7 @@ messages:
     # %server% - Player's Current Server
     # %prefix% - LuckPerms Prefix
     # %suffix% - LuckPerms Suffix
-    format: '%prefix% <b>%player%:</b> %message%'
+    format: '%prefix% <b>%player%</b>: %message%'
     
     # Whether to allow players to use MiniMessage in their messages
     allow-mini-message: false
