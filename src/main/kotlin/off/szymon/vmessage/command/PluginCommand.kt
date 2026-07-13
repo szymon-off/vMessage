@@ -13,9 +13,11 @@
 package off.szymon.vmessage.command
 
 import com.velocitypowered.api.command.BrigadierCommand
+import net.kyori.adventure.text.Component
+import off.szymon.fishy.api.messenger.FishyMessenger
 
 
-abstract class PluginCommand(val name: String, vararg val aliases: String) {
+abstract class PluginCommand(val name: String, vararg val aliases: String) : FishyMessenger(Component.empty()){
 
     abstract fun createCommand(): BrigadierCommand
 

@@ -13,6 +13,8 @@
 package off.szymon.vmessage.command
 
 import off.szymon.vmessage.VMessage
+import off.szymon.vmessage.command.message.MessageCommand
+import off.szymon.vmessage.command.message.ReplyCommand
 
 class CommandRegisterer {
 
@@ -21,6 +23,7 @@ class CommandRegisterer {
     init {
         registerCommand(VMessageCommand())
         registerCommand(MessageCommand())
+        registerCommand(ReplyCommand())
     }
 
     fun registerCommand(command: PluginCommand) {
