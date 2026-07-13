@@ -19,29 +19,23 @@ import org.spongepowered.configurate.objectmapping.meta.Comment
 
 @ConfigSerializable
 class MainConfig {
-
     var messages = MessagesConfig()
     var commands = CommandsConfig()
     var serverAliases = ServerAliasesConfig()
     var placeholders = PlaceholdersConfig()
-
+    var otherSettings = OtherSettingsConfig()
 }
-
-
 
 @ConfigSerializable
 class MessagesConfig {
-
     var chat = ChatConfig()
     var join = JoinConfig()
     var leave = LeaveConfig()
     var change = ChangeConfig()
-
 }
 
 @ConfigSerializable
 class ChatConfig {
-
     var enabled = true
     @Comment("This is to give way to other plugins that may want to handle chat messages before vMessage does.\n" +
             "For example punishment plugins like LiteBans or LibertyBans may want to prevent chat messages from being sent if sender is muted.\n" +
@@ -51,7 +45,6 @@ class ChatConfig {
     var format = $$"$prefix$ <b>$player$</b>: $message$"
     @Comment("Whether to allow players to use MiniMessage in their messages\nThis may break your formatting, so it is recommended to keep this disabled.")
     var allowMiniMessage = false
-
 }
 
 @ConfigSerializable
@@ -63,11 +56,9 @@ class JoinConfig {
 
 @ConfigSerializable
 class LeaveConfig {
-
     var enabled = true
     @Comment($$"Available placeholders: $player$, $server$, $prefix$, $suffix$, (custom luckperms metas), (PlaceholderAPI placeholders)")
     var format = $$"<dark_gray>(<red>-<dark_gray>) <gray>$player$"
-
 }
 
 @ConfigSerializable
@@ -128,6 +119,12 @@ class CustomMetaConfig {
 @ConfigSerializable
 class PlaceholderApiConfig {
     var enabled = true
-    @Comment("The time in milliseconds to wait for PAPIProxyBridge to format the placeholders before sending the message.")
-    var timeout = 500
+    @Comment("The time in milliseconds to give to PAPIProxyBridge to format the placeholders before skipping the integration.")
+    var bridgeTimeout: Long = 500
+}
+
+@ConfigSerializable
+class OtherSettingsConfig {
+    @Comment("Server name to use if retrieving the player's current server fails")
+    var defaultServerName = "Unknown"
 }

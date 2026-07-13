@@ -43,7 +43,7 @@ class ServerAliases {
     }
 
     fun getServerName(server: RegisteredServer?): String {
-        return aliases[server?.serverInfo?.name] ?: "Unknown" // TODO configurable default value
+        return aliases[server?.serverInfo?.name] ?: Config.get().tree.otherSettings.defaultServerName
     }
 
     fun loadAliases() {

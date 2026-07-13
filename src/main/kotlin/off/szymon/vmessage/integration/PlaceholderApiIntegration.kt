@@ -15,17 +15,19 @@ package off.szymon.vmessage.integration
 import com.velocitypowered.api.proxy.Player
 import net.william278.papiproxybridge.api.PlaceholderAPI
 import off.szymon.vmessage.VMessage
+import off.szymon.vmessage.config.Config
 import java.util.concurrent.TimeUnit
 
 class PlaceholderApiIntegration : Integration("placeholder-api", "papiproxybridge") {
 
     val api = PlaceholderAPI.createInstance()
+    val timeout = Config.get().tree.placeholders.placeholderApi.bridgeTimeout
 
     override fun parse(string: String, player: Player): String {
         return try {
             api
                 .formatPlaceholders(string, player.uniqueId)
-                .orTimeout(500, TimeUnit.MILLISECONDS) // TODO configurable timeout
+                .orTimeout(timeout, TimeUnit.MILLISECONDS)
                 .join() // safe because the entire event is running async
         } catch (e: Exception) {
             VMessage.get().logger.warn("Failed to parse placeholders for player ${player.username} (${player.uniqueId}) using PlaceholderAPI: ${e.message}")

@@ -43,6 +43,7 @@ commands:
     format:
       sender: "(<b><#00ffff>You</b> → <b><#00ffff>$receiver$</b>): $message$"
       receiver: "(<b><#00ffff>$sender$</b> → <b><#00ffff>You</b>): $message$"
+    # TODO: reply command, allow-mini-message, enable-by-default
 
 server-aliases:
   lobby: Lobby
@@ -60,3 +61,9 @@ integrations:
         custom2: meta_key2 # Used as &custom2& etc.
     placeholderapi: # via PAPIProxyBridge
       enabled: true
+      bridge-timeout: 500
+
+# TODO legacy color codes support
+other:
+  # Server name to use if retrieving the player's current server fails
+  default-server-name: "Unknown"
