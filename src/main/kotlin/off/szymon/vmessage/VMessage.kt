@@ -106,7 +106,7 @@ class VMessage @Inject constructor(
 
     fun reloadVMessage() {
         Config.get().load()
-        detectSignedVelocity()
+//        detectSignedVelocity()
         ServerAliases.get().loadAliases()
         IntegrationManager.get().reloadIntegrations()
         HandlerManager.get().reloadHandlers()
