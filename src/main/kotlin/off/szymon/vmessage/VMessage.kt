@@ -80,12 +80,24 @@ class VMessage @Inject constructor(
         val description = plugin.description
         logger.info("Initializing ${description.name} v${description.version} by ${description.authors.joinToString(", ")}")
         logger.info("Powered by: FishyAPI v${FishyAPI.VERSION} by SzymON/OFF")
+        Config()
+        detectSignedVelocity()
         initializeVMessage()
         logger.info("Initialization complete! Ready to serve chat messages!")
     }
 
+    private fun detectSignedVelocity() {
+        val signedVelocityEnabled = proxy.pluginManager.isLoaded("SignedVelocity")
+        val chatMessagesEnabled = Config.get().tree.messages.chat.enabled
+        if (!signedVelocityEnabled && chatMessagesEnabled) {
+            logger.warn("SignedVelocity not detected! vMessage chat messages will most likely have issues.")
+            logger.warn("Please consider installing SignedVelocity on the proxy and backends from https://modrinth.com/plugin/signedvelocity")
+            logger.warn("Do not ignore this if you don't know what you're doing.")
+            logger.warn("Proceeding without it...")
+        }
+    }
+
     fun initializeVMessage() {
-        Config()
         ServerAliases()
         IntegrationManager()
         HandlerManager()
@@ -94,6 +106,7 @@ class VMessage @Inject constructor(
 
     fun reloadVMessage() {
         Config.get().load()
+        detectSignedVelocity()
         ServerAliases.get().loadAliases()
         IntegrationManager.get().reloadIntegrations()
         HandlerManager.get().reloadHandlers()
