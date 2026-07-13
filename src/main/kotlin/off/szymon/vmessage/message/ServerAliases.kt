@@ -32,10 +32,12 @@ class ServerAliases {
         loadAliases()
     }
 
+    @JvmName("getServerNameFromConnection") // otherwise type erasure makes it so the methods are exactly the same
     fun getServerName(server: Optional<ServerConnection>): String {
         return getServerName(server.getOrNull()?.server)
     }
 
+    @JvmName("getServerNameFromRegistered") // otherwise type erasure makes it so the methods are exactly the same
     fun getServerName(server: Optional<RegisteredServer>): String {
         return getServerName(server.getOrNull())
     }
