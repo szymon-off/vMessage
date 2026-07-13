@@ -37,6 +37,7 @@ class ChatHandler : MessagesHandler("chat") {
 
         return EventTask.async {
             try {
+                @Suppress("DEPRECATION")
                 event.result = PlayerChatEvent.ChatResult.denied() // Possible because of Signed Velocity Dependency
                 broadcast(event.player, event.message)
             } catch (e: Exception) {
