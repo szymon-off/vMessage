@@ -38,8 +38,8 @@ class IntegrationManager : IntegrationParser {
     }
 
     fun loadIntegrations() {
-        loadIntegrationIfEnabled(LuckPermsIntegration::class.java)
-        loadIntegrationIfEnabled(PlaceholderApiIntegration::class.java)
+        loadIntegrationIfEnabled(LuckPermsIntegration::class.java, "luck-perms", "luckperms")
+        loadIntegrationIfEnabled(PlaceholderApiIntegration::class.java, "placeholder-api", "papiproxybridge")
     }
 
     fun unloadIntegrations() {
@@ -53,15 +53,22 @@ class IntegrationManager : IntegrationParser {
         loadIntegrations()
     }
 
-    fun loadIntegrationIfEnabled(clazz: Class<out Integration>) {
-        val integration = clazz.getDeclaredConstructor().newInstance()
-        val pluginEnabled = vMessage.proxy.pluginManager.isLoaded(integration.pluginId)
-        if (pluginEnabled && config.root.node("integrations","placeholder",integration.id,"enabled").getBoolean(true)) {
-            vMessage.logger.info("Loading '${integration.id}' integration...")
-            integrations[clazz] = integration
-        } else {
-            vMessage.logger.info("Skipping '${integration.id}' integration...")
+    fun loadIntegrationIfEnabled(clazz: Class<out Integration>, id: String, pluginId: String) {
+        if (!vMessage.proxy.pluginManager.isLoaded(pluginId)) {
+            vMessage.logger.info("Skipping '$id' integration...")
+            return
         }
+        if (!config.root.node("integrations","placeholder",id,"enabled").getBoolean(true)) {
+            vMessage.logger.info("Skipping '$id' integration...")
+            return
+        }
+        val integration = clazz.getDeclaredConstructor().newInstance() // only initialize if plugin is loaded (import not found exception or something otherwise)
+        if (integration.id != id || integration.pluginId != pluginId) {
+            vMessage.logger.info("Integration '$id' was loaded improperly. Skipping...")
+            return
+        }
+        vMessage.logger.info("Loading '$id' integration...")
+        integrations[clazz] = integration
     }
 
     fun unloadIntegration(clazz: Class<out Integration>) {
