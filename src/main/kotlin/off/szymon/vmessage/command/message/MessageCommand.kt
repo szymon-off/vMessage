@@ -58,7 +58,6 @@ class MessageCommand : PluginCommand("message", "msg", "tell", "whisper", "w") {
                                 return@executes Command.SINGLE_SUCCESS // handled properly
                             }
 
-
                             val receiverString = ctx.getArgument("player", String::class.java).lowercase()
                             val receiver = VMessage.get().proxy.getPlayer(receiverString).getOrElse {
                                 sendMessage(ctx.source, "<dark_gray>▎</dark_gray><gray>Invalid argument provided for '<#00ffff>player</#00ffff>'</gray>")
@@ -67,8 +66,8 @@ class MessageCommand : PluginCommand("message", "msg", "tell", "whisper", "w") {
 
                             @Suppress("DuplicatedCode")
                             val message = ctx.getArgument("message", String::class.java)
-                            val messageConfig = Config.get().tree.commands.message
 
+                            val messageConfig = Config.get().tree.commands.message
                             val senderFormat = messageConfig.format.sender
                             val receiverFormat = messageConfig.format.receiver
 

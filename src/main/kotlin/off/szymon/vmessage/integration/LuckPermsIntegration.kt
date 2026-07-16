@@ -17,7 +17,7 @@ import net.luckperms.api.LuckPermsProvider
 import off.szymon.fishy.api.messenger.parser.PlaceholderParserBuilder
 import off.szymon.vmessage.config.Config
 
-class LuckPermsIntegration() : Integration("luck-perms", "luckperms") {
+class LuckPermsIntegration : Integration("luck-perms", "luckperms") {
 
     val api = LuckPermsProvider.get()
     val playerAdapter = api.getPlayerAdapter(Player::class.java)

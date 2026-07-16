@@ -26,7 +26,7 @@ class ReplyCommand : PluginCommand("reply", "r") {
     override fun createCommand(): BrigadierCommand {
         return BrigadierCommand(
             BrigadierCommand.literalArgumentBuilder("reply")
-                .requires { src -> src.hasPermission("vmessage.command.message.reply") }
+                .requires { it.hasPermission("vmessage.command.message.reply") }
                 .then(BrigadierCommand.requiredArgumentBuilder("message", StringArgumentType.greedyString())
                     .executes { ctx ->
                         val sender = ctx.source as? Player ?: run {
@@ -41,8 +41,8 @@ class ReplyCommand : PluginCommand("reply", "r") {
                         }
 
                         val message = ctx.getArgument("message", String::class.java)
-                        val messageConfig = Config.get().tree.commands.message
 
+                        val messageConfig = Config.get().tree.commands.message
                         val senderFormat = messageConfig.format.sender
                         val receiverFormat = messageConfig.format.receiver
 

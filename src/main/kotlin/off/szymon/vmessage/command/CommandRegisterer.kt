@@ -27,6 +27,7 @@ class CommandRegisterer {
     }
 
     fun registerCommand(command: PluginCommand) {
+        // TODO check if enabled in config
         val cmdManager = vMessage.proxy.commandManager
         cmdManager.register(
             cmdManager.metaBuilder(command.name)

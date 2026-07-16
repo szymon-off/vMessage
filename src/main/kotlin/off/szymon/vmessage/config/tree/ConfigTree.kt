@@ -72,6 +72,8 @@ class ChangeConfig {
 class CommandsConfig {
     @Comment("/message, /msg, /whisper, /w, /tell")
     var message = MessageConfig()
+    @Comment("/broadcast, /bcast, /bc, /shout")
+    var broadcast = BroadcastConfig()
 }
 
 @ConfigSerializable
@@ -85,6 +87,20 @@ class MessageConfig {
 class MessageFormatConfig {
     var sender = $$"(<b><#00ffff>You</b> → <b><#00ffff>$receiver$</b>): $message$"
     var receiver = $$"(<b><#00ffff>$sender$</b> → <b><#00ffff>You</b>): $message$"
+}
+
+@ConfigSerializable
+class BroadcastConfig {
+    var enabled = true
+    var format = BroadcastFormatConfig()
+}
+
+@ConfigSerializable
+class BroadcastFormatConfig {
+    @Comment($$"Available placeholders: $player$, $message$, $server$, $prefix$, $suffix$, (custom luckperms metas), (PlaceholderAPI placeholders)")
+    var player = $$"<b><#00ffff>$player$</b>: $message$"
+    @Comment($$"Available placeholders: $message$")
+    var console = $$"<b><#00ffff>Console</b>: $message$"
 }
 
 @ConfigSerializable

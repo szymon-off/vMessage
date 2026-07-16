@@ -11,7 +11,7 @@ messages:
     enabled: true
 
     # Available placeholders: $player$, $message$, $server$, $prefix$, $suffix$, (custom luckperms metas), (PlaceholderAPI placeholders)
-    format: '%prefix% <b>%player%:</b> %message%'
+    format: '%prefix% <b>%player%</b>: %message%'
 
     # Whether to allow players to use MiniMessage in their messages
     # This may break your formatting, so it is recommended to keep this disabled.
@@ -35,8 +35,9 @@ messages:
     # $prefix$ - LuckPerms Prefix
     # $suffix$ - LuckPerms Suffix
     format: <dark_gray>(<gold>•<dark_gray>) <gray>%player% <dark_gray>(<gold>%old_server%→%new_server%<dark_gray>)
-
+# TODO: broadcast command
 commands:
+
   message:
     enabled: true
     # Available placeholders: $sender$, $receiver$, $prefix$, $suffix$, (custom luckperms metas), (PlaceholderAPI placeholders)
@@ -44,7 +45,14 @@ commands:
       sender: "(<b><#00ffff>You</b> → <b><#00ffff>$receiver$</b>): $message$"
       receiver: "(<b><#00ffff>$sender$</b> → <b><#00ffff>You</b>): $message$"
     # TODO: reply command, allow-mini-message, enable-by-default
-
+  broadcast:
+    enabled: true
+    format:
+      # Available placeholders: $player$, $message$, $server$, $prefix$, $suffix$, (custom luckperms metas), (PlaceholderAPI placeholders)
+      player: "<b><#00ffff>%player%</b>: %message%"
+      # Available placeholders: $message$
+      console: "<b><#00ffff>Console</b>: %message%"
+    # TODO: reply command, allow-mini-message, enable-by-default
 server-aliases:
   lobby: Lobby
   lobby1: Lobby
