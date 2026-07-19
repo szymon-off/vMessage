@@ -18,7 +18,6 @@ import off.szymon.vmessage.config.tree.MainConfig
 import org.spongepowered.configurate.CommentedConfigurationNode
 import org.spongepowered.configurate.ConfigurationOptions
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader
-import kotlin.jvm.java
 
 class Config : FishySerializedConfigurateFile<YamlConfigurationLoader, CommentedConfigurationNode, YamlConfigurationLoader.Builder, MainConfig> (
     "config.yml", VMessage.get().dataDir, YamlConfigurationLoader.Builder::class.java, MainConfig::class.java,
@@ -29,13 +28,13 @@ class Config : FishySerializedConfigurateFile<YamlConfigurationLoader, Commented
 ) {
 
     companion object {
-        @JvmStatic
         private lateinit var instance: Config
 
         @JvmStatic
         fun get(): Config = instance
     }
 
+    //  TODO old config migration
     init {
         instance = this
     }

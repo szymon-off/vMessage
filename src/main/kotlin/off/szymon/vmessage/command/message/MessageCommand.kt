@@ -18,6 +18,7 @@ import com.velocitypowered.api.command.BrigadierCommand
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.connection.DisconnectEvent
 import com.velocitypowered.api.proxy.Player
+import net.kyori.adventure.text.minimessage.MiniMessage
 import off.szymon.vmessage.VMessage
 import off.szymon.vmessage.command.PluginCommand
 import off.szymon.vmessage.config.Config
@@ -29,6 +30,7 @@ class MessageCommand : PluginCommand("message", "msg", "tell", "whisper", "w") {
     companion object {
         private lateinit var instance: MessageCommand
 
+        @JvmStatic
         fun get() = instance
     }
 
@@ -49,7 +51,7 @@ class MessageCommand : PluginCommand("message", "msg", "tell", "whisper", "w") {
     override fun createCommand(): BrigadierCommand {
         return BrigadierCommand(
             BrigadierCommand.literalArgumentBuilder("message")
-                .requires { it.hasPermission("vmessage.command.message") }
+                .requires { checkPermission(it, "vmessage.command.message") }
                 .then(BrigadierCommand.requiredArgumentBuilder("player", StringArgumentType.word())
                     .then(BrigadierCommand.requiredArgumentBuilder("message", StringArgumentType.greedyString())
                         .executes { ctx ->
@@ -64,10 +66,12 @@ class MessageCommand : PluginCommand("message", "msg", "tell", "whisper", "w") {
                                 return@executes Command.SINGLE_SUCCESS // handled properly
                             }
 
-                            @Suppress("DuplicatedCode")
-                            val message = ctx.getArgument("message", String::class.java)
+                            var message = ctx.getArgument("message", String::class.java)
 
                             val messageConfig = Config.get().tree.commands.message
+
+                            if (!messageConfig.allowMiniMessage) message = MiniMessage.miniMessage().escapeTags(message)
+
                             val senderFormat = messageConfig.format.sender
                             val receiverFormat = messageConfig.format.receiver
 

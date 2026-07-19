@@ -16,6 +16,7 @@ import com.mojang.brigadier.Command
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.velocitypowered.api.command.BrigadierCommand
 import com.velocitypowered.api.proxy.Player
+import net.kyori.adventure.text.minimessage.MiniMessage
 import off.szymon.vmessage.VMessage
 import off.szymon.vmessage.command.PluginCommand
 import off.szymon.vmessage.config.Config
@@ -26,7 +27,7 @@ class ReplyCommand : PluginCommand("reply", "r") {
     override fun createCommand(): BrigadierCommand {
         return BrigadierCommand(
             BrigadierCommand.literalArgumentBuilder("reply")
-                .requires { it.hasPermission("vmessage.command.message.reply") }
+                .requires { checkPermission(it, "vmessage.command.message.reply") }
                 .then(BrigadierCommand.requiredArgumentBuilder("message", StringArgumentType.greedyString())
                     .executes { ctx ->
                         val sender = ctx.source as? Player ?: run {
@@ -40,9 +41,12 @@ class ReplyCommand : PluginCommand("reply", "r") {
                             return@executes Command.SINGLE_SUCCESS // handled properly
                         }
 
-                        val message = ctx.getArgument("message", String::class.java)
+                        var message = ctx.getArgument("message", String::class.java)
 
                         val messageConfig = Config.get().tree.commands.message
+
+                        if (!messageConfig.allowMiniMessage) message = MiniMessage.miniMessage().escapeTags(message)
+
                         val senderFormat = messageConfig.format.sender
                         val receiverFormat = messageConfig.format.receiver
 

@@ -16,6 +16,7 @@ import com.mojang.brigadier.Command
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.velocitypowered.api.command.BrigadierCommand
 import com.velocitypowered.api.proxy.Player
+import net.kyori.adventure.text.minimessage.MiniMessage
 import off.szymon.fishy.api.messenger.parser.PlaceholderParserBuilder
 import off.szymon.vmessage.VMessage
 import off.szymon.vmessage.config.Config
@@ -29,7 +30,9 @@ class BroadcastCommand : PluginCommand("broadcast", "bcast", "bc", "shout") {
                 .requires { it.hasPermission("vmessage.command.broadcast") }
                 .then(BrigadierCommand.requiredArgumentBuilder("message", StringArgumentType.greedyString())
                     .executes { ctx ->
-                        val message = ctx.getArgument("message", String::class.java)
+                        var message = ctx.getArgument("message", String::class.java)
+
+                        if (!Config.get().tree.commands.broadcast.allowMiniMessage) message = MiniMessage.miniMessage().escapeTags(message)
 
                         val player = ctx.source as? Player
 

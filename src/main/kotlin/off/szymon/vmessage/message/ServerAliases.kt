@@ -23,6 +23,7 @@ class ServerAliases {
     companion object {
         private lateinit var instance: ServerAliases
 
+        @JvmStatic
         fun get() = instance
     }
 

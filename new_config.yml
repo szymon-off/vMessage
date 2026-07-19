@@ -35,7 +35,8 @@ messages:
     # $prefix$ - LuckPerms Prefix
     # $suffix$ - LuckPerms Suffix
     format: <dark_gray>(<gold>•<dark_gray>) <gray>%player% <dark_gray>(<gold>%old_server%→%new_server%<dark_gray>)
-# TODO: broadcast command
+
+# TODO: permission string in comments
 commands:
 
   message:
@@ -44,15 +45,20 @@ commands:
     format:
       sender: "(<b><#00ffff>You</b> → <b><#00ffff>$receiver$</b>): $message$"
       receiver: "(<b><#00ffff>$sender$</b> → <b><#00ffff>You</b>): $message$"
-    # TODO: reply command, allow-mini-message, enable-by-default
+    allow-mini-message: false
+    allow-by-default: true
+  reply:
+    enabled: true
+    allow-by-default: true
   broadcast:
     enabled: true
     format:
       # Available placeholders: $player$, $message$, $server$, $prefix$, $suffix$, (custom luckperms metas), (PlaceholderAPI placeholders)
-      player: "<b><#00ffff>%player%</b>: %message%"
+      player: "<b><#00ffff>%player%</b>: <reset>%message%"
       # Available placeholders: $message$
-      console: "<b><#00ffff>Console</b>: %message%"
-    # TODO: reply command, allow-mini-message, enable-by-default
+      console: "<b><#00ffff>Console</b>: <reset>%message%"
+    allow-mini-message: true
+    allow-by-default: false
 server-aliases:
   lobby: Lobby
   lobby1: Lobby

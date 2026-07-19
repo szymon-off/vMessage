@@ -24,6 +24,7 @@ class MainConfig {
     var serverAliases = ServerAliasesConfig()
     var placeholders = PlaceholdersConfig()
     var otherSettings = OtherSettingsConfig()
+    var configVersion = "2.0"
 }
 
 @ConfigSerializable
@@ -72,6 +73,8 @@ class ChangeConfig {
 class CommandsConfig {
     @Comment("/message, /msg, /whisper, /w, /tell")
     var message = MessageConfig()
+    @Comment("/reply, /r\nThe /reply command will mirror most of /message's settings")
+    var reply = ReplyConfig()
     @Comment("/broadcast, /bcast, /bc, /shout")
     var broadcast = BroadcastConfig()
 }
@@ -81,6 +84,8 @@ class MessageConfig {
     var enabled = true
     @Comment($$"Available placeholders: $sender$, $receiver$, $prefix$, $suffix$, (custom luckperms metas), (PlaceholderAPI placeholders)")
     var format = MessageFormatConfig()
+    var allowMiniMessage = false
+    var allowByDefault = true
 }
 
 @ConfigSerializable
@@ -90,17 +95,25 @@ class MessageFormatConfig {
 }
 
 @ConfigSerializable
+class ReplyConfig {
+    var enabled = true
+    var allowByDefault = true
+}
+
+@ConfigSerializable
 class BroadcastConfig {
     var enabled = true
     var format = BroadcastFormatConfig()
+    var allowMiniMessage = true
+    var allowByDefault = false
 }
 
 @ConfigSerializable
 class BroadcastFormatConfig {
     @Comment($$"Available placeholders: $player$, $message$, $server$, $prefix$, $suffix$, (custom luckperms metas), (PlaceholderAPI placeholders)")
-    var player = $$"<b><#00ffff>$player$</b>: $message$"
+    var player = $$"<b><#00ffff>$player$</b>: <reset>$message$"
     @Comment($$"Available placeholders: $message$")
-    var console = $$"<b><#00ffff>Console</b>: $message$"
+    var console = $$"<b><#00ffff>Console</b>: <reset>$message$"
 }
 
 @ConfigSerializable

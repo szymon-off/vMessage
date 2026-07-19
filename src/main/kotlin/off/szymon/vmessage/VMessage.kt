@@ -31,7 +31,7 @@ import com.velocitypowered.api.plugin.PluginContainer
 import com.velocitypowered.api.plugin.annotation.DataDirectory
 import com.velocitypowered.api.proxy.ProxyServer
 import off.szymon.fishy.api.FishyAPI
-import off.szymon.vmessage.command.CommandRegisterer
+import off.szymon.vmessage.command.CommandManager
 import off.szymon.vmessage.config.Config
 import off.szymon.vmessage.generated.Version
 import off.szymon.vmessage.integration.IntegrationManager
@@ -63,7 +63,6 @@ class VMessage @Inject constructor(
 ) {
 
     companion object {
-        @JvmStatic
         private lateinit var instance: VMessage
 
         @JvmStatic
@@ -101,7 +100,7 @@ class VMessage @Inject constructor(
         ServerAliases()
         IntegrationManager()
         HandlerManager()
-        CommandRegisterer()
+        CommandManager()
     }
 
     fun reloadVMessage() {

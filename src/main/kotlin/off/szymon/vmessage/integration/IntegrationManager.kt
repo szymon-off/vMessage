@@ -25,7 +25,6 @@ class IntegrationManager : IntegrationParser {
     val integrations = mutableMapOf<Class<out Integration>, Integration>()
 
     companion object {
-        @JvmStatic
         private lateinit var instance: IntegrationManager
 
         @JvmStatic

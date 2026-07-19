@@ -15,8 +15,9 @@ package off.szymon.vmessage.command
 import off.szymon.vmessage.VMessage
 import off.szymon.vmessage.command.message.MessageCommand
 import off.szymon.vmessage.command.message.ReplyCommand
+import off.szymon.vmessage.config.Config
 
-class CommandRegisterer {
+class CommandManager {
 
     private val vMessage = VMessage.get()
 
@@ -24,11 +25,17 @@ class CommandRegisterer {
         registerCommand(VMessageCommand())
         registerCommand(MessageCommand())
         registerCommand(ReplyCommand())
+        registerCommand(BroadcastCommand())
     }
 
     fun registerCommand(command: PluginCommand) {
-        // TODO check if enabled in config
+        val isMainCommand = command.name == "vmessage" // exception for /vmessage
+        if (!isMainCommand && !Config.get().root.node("commands", command.name, "enabled").getBoolean(false)) {
+            vMessage.logger.info("Skipping '${command.name}' command...")
+            return
+        }
         val cmdManager = vMessage.proxy.commandManager
+        vMessage.logger.info("Loading '${command.name}' command...")
         cmdManager.register(
             cmdManager.metaBuilder(command.name)
                 .plugin(vMessage)
@@ -37,5 +44,4 @@ class CommandRegisterer {
             command.createCommand()
         )
     }
-
 }
