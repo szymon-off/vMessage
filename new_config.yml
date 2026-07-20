@@ -36,9 +36,9 @@ messages:
     # $suffix$ - LuckPerms Suffix
     format: <dark_gray>(<gold>•<dark_gray>) <gray>%player% <dark_gray>(<gold>%old_server%→%new_server%<dark_gray>)
 
-# TODO: permission string in comments
 commands:
 
+  # /message, /msg, /tell, /whisper, /w (vmessage.command.message)
   message:
     enabled: true
     # Available placeholders: $sender$, $receiver$, $prefix$, $suffix$, (custom luckperms metas), (PlaceholderAPI placeholders)
@@ -81,3 +81,8 @@ integrations:
 other:
   # Server name to use if retrieving the player's current server fails
   default-server-name: "Unknown"
+  # TODO: Integrate this into ConfigTree.kt: !!!!! TODO TODO TODO
+  # Although this was a feature in vMessage 1.10.0-1.11.2, it is no longer supported in vMessage 2.0 and above.
+  # This is because MiniMessage is now very integrated into AdventureAPI, FishyAPI and this plugin itself.
+  # This may change in the future, if it is requested enough, but for now, it is not supported.
+  legacy-color-codes: "NOT SUPPORTED"

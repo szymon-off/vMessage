@@ -71,11 +71,11 @@ class ChangeConfig {
 
 @ConfigSerializable
 class CommandsConfig {
-    @Comment("/message, /msg, /whisper, /w, /tell")
+    @Comment("/message, /msg, /whisper, /w, /tell (vmessage.command.message)")
     var message = MessageConfig()
-    @Comment("/reply, /r\nThe /reply command will mirror most of /message's settings")
+    @Comment("/reply, /r (vmessage.command.message.reply)\nThe /reply command will mirror most of /message's settings")
     var reply = ReplyConfig()
-    @Comment("/broadcast, /bcast, /bc, /shout")
+    @Comment("/broadcast, /bcast, /bc, /shout (vmessage.command.broadcast)")
     var broadcast = BroadcastConfig()
 }
 
