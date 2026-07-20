@@ -27,7 +27,7 @@ class BroadcastCommand : PluginCommand("broadcast", "bcast", "bc", "shout") {
     override fun createCommand(): BrigadierCommand {
         return BrigadierCommand(
             BrigadierCommand.literalArgumentBuilder("broadcast")
-                .requires { it.hasPermission("vmessage.command.broadcast") }
+                .requires { checkPermission(it, "vmessage.command.broadcast") }
                 .then(BrigadierCommand.requiredArgumentBuilder("message", StringArgumentType.greedyString())
                     .executes { ctx ->
                         var message = ctx.getArgument("message", String::class.java)
