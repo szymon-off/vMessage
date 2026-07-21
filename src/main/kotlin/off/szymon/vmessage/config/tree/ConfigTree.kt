@@ -156,4 +156,9 @@ class PlaceholderApiConfig {
 class OtherSettingsConfig {
     @Comment("Server name to use if retrieving the player's current server fails")
     var defaultServerName = "Unknown"
+    @Comment("""Although this was a feature in vMessage 1.10.0-1.11.2, it is no longer supported in vMessage 2.0 and above.
+This is because MiniMessage is now very integrated into AdventureAPI, FishyAPI and this plugin itself.
+This may change in the future, if it is requested enough, but for now, it is not supported."""
+    )
+    var legacyColorCodes = "NOT SUPPORTED"
 }

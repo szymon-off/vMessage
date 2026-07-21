@@ -24,6 +24,7 @@ class Config : FishySerializedConfigurateFile<YamlConfigurationLoader, Commented
     """
         vMessage Config
         Thanks for downloading my plugin! I hope you like it!
+        Check out the wiki for more information: https://github.com/szymon-off/vMessage/wiki/Configuration-(config.yml)
     """.trimIndent()
 ) {
 
