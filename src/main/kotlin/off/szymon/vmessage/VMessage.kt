@@ -40,6 +40,8 @@ import off.szymon.vmessage.message.ServerAliases
 import org.bstats.velocity.Metrics
 import org.slf4j.Logger
 import java.nio.file.Path
+import kotlin.jvm.optionals.getOrDefault
+import kotlin.math.max
 
 @Plugin(
     id = "vmessage",
@@ -77,16 +79,17 @@ class VMessage @Inject constructor(
     @Subscribe
     fun onProxyInitialization(event: ProxyInitializeEvent) {
         val description = plugin.description
-        logger.info("Initializing ${description.name} v${description.version} by ${description.authors.joinToString(", ")}")
+        logger.info("Initializing ${description.name} v${description.version.getOrDefault("0.0.0-UNKNOWN")} by ${description.authors.joinToString(", ")}")
         logger.info("Powered by: FishyAPI v${FishyAPI.VERSION} by SzymON/OFF")
         Config()
         detectSignedVelocity()
         initializeVMessage()
-        logger.info("Initialization complete! Ready to serve chat messages!")
+        logger.info("Initialization completed! Ready to serve chat messages!")
+        checkForUpdates()
     }
 
     private fun detectSignedVelocity() {
-        val signedVelocityEnabled = proxy.pluginManager.isLoaded("SignedVelocity")
+        val signedVelocityEnabled = proxy.pluginManager.isLoaded("signedvelocity")
         val chatMessagesEnabled = Config.get().tree.messages.chat.enabled
         if (!signedVelocityEnabled && chatMessagesEnabled) {
             logger.warn("SignedVelocity not detected! vMessage chat messages will most likely have issues.")
@@ -109,6 +112,29 @@ class VMessage @Inject constructor(
         ServerAliases.get().loadAliases()
         IntegrationManager.get().reloadIntegrations()
         HandlerManager.get().reloadHandlers()
+    }
+
+    // TODO: disable update checker in config
+    fun checkForUpdates() {
+        val currentVersionString = plugin.description.version.getOrDefault("0.0.0-UNKNOWN")
+        val newestVersionString = "2.2.2" // TODO: fetch from github/modrinth
+
+        val currentVersion = currentVersionString.split('.')
+        val newestVersion = newestVersionString.split('.')
+
+        // TODO: reject invalid versions, detect dev builds and log
+
+        for (i in max(currentVersion.size, newestVersion.size) - 1 downTo 0) {
+            val currentPart = currentVersion.getOrNull(i)?.toIntOrNull() ?: 0
+            val newestPart = newestVersion.getOrNull(i)?.toIntOrNull() ?: 0
+
+            if (currentPart < newestPart) {
+                logger.info("A new version of vMessage is available: $newestVersionString (current: $currentVersionString)")
+                logger.info("Please update to the latest version from https://modrinth.com/plugin/vmessage")
+                return
+            }
+        }
+        logger.info("You are running the latest version of vMessage ($currentVersionString)")
     }
 
 }
