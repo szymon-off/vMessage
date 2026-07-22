@@ -23,7 +23,7 @@ class MainConfig {
     var commands = CommandsConfig()
     var serverAliases = ServerAliasesConfig()
     var placeholders = PlaceholdersConfig()
-    var otherSettings = OtherSettingsConfig()
+    var settings = SettingsConfig()
     var configVersion = "2.0"
 }
 
@@ -153,12 +153,15 @@ class PlaceholderApiConfig {
 }
 
 @ConfigSerializable
-class OtherSettingsConfig {
+class SettingsConfig {
     @Comment("Server name to use if retrieving the player's current server fails")
     var defaultServerName = "Unknown"
-    @Comment("""Although this was a feature in vMessage 1.10.0-1.11.2, it is no longer supported in vMessage 2.0 and above.
-This is because MiniMessage is now very integrated into AdventureAPI, FishyAPI and this plugin itself.
-This may change in the future, if it is requested enough, but for now, it is not supported."""
-    )
+    @Comment("Although this was a feature in vMessage 1.10.0-1.11.2, it is no longer supported in vMessage 2.0 and above.\n" +
+            "This is because MiniMessage is now very integrated into AdventureAPI, FishyAPI and this plugin itself.\n" +
+            "This may change in the future, if it is requested enough, but for now, it is not supported.")
     var legacyColorCodes = "NOT SUPPORTED"
+    @Comment("Whether to check for updates on plugin load.\n" +
+            "Will log a message to the console if an update is available.\n" +
+            "This won't work when running a development build.")
+    var checkForUpdates = true
 }

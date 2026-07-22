@@ -22,6 +22,7 @@ package off.szymon.vmessage/*
  * See the LICENSE file in the project root for details.
  */
 
+import com.google.gson.JsonParser
 import com.google.inject.Inject
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent
@@ -39,7 +40,13 @@ import off.szymon.vmessage.message.HandlerManager
 import off.szymon.vmessage.message.ServerAliases
 import org.bstats.velocity.Metrics
 import org.slf4j.Logger
+import java.net.URI
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
 import java.nio.file.Path
+import java.time.Duration
+import java.util.concurrent.CompletableFuture
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.math.max
 
@@ -114,27 +121,77 @@ class VMessage @Inject constructor(
         HandlerManager.get().reloadHandlers()
     }
 
-    // TODO: disable update checker in config
     fun checkForUpdates() {
-        val currentVersionString = plugin.description.version.getOrDefault("0.0.0-UNKNOWN")
-        val newestVersionString = "2.2.2" // TODO: fetch from github/modrinth
-
-        val currentVersion = currentVersionString.split('.')
-        val newestVersion = newestVersionString.split('.')
-
-        // TODO: reject invalid versions, detect dev builds and log
-
-        for (i in max(currentVersion.size, newestVersion.size) - 1 downTo 0) {
-            val currentPart = currentVersion.getOrNull(i)?.toIntOrNull() ?: 0
-            val newestPart = newestVersion.getOrNull(i)?.toIntOrNull() ?: 0
-
-            if (currentPart < newestPart) {
-                logger.info("A new version of vMessage is available: $newestVersionString (current: $currentVersionString)")
-                logger.info("Please update to the latest version from https://modrinth.com/plugin/vmessage")
-                return
-            }
+        if (!Config.get().tree.settings.checkForUpdates) {
+            logger.info("Skipping update check. Consider enabling this in the config.")
+            return
         }
-        logger.info("You are running the latest version of vMessage ($currentVersionString)")
+
+        val currentVersionString = plugin.description.version.getOrDefault("0.0.0-UNKNOWN")
+        if (currentVersionString.endsWith("dev")) {
+            logger.info("You are running a development build of vMessage ($currentVersionString). Update checking is disabled for dev builds.")
+            logger.info("Consider switching to a stable release from https://modrinth.com/plugin/vmessage")
+            return
+        }
+
+        // I don't really wanna add kotlin coroutines for this once usecase
+
+        CompletableFuture.runAsync {
+            val newestVersionString = fetchLatestReleaseVersion() ?: run {
+                logger.warn("Cannot check for updates. Could not fetch latest release version.")
+                return@runAsync
+            }
+
+            val currentVersion = currentVersionString.split(".").map { i ->
+                i.toIntOrNull() ?: run {
+                    logger.warn("Cannot check for updates. Invalid current version format: $currentVersionString")
+                    return@runAsync
+                }
+            }
+            val newestVersion = newestVersionString.split(".").map { i ->
+                i.toIntOrNull() ?: run {
+                    logger.warn("Cannot check for updates. Invalid newest version format: $newestVersionString")
+                    return@runAsync
+                }
+            }
+
+            val length = max(currentVersion.size, newestVersion.size)
+            for (i in 0 until length) {
+                val currentPart = currentVersion.getOrNull(i) ?: 0
+                val newestPart = newestVersion.getOrNull(i) ?: 0
+                when {
+                    currentPart > newestPart -> {
+                        logger.info("You are running an unreleased build ahead of the newest version (newest: $newestVersionString)")
+                        return@runAsync
+                    }
+                    currentPart < newestPart -> {
+                        logger.info("A new version of vMessage is available: $newestVersionString (current: $currentVersionString)")
+                        logger.info("Please update to the latest version from https://modrinth.com/plugin/vmessage")
+                        return@runAsync
+                    }
+                }
+            }
+            logger.info("You are running the latest version of vMessage ($currentVersionString)")
+        }
+    }
+
+    private val httpClient = HttpClient.newHttpClient()
+
+    fun fetchLatestReleaseVersion(): String? {
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create("https://api.modrinth.com/v2/project/vmessage/version"))
+            .header("User-Agent", "vMessage-UpdateChecker")
+            .timeout(Duration.ofSeconds(5))
+            .build()
+        return try {
+            val body = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body()
+            val versions = JsonParser.parseString(body).asJsonArray
+            versions.firstOrNull { it.asJsonObject.get("version_type").asString == "release" } // Assumes Modrinth returns in order (which it does)
+                ?.asJsonObject?.get("version_number")?.asString
+        } catch (e: Exception) {
+            logger.warn("Failed to fetch latest version from Modrinth: ${e.message}")
+            null
+        }
     }
 
 }

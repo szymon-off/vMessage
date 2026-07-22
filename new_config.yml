@@ -77,10 +77,14 @@ integrations:
       enabled: true
       bridge-timeout: 500
 
-other:
+settings:
   # Server name to use if retrieving the player's current server fails
   default-server-name: "Unknown"
   # Although this was a feature in vMessage 1.10.0-1.11.2, it is no longer supported in vMessage 2.0 and above.
   # This is because MiniMessage is now very integrated into AdventureAPI, FishyAPI and this plugin itself.
   # This may change in the future, if it is requested enough, but for now, it is not supported.
   legacy-color-codes: "NOT SUPPORTED"
+  # Whether to check for updates on plugin load.
+  # Will log a message to the console if an update is available.
+  # This won't work when running a development build.
+  check-for-updates: true
