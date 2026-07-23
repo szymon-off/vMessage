@@ -26,8 +26,11 @@ import off.szymon.vmessage.command.CommandManager
 import off.szymon.vmessage.config.Config
 import off.szymon.vmessage.generated.Version
 import off.szymon.vmessage.integration.IntegrationManager
+import off.szymon.vmessage.integration.LuckPermsIntegration
+import off.szymon.vmessage.integration.PlaceholderApiIntegration
 import off.szymon.vmessage.message.HandlerManager
 import off.szymon.vmessage.message.ServerAliases
+import org.bstats.charts.AdvancedBarChart
 import org.bstats.velocity.Metrics
 import org.slf4j.Logger
 import java.net.URI
@@ -60,7 +63,7 @@ class VMessage @Inject constructor(
     val logger: Logger,
     @param:DataDirectory val dataDir: Path,
     val plugin: PluginContainer,
-    val metrics: Metrics.Factory // TODO
+    val metricsFactory: Metrics.Factory
 ) {
 
     companion object {
@@ -84,6 +87,7 @@ class VMessage @Inject constructor(
         initializeVMessage()
         logger.info("Initialization completed! Ready to serve chat messages!")
         checkForUpdates()
+        submitMetrics()
     }
 
     private fun detectSignedVelocity() {
@@ -97,14 +101,14 @@ class VMessage @Inject constructor(
         }
     }
 
-    fun initializeVMessage() {
+    private fun initializeVMessage() {
         ServerAliases()
         IntegrationManager()
         HandlerManager()
         CommandManager()
     }
 
-    fun reloadVMessage() {
+    private fun reloadVMessage() {
         Config.get().load()
 //        detectSignedVelocity()
         ServerAliases.get().loadAliases()
@@ -112,7 +116,7 @@ class VMessage @Inject constructor(
         HandlerManager.get().reloadHandlers()
     }
 
-    fun checkForUpdates() {
+    private fun checkForUpdates() {
         if (!Config.get().tree.settings.checkForUpdates) {
             logger.info("Skipping update check. Consider enabling this in the config.")
             return
@@ -168,7 +172,7 @@ class VMessage @Inject constructor(
 
     private val httpClient = HttpClient.newHttpClient()
 
-    fun fetchLatestReleaseVersion(): String? {
+    private fun fetchLatestReleaseVersion(): String? {
         val request = HttpRequest.newBuilder()
             .uri(URI.create("https://api.modrinth.com/v2/project/vmessage/version"))
             .header("User-Agent", "vMessage-UpdateChecker")
@@ -183,6 +187,33 @@ class VMessage @Inject constructor(
             logger.warn("Failed to fetch latest version from Modrinth: ${e.message}")
             null
         }
+    }
+
+    private fun submitMetrics() {
+        val metrics: Metrics = metricsFactory.make(this, 27241) // https://bstats.org/plugin/velocity/vMessage%20Velocity/27241
+        metrics.addCustomChart(AdvancedBarChart("features") {
+            val integrationManager = IntegrationManager.get()
+            val configTree = Config.get().tree
+
+            val map = mutableMapOf<String, IntArray>()
+            // 1,0 = Enabled
+            // 0,1 = Disabled
+            map["Chat Messages"] = getIntArray(configTree.messages.chat.enabled)
+            map["Join Messages"] = getIntArray(configTree.messages.join.enabled)
+            map["Leave Messages"] = getIntArray(configTree.messages.leave.enabled)
+            map["Server Change Messages"] = getIntArray(configTree.messages.change.enabled)
+            map["Message Command"] = getIntArray(configTree.commands.message.enabled)
+            map["Reply Command"] = getIntArray(configTree.commands.reply.enabled)
+            map["Broadcast Command"] = getIntArray(configTree.commands.broadcast.enabled)
+            // we check the below like this because that actually checks whether they are in use (plugin installed) and not just toggled in the config
+            map["PlaceholderAPI Integration"] = getIntArray(integrationManager.getIntegration(PlaceholderApiIntegration::class.java) != null)
+            map["LuckPerms Integration"] = getIntArray(integrationManager.getIntegration(LuckPermsIntegration::class.java) != null)
+            map
+        })
+    }
+
+    private fun getIntArray(enabled: Boolean): IntArray {
+        return if (enabled) intArrayOf(1, 0) else intArrayOf(0, 1)
     }
 
 }
