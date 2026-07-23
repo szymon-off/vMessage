@@ -22,7 +22,7 @@ version = pluginVersion
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 
@@ -39,11 +39,11 @@ dependencies {
     implementation("off.szymon:fishy-api:0.9.5")
 
     /* Velocity API */
-    compileOnly("com.velocitypowered:velocity-api:3.4.0-SNAPSHOT") {
+    compileOnly("com.velocitypowered:velocity-api:3.5.1") {
         exclude(group = "org.spongepowered", module = "configurate-core")
         exclude(group = "org.spongepowered", module = "configurate-yaml")
     }
-    annotationProcessor("com.velocitypowered:velocity-api:3.4.0-SNAPSHOT") {
+    annotationProcessor("com.velocitypowered:velocity-api:3.5.1") {
         exclude(group = "org.spongepowered", module = "configurate-core")
         exclude(group = "org.spongepowered", module = "configurate-yaml")
     }
