@@ -39,11 +39,11 @@ dependencies {
     implementation("off.szymon:fishy-api:0.9.5")
 
     /* Velocity API */
-    compileOnly("com.velocitypowered:velocity-api:3.5.1") {
+    compileOnly("com.velocitypowered:velocity-api:3.5.0-SNAPSHOT") {
         exclude(group = "org.spongepowered", module = "configurate-core")
         exclude(group = "org.spongepowered", module = "configurate-yaml")
     }
-    annotationProcessor("com.velocitypowered:velocity-api:3.5.1") {
+    annotationProcessor("com.velocitypowered:velocity-api:3.5.0-SNAPSHOT") {
         exclude(group = "org.spongepowered", module = "configurate-core")
         exclude(group = "org.spongepowered", module = "configurate-yaml")
     }
@@ -54,7 +54,7 @@ dependencies {
     compileOnly("net.william278:papiproxybridge:1.8")
 
     /* Usage Statistics */
-    implementation("org.bstats:bstats-velocity:3.1.0")
+    implementation("org.bstats:bstats-velocity:3.2.1")
 }
 
 /* Generate Version.kt: build/generated/source/version/kotlin/off/szymon/vmessage/generated/Version.kt -> Treated as a source */

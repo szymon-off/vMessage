@@ -1,6 +1,6 @@
 # vMessage
 
-TODO: Ai transparency, recommended velocity 3.5.1+, required Java 21, update readme generally
+TODO: Ai transparency, recommended velocity 3.5.0+, required Java 21, update readme generally
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/szymon-off/vMessage) ![Modrinth Downloads](https://img.shields.io/modrinth/dt/ZIxTT2xI?logo=modrinth&color=%2300AF5C) ![GitHub issues](https://img.shields.io/github/issues/szymon-off/vMessage) ![GitHub](https://img.shields.io/github/license/szymon-off/vMessage) ![GitHub last commit](https://img.shields.io/github/last-commit/szymon-off/vMessage)
 
