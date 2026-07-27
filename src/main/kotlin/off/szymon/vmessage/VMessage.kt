@@ -85,7 +85,7 @@ class VMessage @Inject constructor(
         Config()
         detectSignedVelocity()
         initializeVMessage()
-        logger.info("Initialization completed! Ready to serve chat messages!")
+        logger.info("Initialization completed! Ready to serve messages!")
         checkForUpdates()
         submitMetrics()
     }
