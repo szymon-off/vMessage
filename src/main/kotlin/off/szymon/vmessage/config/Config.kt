@@ -20,7 +20,7 @@ import org.spongepowered.configurate.ConfigurationOptions
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader
 
 class Config : FishySerializedConfigurateFile<YamlConfigurationLoader, CommentedConfigurationNode, YamlConfigurationLoader.Builder, MainConfig> (
-    "config.yml", VMessage.get().dataDir, YamlConfigurationLoader.Builder::class.java, MainConfig::class.java,
+    "config.yml", VMessage.get().dataDir, { YamlConfigurationLoader.builder() } , MainConfig::class.java,
     """
         vMessage Config
         Thanks for downloading my plugin! I hope you like it!

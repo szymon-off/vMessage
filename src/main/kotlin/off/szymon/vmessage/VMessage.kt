@@ -80,7 +80,7 @@ class VMessage @Inject constructor(
     @Subscribe
     fun onProxyInitialization(event: ProxyInitializeEvent) {
         val description = plugin.description
-        logger.info("Initializing ${description.name} v${description.version.getOrDefault("0.0.0-UNKNOWN")} by ${description.authors.joinToString(", ")}")
+        logger.info("Initializing ${description.name.orElseThrow()} v${description.version.getOrDefault("0.0.0-UNKNOWN")} by ${description.authors.joinToString(", ")}")
         logger.info("Powered by: FishyAPI v${FishyAPI.VERSION} by SzymON/OFF")
         Config()
         detectSignedVelocity()
