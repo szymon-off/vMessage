@@ -30,6 +30,7 @@ class ServerAliases {
     val aliases: MutableMap<String, String> = mutableMapOf()
 
     init {
+        instance = this
         loadAliases()
     }
 
