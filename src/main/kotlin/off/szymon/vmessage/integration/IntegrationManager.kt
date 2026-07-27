@@ -93,7 +93,7 @@ class IntegrationManager : IntegrationParser {
     fun asMessageParser(player: Player): MessageParser {
         return object : MessageParser {
             override fun parse(string: String): String {
-                return parse(string, player)
+                return this@IntegrationManager.parse(string, player)
             }
         }
     }
