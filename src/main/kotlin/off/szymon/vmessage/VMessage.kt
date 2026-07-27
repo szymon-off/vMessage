@@ -108,7 +108,7 @@ class VMessage @Inject constructor(
         CommandManager()
     }
 
-    private fun reloadVMessage() {
+    fun reloadVMessage() {
         Config.get().load()
 //        detectSignedVelocity()
         ServerAliases.get().loadAliases()
@@ -203,7 +203,7 @@ class VMessage @Inject constructor(
             map["Leave Messages"] = getIntArray(configTree.messages.leave.enabled)
             map["Server Change Messages"] = getIntArray(configTree.messages.change.enabled)
             map["Message Command"] = getIntArray(configTree.commands.message.enabled)
-            map["Reply Command"] = getIntArray(configTree.commands.reply.enabled)
+            map["Reply Command"] = getIntArray(configTree.commands.message.enabled && configTree.commands.reply.enabled)
             map["Broadcast Command"] = getIntArray(configTree.commands.broadcast.enabled)
             // we check the below like this because that actually checks whether they are in use (plugin installed) and not just toggled in the config
             map["PlaceholderAPI Integration"] = getIntArray(integrationManager.getIntegration(PlaceholderApiIntegration::class.java) != null)

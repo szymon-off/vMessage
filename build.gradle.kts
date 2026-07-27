@@ -12,6 +12,7 @@
 
 plugins {
     kotlin("jvm") version "2.2.21"
+    kotlin("kapt") version "2.2.21"
     id("com.gradleup.shadow") version "9.3.0"
 }
 
@@ -43,10 +44,7 @@ dependencies {
         exclude(group = "org.spongepowered", module = "configurate-core")
         exclude(group = "org.spongepowered", module = "configurate-yaml")
     }
-    annotationProcessor("com.velocitypowered:velocity-api:3.5.0-SNAPSHOT") {
-        exclude(group = "org.spongepowered", module = "configurate-core")
-        exclude(group = "org.spongepowered", module = "configurate-yaml")
-    }
+    kapt("com.velocitypowered:velocity-api:3.5.0-SNAPSHOT")
 
     /* Plugin Integration APIs */
     // Placeholder Plugins
