@@ -24,7 +24,7 @@ class CommandManager {
     init {
         registerCommand(VMessageCommand())
         registerCommand(MessageCommand())
-        registerCommand(ReplyCommand())
+        if (Config.get().tree.commands.message.enabled) registerCommand(ReplyCommand())
         registerCommand(BroadcastCommand())
     }
 
