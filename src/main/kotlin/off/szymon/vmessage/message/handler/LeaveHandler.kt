@@ -27,11 +27,10 @@ class LeaveHandler : MessagesHandler("leave") {
     private val serverAliases = ServerAliases.get()
 
     @Subscribe
-    fun onLeave(event: DisconnectEvent): EventTask {
+    fun onLeave(event: DisconnectEvent): EventTask? {
+        if (event.player.hasPermission(Config.get().tree.silentPermissions.join)) return null
         @Suppress("DuplicatedCode")
-        return EventTask.async {
-            broadcast(event.player)
-        }
+        return EventTask.async { broadcast(event.player) }
     }
 
     override fun broadcast(player: Player) {

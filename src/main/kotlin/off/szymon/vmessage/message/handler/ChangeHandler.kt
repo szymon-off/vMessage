@@ -27,9 +27,10 @@ class ChangeHandler : MessagesHandler("change") {
     private val serverAliases = ServerAliases.get()
 
     @Subscribe
-    fun onJoin(event: ServerPostConnectEvent): EventTask? {
+    fun onChange(event: ServerPostConnectEvent): EventTask? {
         if (event.previousServer == null) return null // otherwise this is a join
 
+        if (event.player.hasPermission(Config.get().tree.silentPermissions.change)) return null
         return EventTask.async { broadcast(event.player) }
     }
 

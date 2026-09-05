@@ -23,6 +23,9 @@ class MainConfig {
     var commands = CommandsConfig()
     var serverAliases = ServerAliasesConfig()
     var placeholders = PlaceholdersConfig()
+    @Comment("Players with these permissions will not trigger the join, leave, or change messages.\n" +
+            "\"vmessage-silent\" was chosen as the permission prefix to prevent vmessage.* triggering the silent permissions.")
+    var silentPermissions = SilentPermissionsConfig()
     var settings = SettingsConfig()
     var configVersion = "2.0"
 }
@@ -150,6 +153,14 @@ class PlaceholderApiConfig {
     var enabled = true
     @Comment("The time in milliseconds to give to PAPIProxyBridge to format the placeholders before skipping the integration.")
     var bridgeTimeout: Long = 500
+}
+
+@ConfigSerializable
+// TODO actually implement this
+class SilentPermissionsConfig {
+    var join = "vmessage-silent.join"
+    var leave = "vmessage-silent.leave"
+    var change = "vmessage-silent.change"
 }
 
 @ConfigSerializable

@@ -77,6 +77,13 @@ integrations:
       enabled: true
       bridge-timeout: 500
 
+# Players with these permissions will not trigger the join, leave, or change messages.
+# "vmessage-silent" was chosen as the permission prefix to prevent vmessage.* triggering the silent permissions.
+silent-permissions:
+  join: vmessage-silent.join
+  leave: vmessage-silent.leave
+  change: vmessage-silent.change
+
 settings:
   # Server name to use if retrieving the player's current server fails
   default-server-name: "Unknown"

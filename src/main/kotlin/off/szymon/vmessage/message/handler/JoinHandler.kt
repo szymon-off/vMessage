@@ -30,6 +30,7 @@ class JoinHandler : MessagesHandler("join") {
     fun onJoin(event: ServerPostConnectEvent): EventTask? {
         if (event.previousServer != null) return null // else it's a server change, not a join
 
+        if (event.player.hasPermission(Config.get().tree.silentPermissions.join)) return null
         return EventTask.async { broadcast(event.player) }
     }
 
