@@ -22,8 +22,8 @@ import org.spongepowered.configurate.yaml.YamlConfigurationLoader
 
 class LegacyConfigMigration {
 
-    var legacyConfigRoot: CommentedConfigurationNode? = getLegacyConfigRoot()
-    var newConfigRoot: CommentedConfigurationNode = Config.get().root
+    val legacyConfigRoot: CommentedConfigurationNode? = buildLegacyConfigRoot()
+    val newConfigRoot: CommentedConfigurationNode = Config.get().root
 
     fun runMigrationIfNeeded() {
         if (needsMigration()) {
@@ -32,13 +32,13 @@ class LegacyConfigMigration {
 
             try {
                 migrateLegacyConfig()
-            } catch (e: java.lang.UnsupportedOperationException) {
-                VMessage.get().logger.warn("Legacy config migration failed: ${e.message}")
+            } catch (e: UnsupportedOperationException) {
+                VMessage.get().logger.error("Legacy config migration failed: ${e.message}", e)
             }
         }
     }
 
-    fun getLegacyConfigRoot(): CommentedConfigurationNode? {
+    fun buildLegacyConfigRoot(): CommentedConfigurationNode? {
         val path = VMessage.get().dataDir.parent.resolve("vMessage").resolve("config.yml")
         if (!path.toFile().exists()) {
             return null
@@ -49,13 +49,7 @@ class LegacyConfigMigration {
                 opts.shouldCopyDefaults(true)
                     .header(
                         """
-                    vMessage Configuration File
-                    Thanks for downloading my plugin! I hope you like it!
-                    MiniMessage is supported for formatting in all messages.
-                    Placeholders are parsed before MiniMessage so you can use them in your format.
-                    For in-depth explanation of the configuration options, visit: https://github.com/szymon-off/vMessage/wiki/Configuration-(config.yml)
-                    
-                    ⚠️ If you have used vMessage before v1.8.0, the contents of this file may be malformed ⚠️
+                    vMessage LEGACY Configuration File
                     """.trimIndent()
                     )
                     .implicitInitialization(true)
@@ -68,18 +62,52 @@ class LegacyConfigMigration {
     }
 
     fun needsMigration(): Boolean {
-        return legacyConfigRoot != null && newConfigRoot.node("config-version").isNull // TODO check if migration has already been done before (does this work?)
+        return legacyConfigRoot != null && newConfigRoot.node("config-version").isNull // TODO check if migration has already been done before (does this work? NOOOO)
     }
 
+    @Suppress("DuplicatedCode")
     @Throws(UnsupportedOperationException::class)
     private fun migrateLegacyConfig() {
-        val legacyConfig: LegacyMainConfig? = null
+        var legacyConfig: LegacyMainConfig? = null
         try {
-            val legacyConfig = legacyConfigRoot?.get(LegacyMainConfig::class.java) ?: throw UnsupportedOperationException("Legacy config is invalid, cannot migrate")
+            legacyConfig = legacyConfigRoot?.get(LegacyMainConfig::class.java) ?: throw UnsupportedOperationException("Legacy config is invalid, cannot migrate")
         } catch (e: SerializationException) {
             throw UnsupportedOperationException("Legacy config is invalid, cannot migrate")
         }
+        val newConfig = Config.get().tree
         // TODO: implement migration logic
+
+        // TODO: placeholders
+        newConfig.commands.message.enabled = legacyConfig.commands.message.enabled
+        newConfig.commands.message.allowMiniMessage = legacyConfig.commands.message.allowMiniMessage
+        newConfig.commands.message.allowByDefault = legacyConfig.commands.message.allowByDefault
+        newConfig.commands.message.format.sender = legacyConfig.commands.message.format.sender
+        newConfig.commands.message.format.receiver = legacyConfig.commands.message.format.receiver
+
+        newConfig.commands.reply.enabled = legacyConfig.commands.message.enableReplyCommand
+        newConfig.commands.reply.allowByDefault = legacyConfig.commands.message.allowByDefault
+
+        newConfig.commands.broadcast.enabled = legacyConfig.commands.broadcast.enabled
+        newConfig.commands.broadcast.allowMiniMessage = legacyConfig.commands.broadcast.allowMiniMessage
+        newConfig.commands.broadcast.allowByDefault = legacyConfig.commands.broadcast.allowByDefault
+        newConfig.commands.broadcast.format.player = legacyConfig.commands.broadcast.format
+        newConfig.commands.broadcast.format.console = legacyConfig.commands.broadcast.format
+
+        newConfig.messages.chat.enabled = legacyConfig.messages.chat.enabled
+        newConfig.messages.chat.allowMiniMessage = legacyConfig.messages.chat.allowMiniMessage
+        newConfig.messages.chat.format = legacyConfig.messages.chat.format
+
+        newConfig.messages.join.enabled = legacyConfig.messages.join.enabled
+        newConfig.messages.join.format = legacyConfig.messages.join.format
+
+        newConfig.messages.leave.enabled = legacyConfig.messages.leave.enabled
+        newConfig.messages.leave.format = legacyConfig.messages.leave.format
+
+        newConfig.messages.change.enabled = legacyConfig.messages.change.enabled
+        newConfig.messages.change.format = legacyConfig.messages.change.format
+
+        newConfigRoot.node("settings", "server-aliases").from(legacyConfigRoot.node("server-aliases"))
+        newConfigRoot.node("placeholders", "luck-perms", "custom-meta").from(legacyConfigRoot.node("luck-perms-meta"))
     }
 
 }
