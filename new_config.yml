@@ -77,16 +77,17 @@ integrations:
       enabled: true
       bridge-timeout: 500
 
-# Players with these permissions will not trigger the join, leave, or change messages.
-# "vmessage-silent" was chosen as the permission prefix to prevent vmessage.* triggering the silent permissions.
-silent-permissions:
-  join: vmessage-silent.join
-  leave: vmessage-silent.leave
-  change: vmessage-silent.change
+
 
 settings:
   # Server name to use if retrieving the player's current server fails
   default-server-name: "Unknown"
+  # Players with these permissions will not trigger the join, leave, or change messages.
+  # "vmessage-silent" was chosen as the permission prefix to prevent vmessage.* triggering the silent permissions.
+  silent-permissions:
+    join: vmessage-silent.join
+    leave: vmessage-silent.leave
+    change: vmessage-silent.change
   # Although this was a feature in vMessage 1.10.0-1.11.2, it is no longer supported in vMessage 2.0 and above.
   # This is because MiniMessage is now very integrated into AdventureAPI, FishyAPI and this plugin itself.
   # This may change in the future, if it is requested enough, but for now, it is not supported.

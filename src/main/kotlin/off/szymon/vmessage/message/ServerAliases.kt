@@ -49,7 +49,7 @@ class ServerAliases {
     }
 
     fun loadAliases() {
-        Config.get().root.node("server-aliases").childrenMap().forEach { (key, value) ->
+        Config.get().root.node("settings","server-aliases").childrenMap().forEach { (key, value) ->
             aliases[key.toString()] = value.string ?: return@forEach
         }
     }

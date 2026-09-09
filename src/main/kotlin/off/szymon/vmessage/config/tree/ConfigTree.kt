@@ -21,11 +21,7 @@ import org.spongepowered.configurate.objectmapping.meta.Comment
 class MainConfig {
     var messages = MessagesConfig()
     var commands = CommandsConfig()
-    var serverAliases = ServerAliasesConfig()
     var placeholders = PlaceholdersConfig()
-    @Comment("Players with these permissions will not trigger the join, leave, or change messages.\n" +
-            "\"vmessage-silent\" was chosen as the permission prefix to prevent vmessage.* triggering the silent permissions.")
-    var silentPermissions = SilentPermissionsConfig()
     var settings = SettingsConfig()
     var configVersion = "2.0"
 }
@@ -120,13 +116,6 @@ class BroadcastFormatConfig {
 }
 
 @ConfigSerializable
-class ServerAliasesConfig {
-    var lobby = "Lobby"
-    var lobby1 = "Lobby"
-    var lobby2 = "Lobby"
-}
-
-@ConfigSerializable
 class PlaceholdersConfig {
     var luckPerms = LuckPermsConfig()
     @Comment("via PAPIProxyBridge")
@@ -156,17 +145,14 @@ class PlaceholderApiConfig {
 }
 
 @ConfigSerializable
-// TODO actually implement this
-class SilentPermissionsConfig {
-    var join = "vmessage-silent.join"
-    var leave = "vmessage-silent.leave"
-    var change = "vmessage-silent.change"
-}
-
-@ConfigSerializable
 class SettingsConfig {
     @Comment("Server name to use if retrieving the player's current server fails")
     var defaultServerName = "Unknown"
+    @Comment("Aliases for different server names.")
+    var serverAliases = ServerAliasesConfig()
+    @Comment("Players with these permissions will not trigger the join, leave, or change messages.\n" +
+            "\"vmessage-silent\" was chosen as the permission prefix to prevent vmessage.* triggering the silent permissions.")
+    var silentPermissions = SilentPermissionsConfig()
     @Comment("Although this was a feature in vMessage 1.10.0-1.11.2, it is no longer supported in vMessage 2.0 and above.\n" +
             "This is because MiniMessage is now very integrated into AdventureAPI, FishyAPI and this plugin itself.\n" +
             "This may change in the future, if it is requested enough, but for now, it is not supported.")
@@ -175,4 +161,18 @@ class SettingsConfig {
             "Will log a message to the console if an update is available.\n" +
             "This won't work when running a development build.")
     var checkForUpdates = true
+}
+
+@ConfigSerializable
+class ServerAliasesConfig {
+    var lobby = "Lobby"
+    var lobby1 = "Lobby"
+    var lobby2 = "Lobby"
+}
+
+@ConfigSerializable
+class SilentPermissionsConfig {
+    var join = "vmessage-silent.join"
+    var leave = "vmessage-silent.leave"
+    var change = "vmessage-silent.change"
 }

@@ -30,7 +30,7 @@ class ChangeHandler : MessagesHandler("change") {
     fun onChange(event: ServerPostConnectEvent): EventTask? {
         if (event.previousServer == null) return null // otherwise this is a join
 
-        if (event.player.hasPermission(Config.get().tree.silentPermissions.change)) return null
+        if (event.player.hasPermission(Config.get().tree.settings.silentPermissions.change)) return null
         return EventTask.async { broadcast(event.player) }
     }
 
