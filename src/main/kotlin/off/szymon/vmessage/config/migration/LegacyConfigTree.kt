@@ -43,14 +43,14 @@ class LegacyMessagesConfig {
 @ConfigSerializable
 class LegacyChatConfig {
     var enabled: Boolean = null!!
-    var format: String? = null
-    var allowMiniMessage: Boolean? = null
+    var format: String = null!!
+    var allowMiniMessage: Boolean = null!!
     var mutedMessage: String = null!!
 }
 
 @ConfigSerializable
 class LegacyJoinConfig {
-    var enabled: Boolean? = null
+    var enabled: Boolean = null!!
     var format: String = null!!
 }
 
@@ -68,7 +68,7 @@ class LegacyChangeConfig {
 
 @ConfigSerializable
 class LegacyCommandsConfig {
-    var broadcast: Boolean? = null
+    var broadcast: LegacyBroadcastConfig = null!!
     var message: LegacyMessageConfig = null!!
 }
 
