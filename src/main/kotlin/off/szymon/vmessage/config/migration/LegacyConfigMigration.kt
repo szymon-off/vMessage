@@ -68,21 +68,37 @@ class LegacyConfigMigration {
     @Suppress("DuplicatedCode")
     @Throws(UnsupportedOperationException::class)
     private fun migrateLegacyConfig() {
-        var legacyConfig: LegacyMainConfig? = null
+        var legacyConfig: LegacyMainConfig?
         try {
             legacyConfig = legacyConfigRoot?.get(LegacyMainConfig::class.java) ?: throw UnsupportedOperationException("Legacy config is invalid, cannot migrate")
         } catch (e: SerializationException) {
             throw UnsupportedOperationException("Legacy config is invalid, cannot migrate")
         }
         val newConfig = Config.get().tree
-        // TODO: implement migration logic
 
-        // TODO: placeholders
         newConfig.commands.message.enabled = legacyConfig.commands.message.enabled
         newConfig.commands.message.allowMiniMessage = legacyConfig.commands.message.allowMiniMessage
         newConfig.commands.message.allowByDefault = legacyConfig.commands.message.allowByDefault
         newConfig.commands.message.format.sender = legacyConfig.commands.message.format.sender
+            .replace("%sender%", $$"$sender$")
+            .replace("%receiver%", $$"$receiver$")
+            .replace("%message%", $$"$message$")
+            .replace("%sender-server%", "")
+            .replace("%receiver-server%", "")
+            .replace("%sender-prefix%", "")
+            .replace("%receiver-prefix%", $$"$prefix$")
+            .replace("%sender-suffix%", "")
+            .replace("%receiver-suffix%", $$"$suffix$")
         newConfig.commands.message.format.receiver = legacyConfig.commands.message.format.receiver
+            .replace("%sender%", $$"$sender$")
+            .replace("%receiver%", $$"$receiver$")
+            .replace("%message%", $$"$message$")
+            .replace("%sender-server%", "")
+            .replace("%receiver-server%", "")
+            .replace("%sender-prefix%", $$"$prefix$")
+            .replace("%receiver-prefix%", "")
+            .replace("%sender-suffix%", $$"$suffix$")
+            .replace("%receiver-suffix%", "")
 
         newConfig.commands.reply.enabled = legacyConfig.commands.message.enableReplyCommand
         newConfig.commands.reply.allowByDefault = legacyConfig.commands.message.allowByDefault
@@ -91,20 +107,47 @@ class LegacyConfigMigration {
         newConfig.commands.broadcast.allowMiniMessage = legacyConfig.commands.broadcast.allowMiniMessage
         newConfig.commands.broadcast.allowByDefault = legacyConfig.commands.broadcast.allowByDefault
         newConfig.commands.broadcast.format.player = legacyConfig.commands.broadcast.format
+            .replace("%player%", $$"$player$")
+            .replace("%message%", $$"$message$")
+            .replace("%server%", $$"$server$")
+            .replace("%prefix%", $$"$prefix$")
+            .replace("%suffix%", $$"$suffix$")
         newConfig.commands.broadcast.format.console = legacyConfig.commands.broadcast.format
+            .replace("%player%", "")
+            .replace("%message%", $$"$message$")
+            .replace("%server%", "")
+            .replace("%prefix%", "")
+            .replace("%suffix%", "")
 
         newConfig.messages.chat.enabled = legacyConfig.messages.chat.enabled
         newConfig.messages.chat.allowMiniMessage = legacyConfig.messages.chat.allowMiniMessage
         newConfig.messages.chat.format = legacyConfig.messages.chat.format
+            .replace("%player%", $$"$player$")
+            .replace("%message%", $$"$message$")
+            .replace("%server%", $$"$server$")
+            .replace("%prefix%", $$"$prefix$")
+            .replace("%suffix%", $$"$suffix$")
 
         newConfig.messages.join.enabled = legacyConfig.messages.join.enabled
         newConfig.messages.join.format = legacyConfig.messages.join.format
+            .replace("%player%", $$"$player$")
+            .replace("%server%", $$"$server$")
+            .replace("%prefix%", $$"$prefix$")
+            .replace("%suffix%", $$"$suffix$")
 
         newConfig.messages.leave.enabled = legacyConfig.messages.leave.enabled
         newConfig.messages.leave.format = legacyConfig.messages.leave.format
+            .replace("%player%", $$"$player$")
+            .replace("%server%", $$"$server$")
+            .replace("%prefix%", $$"$prefix$")
+            .replace("%suffix%", $$"$suffix$")
 
         newConfig.messages.change.enabled = legacyConfig.messages.change.enabled
         newConfig.messages.change.format = legacyConfig.messages.change.format
+            .replace("%player%", $$"$player$")
+            .replace("%server%", $$"$server$")
+            .replace("%prefix%", $$"$prefix$")
+            .replace("%suffix%", $$"$suffix$")
 
         newConfigRoot.node("settings", "server-aliases").from(legacyConfigRoot.node("server-aliases"))
         newConfigRoot.node("placeholders", "luck-perms", "custom-meta").from(legacyConfigRoot.node("luck-perms-meta"))
