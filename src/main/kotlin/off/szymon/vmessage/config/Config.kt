@@ -35,7 +35,6 @@ class Config : FishySerializedConfigurateFile<YamlConfigurationLoader, Commented
         fun get(): Config = instance
     }
 
-    //  TODO old config migration
     init {
         instance = this
     }

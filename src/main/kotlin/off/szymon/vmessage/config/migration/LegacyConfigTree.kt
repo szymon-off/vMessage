@@ -17,93 +17,93 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable
 
 @ConfigSerializable
 class LegacyMainConfig {
-    var textComponentSettings: LegacyTextComponentConfig = null!!
-    var messages: LegacyMessagesConfig = null!!
-    var commands: LegacyCommandsConfig = null!!
-    var luckPermsMeta: LegacyLuckPermsMetaConfig = null!!
-    var serverAliases: ServerAliasesConfig = null!!
-    var backupConfig: Boolean = null!!
+    lateinit var textComponentSettings: LegacyTextComponentConfig
+    lateinit var messages: LegacyMessagesConfig
+    lateinit var commands: LegacyCommandsConfig
+    lateinit var luckPermsMeta: LegacyLuckPermsMetaConfig
+    lateinit var serverAliases: ServerAliasesConfig
+    var backupConfig: Boolean = false
 }
 
 @ConfigSerializable
 class LegacyTextComponentConfig {
-    var textDeserializer: String = null!!
-    var legacyTextCharacter: String = null!!
+    lateinit var textDeserializer: String
+    lateinit var legacyTextCharacter: String
 }
 
 /* Messages Config */
 @ConfigSerializable
 class LegacyMessagesConfig {
-    var chat: LegacyChatConfig = null!!
-    var join: LegacyJoinConfig = null!!
-    var leave: LegacyLeaveConfig = null!!
-    var change: LegacyChangeConfig = null!!
+    lateinit var chat: LegacyChatConfig
+    lateinit var join: LegacyJoinConfig
+    lateinit var leave: LegacyLeaveConfig
+    lateinit var change: LegacyChangeConfig
 }
 
 @ConfigSerializable
 class LegacyChatConfig {
-    var enabled: Boolean = null!!
-    var format: String = null!!
-    var allowMiniMessage: Boolean = null!!
-    var mutedMessage: String = null!!
+    var enabled: Boolean = false
+    lateinit var format: String
+    var allowMiniMessage: Boolean = false
+    lateinit var mutedMessage: String
 }
 
 @ConfigSerializable
 class LegacyJoinConfig {
-    var enabled: Boolean = null!!
-    var format: String = null!!
+    var enabled: Boolean = false
+    lateinit var format: String
 }
 
 @ConfigSerializable
 class LegacyLeaveConfig {
-    var enabled: Boolean = null!!
-    var format: String = null!!
+    var enabled: Boolean = false
+    lateinit var format: String
 }
 
 @ConfigSerializable
 class LegacyChangeConfig {
-    var enabled: Boolean = null!!
-    var format: String = null!!
+    var enabled: Boolean = false
+    lateinit var format: String
 }
 
 @ConfigSerializable
 class LegacyCommandsConfig {
-    var broadcast: LegacyBroadcastConfig = null!!
-    var message: LegacyMessageConfig = null!!
+    lateinit var broadcast: LegacyBroadcastConfig
+    lateinit var message: LegacyMessageConfig
 }
 
 @ConfigSerializable
 class LegacyBroadcastConfig {
-    var enabled: Boolean = null!!
-    var format: String = null!!
-    var allowByDefault: Boolean = null!!
-    var allowMiniMessage: Boolean = null!!
+    var enabled: Boolean = false
+    lateinit var format: String
+    var allowByDefault: Boolean = false
+    var allowMiniMessage: Boolean = false
 }
 
 @ConfigSerializable
 class LegacyMessageConfig {
-    var enabled: Boolean = null!!
-    var format: LegacyMessageFormatConfig = null!!
-    var allowMiniMessage: Boolean = null!!
-    var allowByDefault: Boolean = null!!
-    var enableReplyCommand: Boolean = null!!
+    var enabled: Boolean = false
+    lateinit var format: LegacyMessageFormatConfig
+    var allowMiniMessage: Boolean = false
+    var allowByDefault: Boolean = false
+    var enableReplyCommand: Boolean = false
 }
 
 @ConfigSerializable
 class LegacyMessageFormatConfig {
-    var sender: String = null!!
-    var receiver: String = null!!
+    lateinit var sender: String
+    lateinit var receiver: String
 }
 
 @ConfigSerializable
 class LegacyLuckPermsMetaConfig {
-    var customName1: String = null!!
-    var customName2: String = null!!
+    lateinit var customName1: String
+    lateinit var customName2: String
 }
 
 @ConfigSerializable
 class LegacyServerAliasesConfig {
-    var lobby: String = null!!
-    var lobby1: String = null!!
-    var lobby2: String = null!!
+    lateinit var lobby: String
+    lateinit var lobby1: String
+    lateinit var lobby2: String
 }

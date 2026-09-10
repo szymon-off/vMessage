@@ -24,6 +24,7 @@ import com.velocitypowered.api.proxy.ProxyServer
 import off.szymon.fishy.api.FishyAPI
 import off.szymon.vmessage.command.CommandManager
 import off.szymon.vmessage.config.Config
+import off.szymon.vmessage.config.migration.LegacyConfigMigration
 import off.szymon.vmessage.generated.Version
 import off.szymon.vmessage.integration.IntegrationManager
 import off.szymon.vmessage.integration.LuckPermsIntegration
@@ -83,6 +84,7 @@ class VMessage @Inject constructor(
         logger.info("Initializing ${description.name.orElseThrow()} v${description.version.getOrDefault("0.0.0-UNKNOWN")} by ${description.authors.joinToString(", ")}")
         logger.info("Powered by: FishyAPI v${FishyAPI.VERSION} by SzymON/OFF")
         Config()
+        LegacyConfigMigration().runMigrationIfNeeded()
         detectSignedVelocity()
         initializeVMessage()
         logger.info("Initialization completed! Ready to serve messages!")

@@ -19,27 +19,55 @@ import org.spongepowered.configurate.loader.HeaderMode
 import org.spongepowered.configurate.serialize.SerializationException
 import org.spongepowered.configurate.yaml.NodeStyle
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader
+import java.io.IOException
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 
 class LegacyConfigMigration {
+
+    private val legacyConfigDir = VMessage.get().dataDir.parent.resolve("vMessage")
 
     val legacyConfigRoot: CommentedConfigurationNode? = buildLegacyConfigRoot()
     val newConfigRoot: CommentedConfigurationNode = Config.get().root
 
     fun runMigrationIfNeeded() {
         if (needsMigration()) {
-            // TODO: backup
-            // TODO: readme: config moved
-
             try {
                 migrateLegacyConfig()
             } catch (e: UnsupportedOperationException) {
                 VMessage.get().logger.error("Legacy config migration failed: ${e.message}", e)
+                return
+            }
+
+            try {
+                finalizeLegacyConfigFolder()
+            } catch (e: IOException) {
+                VMessage.get().logger.warn("Legacy config was migrated, but the old plugins/vMessage folder could not be cleaned up: ${e.message}", e)
             }
         }
     }
 
+    private fun finalizeLegacyConfigFolder() {
+        val legacyConfigFile = legacyConfigDir.resolve("config.yml")
+        val migratedFile = legacyConfigDir.resolve("MIGRATED-config.yml")
+        Files.move(legacyConfigFile, migratedFile, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
+
+        Files.writeString(
+            legacyConfigDir.resolve("README.txt"),
+            """
+                This folder is no longer used.
+
+                vMessage's configuration has moved to the plugins/vmessage folder (lowercase).
+
+                Your old configuration has already been migrated automatically and is kept here,
+                renamed to MIGRATED-config.yml, only for reference. You can safely delete this
+                entire folder once you've confirmed everything migrated correctly.
+            """.trimIndent()
+        )
+    }
+
     fun buildLegacyConfigRoot(): CommentedConfigurationNode? {
-        val path = VMessage.get().dataDir.parent.resolve("vMessage").resolve("config.yml")
+        val path = legacyConfigDir.resolve("config.yml")
         if (!path.toFile().exists()) {
             return null
         }
@@ -62,7 +90,9 @@ class LegacyConfigMigration {
     }
 
     fun needsMigration(): Boolean {
-        return legacyConfigRoot != null && newConfigRoot.node("config-version").isNull // TODO check if migration has already been done before (does this work? NOOOO)
+        // Once migration succeeds, the legacy config.yml is renamed to MIGRATED-config.yml,
+        // so its absence on the next boot is itself proof migration already ran.
+        return legacyConfigRoot != null
     }
 
     @Suppress("DuplicatedCode")
@@ -72,7 +102,7 @@ class LegacyConfigMigration {
         try {
             legacyConfig = legacyConfigRoot?.get(LegacyMainConfig::class.java) ?: throw UnsupportedOperationException("Legacy config is invalid, cannot migrate")
         } catch (e: SerializationException) {
-            throw UnsupportedOperationException("Legacy config is invalid, cannot migrate")
+            throw UnsupportedOperationException("Legacy config is invalid, cannot migrate", e)
         }
         val newConfig = Config.get().tree
 
@@ -149,8 +179,11 @@ class LegacyConfigMigration {
             .replace("%prefix%", $$"$prefix$")
             .replace("%suffix%", $$"$suffix$")
 
+        Config.get().save()
+
         newConfigRoot.node("settings", "server-aliases").from(legacyConfigRoot.node("server-aliases"))
         newConfigRoot.node("placeholders", "luck-perms", "custom-meta").from(legacyConfigRoot.node("luck-perms-meta"))
+        Config.get().saveRoot()
     }
 
 }
