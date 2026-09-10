@@ -76,7 +76,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-# TODO: dependencies: signedvelocity, luckperms
       - name: Modrinth Publish
         uses: cloudnode-pro/modrinth-publish@v2.1.4
         with:
@@ -91,4 +90,11 @@ jobs:
             **Full Changelog:** ${{ steps.changelog.outputs.url }}
           loaders: velocity
           game-versions: '["26.2.x","26.1.x","1.21.x","1.20.x","1.19.x","1.18.x","1.17.x","1.16.x","1.15.x","1.14.x","1.13.x","1.12.x","1.11.x","1.10.x","1.9.x","1.8.x","1.7.x"]'
+          # 7IbzD4Zm = SignedVelocity, Vebnzrzj = LuckPerms, bEIUEGTX = PAPIProxyBridge
+          dependencies: |-
+            [
+              {"project_id": "7IbzD4Zm", "dependency_type": "optional"},
+              {"project_id": "Vebnzrzj", "dependency_type": "optional"},
+              {"project_id": "bEIUEGTX", "dependency_type": "optional"}
+            ]
           files: build/libs/vMessage-${{ steps.vars.outputs.version }}.jar
