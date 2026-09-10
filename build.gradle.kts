@@ -11,9 +11,9 @@
  */
 
 plugins {
-    kotlin("jvm") version "2.2.21"
-    kotlin("kapt") version "2.2.21"
-    id("com.gradleup.shadow") version "9.3.0"
+    kotlin("jvm") version "2.4.20"
+    kotlin("kapt") version "2.4.20"
+    id("com.gradleup.shadow") version "9.6.1"
 }
 
 group = "off.szymon"
@@ -56,7 +56,7 @@ dependencies {
 }
 
 /* Generate Version.kt: build/generated/source/version/kotlin/off/szymon/vmessage/generated/Version.kt -> Treated as a source */
-val generateVersion by tasks.registering {
+val generateVersion = tasks.register("generateVersion") {
     description = "Generates a Version.kt file containing the plugin version."
     val outputDir = layout.buildDirectory.dir("generated/source/version/kotlin")
 
