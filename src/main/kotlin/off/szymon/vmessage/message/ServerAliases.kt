@@ -45,7 +45,8 @@ class ServerAliases {
     }
 
     fun getServerName(server: RegisteredServer?): String {
-        return aliases[server?.serverInfo?.name] ?: Config.get().tree.settings.defaultServerName
+        val name = server?.serverInfo?.name ?: return Config.get().tree.settings.defaultServerName
+        return aliases[name] ?: name
     }
 
     fun loadAliases() {
