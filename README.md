@@ -4,6 +4,8 @@ A Velocity plugin that shows chat, joins, leaves and server switches to everyone
 
 ![Release](https://img.shields.io/github/v/release/szymon-off/vMessage) ![Modrinth downloads](https://img.shields.io/modrinth/dt/ZIxTT2xI?logo=modrinth&color=%2300AF5C) ![License](https://img.shields.io/github/license/szymon-off/vMessage)
 
+> Also by me: **[vHubs](https://modrinth.com/plugin/vhubs)**, for running several hub servers with player commands like `/hub`, `/lobby` and `/survival`.
+
 ## Requirements
 
 | Dependency | Version |
@@ -35,7 +37,7 @@ What the conversion does:
 
 What no longer exists:
 
-- Legacy `&` colour codes. Formats are MiniMessage only.
+- Legacy `&` colour codes. Formats are MiniMessage only, and `§` codes in player messages are stripped.
 - The LiteBans and LibertyBans hooks. Muted players are handled by event order instead: vMessage runs `LAST` by default and skips any chat message that another plugin has already denied. If you're changing `messages.chat.order`, keep the punishment plugin ahead of it.
 - `/vmessage say`. Use `/vmessage fake chat` (below).
 
@@ -68,6 +70,20 @@ Players with these permissions don't trigger the matching message:
 
 The prefix is `vmessage-silent` and not `vmessage` so that a `vmessage.*` wildcard doesn't silence everyone.
 
+### Muted players
+
+vMessage cancels the chat event on the proxy, so the punishment plugin (LiteBans, LibertyBans, ...) has to run on the proxy too, and its chat handling has to run ahead of vMessage's. With the default `order: LAST` that's normally the case. A mute that only exists on the backends won't hold, because the message never reaches them.
+
+`/message`, `/reply` and `/broadcast` are commands, not chat, so a mute doesn't cover them and a muted player can still send private messages. Add every alias to your punishment plugin's list of commands blocked while muted:
+
+```
+message, msg, tell, whisper, w
+reply, r
+broadcast, bcast, bc, shout
+```
+
+Blocking `/msg` alone leaves `/w` and `/tell` open.
+
 ## Configuration
 
 Everything lives in `plugins/vmessage/config.yml`, and the generated file has comments on each option. `/vmessage reload` reloads formats, server aliases, integrations and which message types are on. It doesn't register or remove commands, so turning `/message`, `/reply` or `/broadcast` on or off needs a proxy restart.
@@ -83,7 +99,7 @@ messages:
     order: LAST
 ```
 
-With `allow-mini-message: false`, tags typed by players are escaped, so nobody can colour their own messages or break your layout. `order` is when vMessage handles the chat event: `FIRST`, `EARLY`, `NORMAL`, `LATE` or `LAST`.
+With `allow-mini-message: false`, tags typed by players are escaped, so nobody can colour their own messages or break your layout. Chat, `/message` and `/broadcast` each have their own `allow-mini-message`. Whatever the setting, legacy `§` colour codes and control characters are always stripped from player text. `order` is when vMessage handles the chat event: `FIRST`, `EARLY`, `NORMAL`, `LATE` or `LAST`.
 
 Placeholders per format:
 
@@ -92,7 +108,7 @@ Placeholders per format:
 | `messages.chat` | `$player$`, `$message$`, `$server$` |
 | `messages.join`, `messages.leave` | `$player$`, `$server$` |
 | `messages.change` | `$player$`, `$old_server$`, `$new_server$` |
-| `commands.message` | `$sender$`, `$receiver$`, `$message$` |
+| `commands.message` | `$sender$`, `$receiver$`, `$message$`, `$sender_server$`, `$receiver_server$` |
 | `commands.broadcast.format.player` | `$player$`, `$message$`, `$server$` |
 | `commands.broadcast.format.console` | `$message$` |
 
@@ -107,11 +123,11 @@ settings:
     survival: Survival
 ```
 
-A server that isn't listed there is shown as `settings.default-server-name` (`Unknown` by default), so add every backend you want a proper name for.
+A server that isn't listed keeps its plain name from `velocity.toml`. `settings.default-server-name` (`Unknown` by default) is only used when vMessage can't work out which server a player is on.
 
 ### LuckPerms and PlaceholderAPI
 
-For LuckPerms, `$prefix$` and `$suffix$` work as soon as it's installed. Any other meta value has to be mapped first, under `placeholders.luck-perms.custom-meta`. Adding `rank: my_rank_meta` there lets you write `&rank&` in a format.
+For LuckPerms, `$prefix$` and `$suffix$` work as soon as it's installed. Any other meta value has to be mapped first, under `placeholders.luck-perms.custom-meta`. Each integration also has an `enabled` toggle (`placeholders.luck-perms.enabled`, `placeholders.placeholder-api.enabled`). Adding `rank: my_rank_meta` there lets you write `&rank&` in a format.
 
 PlaceholderAPI works through PAPIProxyBridge, so the placeholders are resolved by the backend the player is on. Each lookup is given `placeholders.placeholder-api.bridge-timeout` milliseconds (500 by default); if the backend doesn't answer in time, the placeholder is left unresolved and a warning is logged.
 
@@ -140,5 +156,3 @@ Bug reports and pull requests are welcome on [GitHub](https://github.com/szymon-
 ## License
 
 Versions up to 1.6.1 are MIT. From 1.7.0 on, vMessage is GPL-3.0; the full text is in [LICENSE.md](https://github.com/szymon-off/vMessage/blob/master/LICENSE.md).
-
-I also make [vHubs](https://modrinth.com/plugin/vhubs), which adds hub commands like `/hub` and `/lobby` to a Velocity network.
