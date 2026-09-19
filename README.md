@@ -6,13 +6,13 @@ A Velocity plugin that shows chat, joins, leaves and server switches to everyone
 
 ## Requirements
 
-| | |
-|---|---|
-| Velocity | 3.5.0 or newer |
-| Java | 21 |
+| Dependency | Version |
+| --- | --- |
+| Velocity | 3.5.0 or newer                                                                                                                                                                                                                                        |
+| Java | 21                                                                                                                                                                                                                                                    |
 | [SignedVelocity](https://modrinth.com/plugin/signedvelocity) | On the proxy and on every backend. Only needed for chat: vMessage cancels the original chat event on the proxy and sends its own, and with signed chat that needs SignedVelocity. Without it, chat is unreliable; joins, leaves and switches are fine. |
-| [LuckPerms](https://luckperms.net) | Optional. Gives you `$prefix$`, `$suffix$` and custom meta placeholders. |
-| [PAPIProxyBridge](https://modrinth.com/plugin/papiproxybridge) | Optional. Lets formats use PlaceholderAPI placeholders. |
+| [LuckPerms](https://luckperms.net) | Optional. Gives you `$prefix$`, `$suffix$` and custom meta placeholders.                                                                                                                                                                              |
+| [PAPIProxyBridge](https://modrinth.com/plugin/papiproxybridge) | Optional. Lets formats use PlaceholderAPI placeholders.                                                                                                                                                                                               |
 
 ## Installing
 
