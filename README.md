@@ -1,114 +1,144 @@
 # vMessage
 
-TODO: Ai transparency, recommended velocity 3.5.0+, required Java 21, update readme generally
+A Velocity plugin that shows chat, joins, leaves and server switches to everyone on the network, no matter which backend they're on. It also adds `/msg`, `/reply` and `/broadcast` that work across servers. Every message format is a MiniMessage string in one config file.
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/szymon-off/vMessage) ![Modrinth Downloads](https://img.shields.io/modrinth/dt/ZIxTT2xI?logo=modrinth&color=%2300AF5C) ![GitHub issues](https://img.shields.io/github/issues/szymon-off/vMessage) ![GitHub](https://img.shields.io/github/license/szymon-off/vMessage) ![GitHub last commit](https://img.shields.io/github/last-commit/szymon-off/vMessage)
+![Release](https://img.shields.io/github/v/release/szymon-off/vMessage) ![Modrinth downloads](https://img.shields.io/modrinth/dt/ZIxTT2xI?logo=modrinth&color=%2300AF5C) ![License](https://img.shields.io/github/license/szymon-off/vMessage)
 
-> 🆕 Hey, I'm SzymON/OFF! If you found **vMessage** useful please don't hesitate to also try [vHubs](https://modrinth.com/plugin/vhubs)! It allows you to create multiple hub servers accesible with player commands (e.g. `/hub`, `/lobby`, `/survival`).
+## Requirements
 
-**vMessage** is the best Velocity plugin for synchronizing chat and player events across your entire proxy network! It is designed for server administrators who want seamless, reliable, and configurable message syncing without unnecessary complexity.
-
-## Features
-
-- **Global Chat Sync:** Instantly syncs chat messages across all servers connected to your Velocity proxy.
-- **Join/Leave/Change-Server Broadcasts:** Notifies all players network-wide when someone joins, leaves, or switches servers.
-- **Silent Permissions:** Players with a special silent permission can prevent their join, leave, and server change messages from being announced.
-- **Powerful Configuration:** Comes with a robust, easy-to-use config file so you can tailor the plugin to your network's needs.
-- **Lightweight & Fast:** No unnecessary features or bloat—just efficient, reliable message syncing.
+| | |
+|---|---|
+| Velocity | 3.5.0 or newer |
+| Java | 21 |
+| [SignedVelocity](https://modrinth.com/plugin/signedvelocity) | On the proxy and on every backend. Only needed for chat: vMessage cancels the original chat event on the proxy and sends its own, and with signed chat that needs SignedVelocity. Without it, chat is unreliable; joins, leaves and switches are fine. |
+| [LuckPerms](https://luckperms.net) | Optional. Gives you `$prefix$`, `$suffix$` and custom meta placeholders. |
+| [PAPIProxyBridge](https://modrinth.com/plugin/papiproxybridge) | Optional. Lets formats use PlaceholderAPI placeholders. |
 
 ## Installing
 
-1. Place `vMessage.jar` into your Velocity `plugins` folder.
-2. Install the appropriate versions of [SignedVelocity](https://modrinth.com/plugin/signedvelocity) on your proxy AND backends.
-3. Start or restart your Velocity proxy.
-4. Edit the generated configuration file (`plugins/vMessage/config.yml`) to suit your preferences.
+1. Drop `vMessage-<version>.jar` into the proxy's `plugins` folder.
+2. Install SignedVelocity on the proxy and all backends.
+3. Start the proxy. The config is created at `plugins/vmessage/config.yml`.
+4. Edit it and run `/vmessage reload`.
 
-Once installed and configured, vMessage will automatically:
+Chat, join, leave and switch messages work without any permissions set up.
 
-- Sync chat messages across all servers
-- Broadcast join, leave, and server switch events to all players (unless the player has the silent permission)
+## Upgrading from 1.x
 
-No commands or permissions are required for basic functionality.
+Version 2.0 is a rewrite, and the config changed with it. On first start, vMessage looks for `plugins/vMessage/config.yml` (capital M, the old location) and converts it into `plugins/vmessage/config.yml`. The old file is renamed to `MIGRATED-config.yml` and left where it is, next to a short `README.txt`. Once you've checked the result you can delete that folder. If the conversion fails, the error is logged and the old file isn't touched.
 
-## Updating
+What the conversion does:
 
-To update vMessage, replace the existing `vMessage.jar` in your `plugins` folder with the latest version and restart your Velocity proxy.  
-If new configuration options are introduced, your config.yml will be migrated automatically.
+- Placeholders change from `%player%` to `$player$`. Formats, enabled flags and permission defaults carry over.
+- `server-aliases` moves to `settings.server-aliases`, and `luck-perms-meta` to `placeholders.luck-perms.custom-meta`.
+- In `/msg` formats, `%sender-server%` and `%receiver-server%` are removed. `$prefix$` and `$suffix$` now mean the *other* player's, which is what `%receiver-prefix%` meant in the sender's copy and `%sender-prefix%` in the receiver's.
+
+What no longer exists:
+
+- Legacy `&` colour codes. Formats are MiniMessage only.
+- The LiteBans and LibertyBans hooks. Muted players are handled by event order instead: vMessage runs `LAST` by default and skips any chat message that another plugin has already denied. If you're changing `messages.chat.order`, keep the punishment plugin ahead of it.
+- `/vmessage say`. Use `/vmessage fake chat` (below).
 
 ## Commands
 
-vMessage provides several administrative commands for advanced usage and configuration:
+| Command | Aliases | Permission | Default |
+|---|---|---|---|
+| `/vmessage` | `/vmsg`, `/vm` | none | everyone |
+| `/vmessage help` | | `vmessage.command.vmessage.help` | denied |
+| `/vmessage reload` | | `vmessage.command.vmessage.reload` | denied |
+| `/vmessage fake <join\|leave\|change> <player>` | | `vmessage.command.vmessage.fake` | denied |
+| `/vmessage fake chat <player> <message>` | | `vmessage.command.vmessage.fake` | denied |
+| `/message <player> <message>` | `/msg`, `/tell`, `/whisper`, `/w` | `vmessage.command.message` | allowed |
+| `/reply <message>` | `/r` | `vmessage.command.message.reply` | allowed |
+| `/broadcast <message>` | `/bc`, `/bcast`, `/shout` | `vmessage.command.broadcast` | denied |
 
-- `/vmessage say <player> <message>`  
-  Sends a message as the specified player across the network.  
-  **Permission:** `vmessage.command.say`
+The console can run all of them. For `/message`, `/reply` and `/broadcast` the Default column is the `allow-by-default` value in the config; a permission that's explicitly set (true or false) always beats it. `/reply` only exists while `/message` is enabled.
 
-- `/vmessage fake <join/leave/change> [player] [old-server]`
-  Sends a fake join, leave, or server change message as if the specified player performed that action.  
-  **Permission:** `vmessage.command.fake`, `vmessage.command.fake.join`, `[...].leave`, `[...].change`
+`/vmessage fake` sends the message the given player would have triggered, without the player doing anything.
 
-- `/vmessage reload`  
-  Reloads the plugin configuration without restarting the proxy.  
-  **Permission:** `vmessage.command.reload`
+### Silent joins, leaves and switches
 
-- `/vmessage help`  
-  Displays the help message with available commands.  
-  **Permission:** `vmessage.command.help`
+Players with these permissions don't trigger the matching message:
 
-- `/broadcast <message>`  
-  Broadcasts a custom message on the network.  
-  **Permission:** `vmessage.command.broadcast`  
-  **Aliases:** `/bc`, `/bcast`, `/shout`
+| Permission | Suppresses |
+|---|---|
+| `vmessage-silent.join` | join message |
+| `vmessage-silent.leave` | leave message |
+| `vmessage-silent.change` | server switch message |
 
-- `/message <player> <message>`  
-  Sends a private message to a specific player across the network.  
-  **Permission:** `vmessage.command.message`  
-  **Aliases:** `/msg`, `/tell`, `/whisper`, `/w`
-
-- `/reply <message>`  
-  Replies to the last player who sent you a private message.  
-  **Permission:** `vmessage.command.reply`  
-  **Aliases:** `/r`
-
-You can also use `/vmsg` or `/vm` as an alias for `/vmessage` for convenience.
-
-Make sure to assign the appropriate permissions to your staff or admin roles in your Velocity configuration.
-
-For `/broadcast`, `/message`, and `/reply`, you can set `allow-by-default` to `true` in the config file to let all players use these commands without needing explicit permissions.
+The prefix is `vmessage-silent` and not `vmessage` so that a `vmessage.*` wildcard doesn't silence everyone.
 
 ## Configuration
 
-vMessage provides a powerful and easy-to-use configuration file. You can customize message formats, toggle features, and more. Look at the wiki for detailed configuration options: [vMessage Wiki](https://github.com/szymon-off/vMessage/wiki/Configuration-(config.yml))
+Everything lives in `plugins/vmessage/config.yml`, and the generated file has comments on each option. `/vmessage reload` reloads formats, server aliases, integrations and which message types are on. It doesn't register or remove commands, so turning `/message`, `/reply` or `/broadcast` on or off needs a proxy restart.
 
-## Why vMessage?
+A format is a MiniMessage string with placeholders in `$dollar$` signs. This is the default chat format:
 
-- **Purpose-built for Velocity:** Designed specifically for Velocity, making it the most reliable and feature-rich solution for network-wide messaging.
-- **Simple Setup:** Drop it in, configure, and go. No complicated dependencies or setup steps.
-- **Actively Maintained:** Built with modern best practices and open to community feedback.
+```yaml
+messages:
+  chat:
+    enabled: true
+    format: '$prefix$ <b>$player$</b>: $message$'
+    allow-mini-message: false
+    order: LAST
+```
 
-## Contributing
+With `allow-mini-message: false`, tags typed by players are escaped, so nobody can colour their own messages or break your layout. `order` is when vMessage handles the chat event: `FIRST`, `EARLY`, `NORMAL`, `LATE` or `LAST`.
 
-Contributions are welcome! Please open issues or submit pull requests for improvements or bug fixes.
+Placeholders per format:
 
-## Building from Source
+| Format | Placeholders |
+|---|---|
+| `messages.chat` | `$player$`, `$message$`, `$server$` |
+| `messages.join`, `messages.leave` | `$player$`, `$server$` |
+| `messages.change` | `$player$`, `$old_server$`, `$new_server$` |
+| `commands.message` | `$sender$`, `$receiver$`, `$message$` |
+| `commands.broadcast.format.player` | `$player$`, `$message$`, `$server$` |
+| `commands.broadcast.format.console` | `$message$` |
 
-If you want to build vMessage yourself:
+On top of these, every format that involves a player also accepts `$prefix$` and `$suffix$` (LuckPerms), your own `&meta&` placeholders (below) and PlaceholderAPI placeholders (when PAPIProxyBridge is installed).
 
-- Prerequisites: Java 17 or higher
-- Clone the repository and build:
-  ```bash
-  git clone https://github.com/szymon-off/vMessage.git
-  cd vMessage
-  ./gradlew build
-  ```
-- The built jar file will be in the `build/libs/vMessage-0.0.0-UNKNOWN.jar`.
+Server names come from `settings.server-aliases`, which maps a server's name in `velocity.toml` to the text shown to players:
 
-## Usage Statistics
-![bStats](https://bstats.org/signatures/velocity/vMessage%20Velocity.svg)
+```yaml
+settings:
+  server-aliases:
+    lobby1: Lobby
+    survival: Survival
+```
+
+A server that isn't listed there is shown as `settings.default-server-name` (`Unknown` by default), so add every backend you want a proper name for.
+
+### LuckPerms and PlaceholderAPI
+
+For LuckPerms, `$prefix$` and `$suffix$` work as soon as it's installed. Any other meta value has to be mapped first, under `placeholders.luck-perms.custom-meta`. Adding `rank: my_rank_meta` there lets you write `&rank&` in a format.
+
+PlaceholderAPI works through PAPIProxyBridge, so the placeholders are resolved by the backend the player is on. Each lookup is given `placeholders.placeholder-api.bridge-timeout` milliseconds (500 by default); if the backend doesn't answer in time, the placeholder is left unresolved and a warning is logged.
+
+## What it sends out
+
+vMessage reports which features are enabled to [bStats](https://bstats.org/plugin/velocity/vMessage%20Velocity/27241); you can turn that off in bStats' own config. It also asks the Modrinth API for the latest version at startup and logs a line if you're behind. Set `settings.check-for-updates: false` to stop that. Dev builds never check.
+
+## How this was built
+
+Most of vMessage is written by hand, I'd say 90% or more. I use GitHub Copilot for code completion, Claude Chat for quick questions, and Claude Code for code review and small fixes. AI also handled a few repetitive jobs, and it wrote the Javadocs.
+
+## Building from source
+
+You need Java 21.
+
+```bash
+git clone https://github.com/szymon-off/vMessage.git
+cd vMessage
+./gradlew build
+```
+
+The jar ends up in `build/libs/`. Without `-PpluginVersion=x.y.z` it's named `vMessage-0.0.0-UNKNOWN.jar`. One dependency, Fishy API, is fetched from `repo.szymonoff.me`, so the build needs network access.
+
+Bug reports and pull requests are welcome on [GitHub](https://github.com/szymon-off/vMessage/issues).
 
 ## License
 
-- Versions **≤ 1.6.1** are licensed under the **MIT License**.
-- Versions **≥ 1.7.0** are licensed under the **GNU General Public License v3.0** (GPL-3.0).
+Versions up to 1.6.1 are MIT. From 1.7.0 on, vMessage is GPL-3.0; the full text is in [LICENSE.md](https://github.com/szymon-off/vMessage/blob/master/LICENSE.md).
 
-You can find the full text of each license in the corresponding release archive, or in the repository under the `LICENSE` file for that version.
+I also make [vHubs](https://modrinth.com/plugin/vhubs), which adds hub commands like `/hub` and `/lobby` to a Velocity network.
