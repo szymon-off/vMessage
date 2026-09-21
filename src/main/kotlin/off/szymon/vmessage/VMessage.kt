@@ -44,12 +44,10 @@ import java.util.concurrent.CompletableFuture
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.math.max
 
-// TODO update README
-
 @Plugin(
     id = "vmessage",
     name = "vMessage",
-    description = "vMessage is the best Velocity plugin for synchronizing chat and player events across your entire proxy network",
+    description = "A Velocity plugin that shows chat, joins, leaves and server switches to everyone on the network, no matter which backend they're on.",
     version = Version.VERSION, // Your IDE may show an error here, but it will compile fine. This is generated during build. Run the generateVersion task if needed.
     authors = ["SzymON/OFF"],
     url = "https://szymonoff.me/projects/vmessage.html",

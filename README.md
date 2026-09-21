@@ -60,15 +60,23 @@ The console can run all of them. For `/message`, `/reply` and `/broadcast` the D
 
 ### Silent joins, leaves and switches
 
-Players with these permissions don't trigger the matching message:
+Players who have the matching permission don't trigger that message. The permission names are set in `settings.silent-permissions`, and these are the defaults:
 
-| Permission | Suppresses |
-|---|---|
-| `vmessage-silent.join` | join message |
-| `vmessage-silent.leave` | leave message |
-| `vmessage-silent.change` | server switch message |
+| Config key | Default permission | Suppresses |
+|---|---|---|
+| `join` | `vmessage-silent.join` | join message |
+| `leave` | `vmessage-silent.leave` | leave message |
+| `change` | `vmessage-silent.change` | server switch message |
 
-The prefix is `vmessage-silent` and not `vmessage` so that a `vmessage.*` wildcard doesn't silence everyone.
+```yaml
+settings:
+  silent-permissions:
+    join: vmessage-silent.join
+    leave: vmessage-silent.leave
+    change: vmessage-silent.change
+```
+
+The default prefix is `vmessage-silent` and not `vmessage` so that a `vmessage.*` wildcard doesn't silence everyone. If you change the names, keep them outside `vmessage.*` for the same reason.
 
 ### Muted players
 
@@ -149,7 +157,7 @@ cd vMessage
 ./gradlew build
 ```
 
-The jar ends up in `build/libs/`. Without `-PpluginVersion=x.y.z` it's named `vMessage-0.0.0-UNKNOWN.jar`. One dependency, Fishy API, is fetched from `repo.szymonoff.me`, so the build needs network access.
+The jar ends up in `build/libs/`. Without `-PpluginVersion=x.y.z` it's named `vMessage-0.0.0-UNKNOWN.jar`. Gradle downloads the dependencies (Velocity API, Fishy API and others), so the build needs network access.
 
 Bug reports and pull requests are welcome on [GitHub](https://github.com/szymon-off/vMessage/issues).
 
