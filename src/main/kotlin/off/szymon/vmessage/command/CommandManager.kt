@@ -23,8 +23,15 @@ class CommandManager {
 
     init {
         registerCommand(VMessageCommand())
-        registerCommand(MessageCommand())
-        if (Config.get().tree.commands.message.enabled) registerCommand(ReplyCommand())
+        // /reply mirrors most of /message's settings, so it only exists when /message does.
+        // constructing MessageCommand also registers its listener, so don't do it when disabled
+        if (Config.get().tree.commands.message.enabled) {
+            registerCommand(MessageCommand())
+            registerCommand(ReplyCommand()) // registerCommand() still checks commands.reply.enabled
+        } else {
+            vMessage.logger.info("Skipping 'message' command...")
+            vMessage.logger.info("Skipping 'reply' command...")
+        }
         registerCommand(BroadcastCommand())
     }
 
