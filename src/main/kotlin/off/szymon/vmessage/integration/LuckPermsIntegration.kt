@@ -29,7 +29,7 @@ class LuckPermsIntegration : Integration("luck-perms", "luckperms") {
         builder.addPlaceholder($$"$prefix$", metaData.prefix ?: "")
         builder.addPlaceholder($$"$suffix$", metaData.suffix ?: "")
 
-        Config.get().root.node("integrations","placeholder",id,"custom-meta").childrenMap().forEach { (key, value) ->
+        Config.get().root.node("placeholders",id,"custom-meta").childrenMap().forEach { (key, value) ->
             val metaKey = key.toString()
             val metaValue = metaData.getMetaValue(value.string ?: "") ?: ""
             builder.addPlaceholder("&$metaKey&", metaValue)

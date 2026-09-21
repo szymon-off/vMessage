@@ -58,7 +58,7 @@ class IntegrationManager : IntegrationParser {
             vMessage.logger.info("Skipping '$id' integration...")
             return
         }
-        if (!config.root.node("integrations","placeholder",id,"enabled").getBoolean(true)) {
+        if (!config.root.node("placeholders",id,"enabled").getBoolean(true)) {
             vMessage.logger.info("Skipping '$id' integration...")
             return
         }
