@@ -13,12 +13,10 @@
 package off.szymon.vmessage.command.message
 
 import com.velocitypowered.api.proxy.Player
-import net.kyori.adventure.text.minimessage.MiniMessage
 import off.szymon.fishy.api.messenger.parser.MessageParser
 import off.szymon.fishy.api.messenger.parser.MultiParser
 import off.szymon.fishy.api.messenger.parser.PlaceholderParser
 import off.szymon.fishy.api.messenger.parser.PlaceholderParserBuilder
-import off.szymon.vmessage.config.Config
 import off.szymon.vmessage.integration.IntegrationManager
 import off.szymon.vmessage.message.ServerAliases
 
@@ -31,7 +29,7 @@ class MessageCommandParser(val sender: Player, val receiver: Player, val parsePl
         builder.addPlaceholder($$"$sender$", sender.username)
         builder.addPlaceholder($$"$receiver$", receiver.username)
         builder.addPlaceholder($$"$sender_server$", ServerAliases.get().getServerName(sender.currentServer))
-        builder.addPlaceholder($$"$receiver_sender$", ServerAliases.get().getServerName(receiver.currentServer))
+        builder.addPlaceholder($$"$receiver_server$", ServerAliases.get().getServerName(receiver.currentServer))
 
         return MultiParser(
             builder.build(),

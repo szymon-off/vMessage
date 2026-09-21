@@ -81,7 +81,7 @@ class CommandsConfig {
 @ConfigSerializable
 class MessageConfig {
     var enabled = true
-    @Comment($$"Available placeholders: $sender$, $receiver$, $prefix$, $suffix$, (custom luckperms metas), (PlaceholderAPI placeholders)")
+    @Comment($$"Available placeholders: $sender$, $receiver$, $message$, $sender_server$, $receiver_server$, $prefix$, $suffix$, (custom luckperms metas), (PlaceholderAPI placeholders)")
     var format = MessageFormatConfig()
     var allowMiniMessage = false
     var allowByDefault = true
