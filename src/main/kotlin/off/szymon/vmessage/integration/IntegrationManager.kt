@@ -42,7 +42,8 @@ class IntegrationManager : IntegrationParser {
     }
 
     fun unloadIntegrations() {
-        for (integrationClass in integrations.keys) {
+        // iterate a copy, unloadIntegration() removes from the map we would otherwise be iterating
+        for (integrationClass in integrations.keys.toList()) {
             unloadIntegration(integrationClass)
         }
     }

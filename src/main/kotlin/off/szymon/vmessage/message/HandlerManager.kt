@@ -51,7 +51,8 @@ class HandlerManager {
     }
 
     fun unloadHandlers() {
-        for (handlerClass in handlers.keys) {
+        // iterate a copy, unloadHandler() removes from the map we would otherwise be iterating
+        for (handlerClass in handlers.keys.toList()) {
             unloadHandler(handlerClass)
         }
     }
