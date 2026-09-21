@@ -23,6 +23,7 @@ import off.szymon.vmessage.command.PluginCommand
 import off.szymon.vmessage.config.Config
 import off.szymon.vmessage.message.MessageSanitizer
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.jvm.optionals.getOrElse
 
 class MessageCommand : PluginCommand("message", "msg", "tell", "whisper", "w") {
@@ -39,14 +40,24 @@ class MessageCommand : PluginCommand("message", "msg", "tell", "whisper", "w") {
         VMessage.get().proxy.eventManager.register(VMessage.get(), this)
     }
 
-    private val replyMap = mutableMapOf<UUID, UUID>()
+    // written from every command thread that sends a message and from the disconnect listener
+    private val replyMap = ConcurrentHashMap<UUID, UUID>()
 
     @Subscribe
     fun onLeave(event: DisconnectEvent) {
-        replyMap.remove(event.player.uniqueId)
+        val uuid = event.player.uniqueId
+        replyMap.remove(uuid) // where they would be the one replying
+        replyMap.values.removeIf { it == uuid } // where they would be the one replied to
     }
 
     fun getReplyReceiver(replySender: UUID): UUID? /* replyReceiver */ = replyMap[replySender]
+
+    // both sides of a conversation can reply to each other, so /reply follows the conversation
+    // instead of pointing at whoever happened to message you last
+    fun setReplyTargets(sender: UUID, receiver: UUID) {
+        replyMap[sender] = receiver
+        replyMap[receiver] = sender
+    }
 
     override fun createCommand(): BrigadierCommand {
         return BrigadierCommand(
@@ -79,7 +90,7 @@ class MessageCommand : PluginCommand("message", "msg", "tell", "whisper", "w") {
                             sendMessage(receiver, receiverFormat, MessageCommandParser(sender, receiver, sender, message))
                             sendMessage(sender, senderFormat, MessageCommandParser(sender, receiver, receiver, message))
 
-                            replyMap[receiver.uniqueId] = sender.uniqueId
+                            setReplyTargets(sender.uniqueId, receiver.uniqueId)
 
                             return@executes Command.SINGLE_SUCCESS
                         }

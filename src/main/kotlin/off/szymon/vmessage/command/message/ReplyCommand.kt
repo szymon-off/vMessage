@@ -16,12 +16,11 @@ import com.mojang.brigadier.Command
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.velocitypowered.api.command.BrigadierCommand
 import com.velocitypowered.api.proxy.Player
-import net.kyori.adventure.text.minimessage.MiniMessage
 import off.szymon.vmessage.VMessage
 import off.szymon.vmessage.command.PluginCommand
 import off.szymon.vmessage.config.Config
-import kotlin.jvm.optionals.getOrElse
 import off.szymon.vmessage.message.MessageSanitizer
+import kotlin.jvm.optionals.getOrNull
 
 class ReplyCommand : PluginCommand("reply", "r") {
 
@@ -36,11 +35,13 @@ class ReplyCommand : PluginCommand("reply", "r") {
                             return@executes Command.SINGLE_SUCCESS // handled properly
                         }
 
-                        val receiverUUID = MessageCommand.get().getReplyReceiver(sender.uniqueId)
-                        val receiver = VMessage.get().proxy.getPlayer(receiverUUID).getOrElse {
-                            sendMessage(ctx.source, "<dark_gray>▎</dark_gray><gray>You have <#00ffff>no one</#00ffff> to reply to</gray>")
-                            return@executes Command.SINGLE_SUCCESS // handled properly
-                        }
+                        // the uuid is null when nobody has been messaged yet, and getPlayer() does not accept null
+                        val receiver = MessageCommand.get().getReplyReceiver(sender.uniqueId)
+                            ?.let { VMessage.get().proxy.getPlayer(it).getOrNull() }
+                            ?: run {
+                                sendMessage(ctx.source, "<dark_gray>▎</dark_gray><gray>You have <#00ffff>no one</#00ffff> to reply to</gray>")
+                                return@executes Command.SINGLE_SUCCESS // handled properly
+                            }
 
                         val messageConfig = Config.get().tree.commands.message
 
@@ -54,6 +55,8 @@ class ReplyCommand : PluginCommand("reply", "r") {
 
                         sendMessage(receiver, receiverFormat, MessageCommandParser(sender, receiver, sender, message))
                         sendMessage(sender, senderFormat, MessageCommandParser(sender, receiver, receiver, message))
+
+                        MessageCommand.get().setReplyTargets(sender.uniqueId, receiver.uniqueId)
 
                         return@executes Command.SINGLE_SUCCESS
 
