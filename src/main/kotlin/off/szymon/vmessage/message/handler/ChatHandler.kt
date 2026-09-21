@@ -19,6 +19,7 @@ import com.velocitypowered.api.event.player.PlayerChatEvent
 import com.velocitypowered.api.proxy.Player
 import off.szymon.vmessage.VMessage
 import off.szymon.vmessage.config.Config
+import off.szymon.vmessage.message.MessageSanitizer
 import off.szymon.vmessage.message.MessagesHandler
 import off.szymon.vmessage.message.parser.ChatParser
 
@@ -50,8 +51,8 @@ class ChatHandler : MessagesHandler("chat") {
         val format = Config.get().tree.messages.chat.format
         sendMessage(
             VMessage.get().proxy,
-            format,
-            ChatParser(player, message),
+            chatConfig.format,
+            ChatParser(player, MessageSanitizer.sanitize(message, chatConfig.allowMiniMessage)),
         )
     }
 

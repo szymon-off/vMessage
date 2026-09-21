@@ -13,16 +13,15 @@
 package off.szymon.vmessage.message.parser
 
 import com.velocitypowered.api.proxy.Player
-import net.kyori.adventure.text.minimessage.MiniMessage
 import off.szymon.fishy.api.messenger.parser.MessageParser
 import off.szymon.fishy.api.messenger.parser.MultiParser
 import off.szymon.fishy.api.messenger.parser.PlaceholderParser
 import off.szymon.fishy.api.messenger.parser.PlaceholderParserBuilder
-import off.szymon.vmessage.config.Config
 import off.szymon.vmessage.integration.IntegrationManager
 import off.szymon.vmessage.message.ServerAliases
 
 // chat has special parser because $message$ must be parsed at the end to avoid injection from players
+// the message is expected to be sanitized by the caller already (see MessageSanitizer)
 class ChatParser(val player: Player, val message: String): MessageParser {
 
     override fun parse(string: String): String {
@@ -30,11 +29,6 @@ class ChatParser(val player: Player, val message: String): MessageParser {
 
         builder.addPlaceholder($$"$player$", player.username)
         builder.addPlaceholder($$"$server$", ServerAliases.get().getServerName(player.currentServer))
-
-        val message = if (Config.get().tree.messages.chat.allowMiniMessage)
-            message
-        else
-            MiniMessage.miniMessage().escapeTags(message)
 
         return MultiParser(
             builder.build(),

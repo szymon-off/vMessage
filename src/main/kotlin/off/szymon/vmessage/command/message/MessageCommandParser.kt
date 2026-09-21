@@ -22,6 +22,7 @@ import off.szymon.vmessage.config.Config
 import off.szymon.vmessage.integration.IntegrationManager
 import off.szymon.vmessage.message.ServerAliases
 
+// the message is expected to be sanitized by the caller already (see MessageSanitizer)
 class MessageCommandParser(val sender: Player, val receiver: Player, val parsePlayer: Player, val message: String): MessageParser {
 
     override fun parse(string: String): String {
@@ -31,11 +32,6 @@ class MessageCommandParser(val sender: Player, val receiver: Player, val parsePl
         builder.addPlaceholder($$"$receiver$", receiver.username)
         builder.addPlaceholder($$"$sender_server$", ServerAliases.get().getServerName(sender.currentServer))
         builder.addPlaceholder($$"$receiver_sender$", ServerAliases.get().getServerName(receiver.currentServer))
-
-        val message = if (Config.get().tree.messages.chat.allowMiniMessage)
-            message
-        else
-            MiniMessage.miniMessage().escapeTags(message)
 
         return MultiParser(
             builder.build(),

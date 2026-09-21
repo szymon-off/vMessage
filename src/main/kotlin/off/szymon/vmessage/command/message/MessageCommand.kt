@@ -18,10 +18,10 @@ import com.velocitypowered.api.command.BrigadierCommand
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.connection.DisconnectEvent
 import com.velocitypowered.api.proxy.Player
-import net.kyori.adventure.text.minimessage.MiniMessage
 import off.szymon.vmessage.VMessage
 import off.szymon.vmessage.command.PluginCommand
 import off.szymon.vmessage.config.Config
+import off.szymon.vmessage.message.MessageSanitizer
 import java.util.*
 import kotlin.jvm.optionals.getOrElse
 
@@ -66,11 +66,12 @@ class MessageCommand : PluginCommand("message", "msg", "tell", "whisper", "w") {
                                 return@executes Command.SINGLE_SUCCESS // handled properly
                             }
 
-                            var message = ctx.getArgument("message", String::class.java)
-
                             val messageConfig = Config.get().tree.commands.message
 
-                            if (!messageConfig.allowMiniMessage) message = MiniMessage.miniMessage().escapeTags(message)
+                            val message = MessageSanitizer.sanitize(
+                                ctx.getArgument("message", String::class.java),
+                                messageConfig.allowMiniMessage
+                            )
 
                             val senderFormat = messageConfig.format.sender
                             val receiverFormat = messageConfig.format.receiver

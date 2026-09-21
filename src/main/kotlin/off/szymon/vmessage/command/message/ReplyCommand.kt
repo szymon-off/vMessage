@@ -21,6 +21,7 @@ import off.szymon.vmessage.VMessage
 import off.szymon.vmessage.command.PluginCommand
 import off.szymon.vmessage.config.Config
 import kotlin.jvm.optionals.getOrElse
+import off.szymon.vmessage.message.MessageSanitizer
 
 class ReplyCommand : PluginCommand("reply", "r") {
 
@@ -41,11 +42,12 @@ class ReplyCommand : PluginCommand("reply", "r") {
                             return@executes Command.SINGLE_SUCCESS // handled properly
                         }
 
-                        var message = ctx.getArgument("message", String::class.java)
-
                         val messageConfig = Config.get().tree.commands.message
 
-                        if (!messageConfig.allowMiniMessage) message = MiniMessage.miniMessage().escapeTags(message)
+                        val message = MessageSanitizer.sanitize(
+                            ctx.getArgument("message", String::class.java),
+                            messageConfig.allowMiniMessage
+                        )
 
                         val senderFormat = messageConfig.format.sender
                         val receiverFormat = messageConfig.format.receiver
