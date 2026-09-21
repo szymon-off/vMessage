@@ -86,6 +86,10 @@ class HandlerManager {
         return handler as? T
     }
 
+    // the ids getHandler(id) will actually resolve, so suggestions can't offer a handler
+    // that is turned off in the config
+    fun getLoadedHandlerIds(): Set<String> = handlers.values.mapTo(mutableSetOf()) { it.id }
+
     fun getHandler(id: String): MessagesHandler? {
         return handlers.values.find { it.id == id }
     }

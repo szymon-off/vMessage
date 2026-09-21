@@ -105,9 +105,7 @@ class VMessageCommand : PluginCommand("vmessage", "vmsg", "vm") {
                             }
                         )
                         .suggests { _, builder ->
-                            val types = HandlerManager.get().defaultHandlers.keys.toMutableSet()
-                            types.remove("chat")
-                            types.forEach { builder.suggest(it) }
+                            HandlerManager.get().getLoadedHandlerIds().forEach { builder.suggest(it) }
                             return@suggests builder.buildFuture()
                         }
                     )
