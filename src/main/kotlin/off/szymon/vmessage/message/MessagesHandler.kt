@@ -18,8 +18,16 @@ import off.szymon.fishy.api.messenger.FishyMessenger
 
 abstract class MessagesHandler(val id: String) : FishyMessenger(Component.empty()) {
 
+    // whether this handler needs a message to broadcast, so callers can tell the two apart
+    // instead of finding out through an UnsupportedOperationException
+    open val requiresMessage: Boolean = false
+
     open fun broadcast(player: Player) {
         throw UnsupportedOperationException("This message handler ($id) doesn't support traditional broadcast")
+    }
+
+    open fun broadcast(player: Player, message: String) {
+        throw UnsupportedOperationException("This message handler ($id) doesn't support broadcast with a message")
     }
 
 }

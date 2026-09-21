@@ -25,6 +25,8 @@ import off.szymon.vmessage.message.parser.ChatParser
 
 class ChatHandler : MessagesHandler("chat") {
 
+    override val requiresMessage: Boolean = true
+
     private val order: PostOrder = try {
         PostOrder.valueOf(Config.get().tree.messages.chat.order.uppercase())
     } catch (e: IllegalArgumentException) {
@@ -47,8 +49,8 @@ class ChatHandler : MessagesHandler("chat") {
         }
     }
 
-    fun broadcast(player: Player, message: String) {
-        val format = Config.get().tree.messages.chat.format
+    override fun broadcast(player: Player, message: String) {
+        val chatConfig = Config.get().tree.messages.chat
         sendMessage(
             VMessage.get().proxy,
             chatConfig.format,
