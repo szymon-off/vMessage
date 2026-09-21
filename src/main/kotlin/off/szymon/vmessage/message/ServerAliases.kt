@@ -27,7 +27,8 @@ class ServerAliases {
         fun get() = instance
     }
 
-    val aliases: MutableMap<String, String> = mutableMapOf()
+    var aliases: Map<String, String> = emptyMap()
+        private set
 
     init {
         instance = this
@@ -50,9 +51,13 @@ class ServerAliases {
     }
 
     fun loadAliases() {
+        // build a new map and swap it in, so a reload drops aliases removed from the config
+        // and never exposes a half filled map to the handlers reading it
+        val loaded = mutableMapOf<String, String>()
         Config.get().root.node("settings","server-aliases").childrenMap().forEach { (key, value) ->
-            aliases[key.toString()] = value.string ?: return@forEach
+            loaded[key.toString()] = value.string ?: return@forEach
         }
+        aliases = loaded
     }
 
 }
