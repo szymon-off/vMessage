@@ -83,8 +83,10 @@ class VMessage @Inject constructor(
         val description = plugin.description
         logger.info("Initializing ${description.name.orElseThrow()} v${description.version.getOrDefault("0.0.0-UNKNOWN")} by ${description.authors.joinToString(", ")}")
         logger.info("Powered by: FishyAPI v${FishyAPI.VERSION} by SzymON/OFF")
+        val legacyConfigMigration = LegacyConfigMigration()
+        legacyConfigMigration.prepareMigration()
         Config()
-        LegacyConfigMigration().runMigrationIfNeeded()
+        legacyConfigMigration.runMigrationIfNeeded()
         detectSignedVelocity()
         initializeVMessage()
         logger.info("Initialization completed! Ready to serve messages!")

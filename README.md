@@ -27,7 +27,7 @@ Chat, join, leave and switch messages work without any permissions set up.
 
 ## Upgrading from 1.x
 
-Version 2.0 is a rewrite, and the config changed with it. On first start, vMessage looks for `plugins/vMessage/config.yml` (capital M, the old location) and converts it into `plugins/vmessage/config.yml`. The old file is renamed to `MIGRATED-config.yml` and left where it is, next to a short `README.txt`. Once you've checked the result you can delete that folder. If the conversion fails, the error is logged and the old file isn't touched.
+Version 2.0 is a rewrite, and the config changed with it. On first start, vMessage looks for a 1.x config in `plugins/vMessage/config.yml` (capital M, the old location) and converts it into `plugins/vmessage/config.yml`. The old file is renamed to `MIGRATED-config.yml` and kept for reference, next to a short `README.txt`. Once you've checked the result you can delete that folder. On Windows and macOS, folder names ignore case, so both locations are the same folder. If `plugins/vmessage/config.yml` already exists as a 2.0 config, the old one is left alone. If the conversion fails, the error is logged, the 2.0 config starts from defaults and your old settings stay in the `MIGRATED-config.yml` file.
 
 What the conversion does:
 

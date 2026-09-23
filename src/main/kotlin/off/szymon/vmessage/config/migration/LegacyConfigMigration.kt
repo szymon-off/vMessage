@@ -19,55 +19,107 @@ import org.spongepowered.configurate.loader.HeaderMode
 import org.spongepowered.configurate.yaml.NodeStyle
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader
 import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.StandardCopyOption
 
+// 1.x kept its config in plugins/vMessage, 2.0 uses plugins/vmessage. On case-insensitive filesystems
+// (Windows, macOS) those are the same folder, so a legacy config is recognized by its contents instead:
+// every 1.x config has a messages section and none of them has config-version, which 2.0 always writes.
+//
+// this class's code was thouroughly tested and fixed by an AI agent. The base logic is authored by me.
 class LegacyConfigMigration {
 
-    private val legacyConfigDir = VMessage.get().dataDir.parent.resolve("vMessage")
-    private val legacyConfigFile = legacyConfigDir.resolve("config.yml")
+    private val dataDir = VMessage.get().dataDir
+    private val legacyConfigDir = dataDir.parent.resolve("vMessage")
 
-    val newConfigRoot: CommentedConfigurationNode = Config.get().root
+    // where prepareMigration() moved the legacy config to, null when there is nothing to migrate
+    private var migratedFile: Path? = null
 
-    fun runMigrationIfNeeded() {
-        if (needsMigration()) {
-            // any exception here comes from a legacy config we don't control, so none of them may stop the plugin from loading
-            try {
-                migrateLegacyConfig()
-            } catch (e: Exception) {
-                VMessage.get().logger.error("Legacy config migration failed: ${e.message}", e)
-                Config.get().load() // drop whatever was already copied over before it failed
-                return
-            }
-
-            try {
-                finalizeLegacyConfigFolder()
-            } catch (e: Exception) {
-                VMessage.get().logger.warn("Legacy config was migrated, but the old plugins/vMessage folder could not be cleaned up: ${e.message}", e)
-            }
+    // must run before Config() is created, otherwise Config() would load a legacy config sitting in
+    // plugins/vmessage as its own and merge the 2.0 defaults into it
+    fun prepareMigration() {
+        // any exception here comes from a legacy config we don't control, so none of them may stop the plugin from loading
+        try {
+            val legacyConfigFile = findLegacyConfigFile() ?: return
+            val target = findFreeMigratedFile(legacyConfigFile.parent)
+            Files.move(legacyConfigFile, target, StandardCopyOption.ATOMIC_MOVE)
+            migratedFile = target
+        } catch (e: Exception) {
+            VMessage.get().logger.error("Could not prepare the legacy config migration: ${e.message}", e)
         }
     }
 
-    private fun finalizeLegacyConfigFolder() {
-        val migratedFile = legacyConfigDir.resolve("MIGRATED-config.yml")
-        Files.move(legacyConfigFile, migratedFile, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
+    fun runMigrationIfNeeded() {
+        val migratedFile = migratedFile ?: return
 
+        try {
+            migrateLegacyConfig(migratedFile)
+        } catch (e: Exception) {
+            VMessage.get().logger.error("Legacy config migration failed: ${e.message}. Your old config is kept at $migratedFile", e)
+            Config.get().load() // drop whatever was already copied over before it failed
+            return
+        }
+        VMessage.get().logger.info("Migrated the vMessage 1.x config. The old one is kept at $migratedFile")
+
+        // on case-insensitive filesystems the legacy folder is the live one, which must not be called unused
+        if (Files.isSameFile(migratedFile.parent, dataDir)) return
+        try {
+            writeLegacyFolderReadme(migratedFile)
+        } catch (e: Exception) {
+            VMessage.get().logger.warn("Legacy config was migrated, but the old plugins/vMessage folder could not be cleaned up: ${e.message}", e)
+        }
+    }
+
+    private fun findLegacyConfigFile(): Path? {
+        // on case-insensitive filesystems this is also where the legacy config lives
+        val configFile = dataDir.resolve("config.yml")
+        if (isLegacyConfig(configFile)) return configFile
+
+        val legacyConfigFile = legacyConfigDir.resolve("config.yml")
+        if (!isLegacyConfig(legacyConfigFile)) return null
+
+        // migrating now would overwrite a 2.0 config that may already have been set up by hand
+        if (Files.exists(configFile)) {
+            VMessage.get().logger.warn("Found a vMessage 1.x config in $legacyConfigDir, but $configFile already exists. Skipping the migration, delete $configFile to migrate the old config instead.")
+            return null
+        }
+        return legacyConfigFile
+    }
+
+    private fun isLegacyConfig(file: Path): Boolean {
+        if (!Files.exists(file)) return false
+        val root = buildLegacyConfigRoot(file)
+        return root.node("config-version").virtual() && !root.node("messages").virtual()
+    }
+
+    // never replace an earlier MIGRATED-config.yml, it may be the only copy of someone's 1.x settings
+    private fun findFreeMigratedFile(dir: Path): Path {
+        var target = dir.resolve("MIGRATED-config.yml")
+        var i = 1
+        while (Files.exists(target)) {
+            target = dir.resolve("MIGRATED-config-${i++}.yml")
+        }
+        return target
+    }
+
+    private fun writeLegacyFolderReadme(migratedFile: Path) {
         Files.writeString(
-            legacyConfigDir.resolve("README.txt"),
+            migratedFile.resolveSibling("README.txt"),
             """
                 This folder is no longer used.
 
                 vMessage's configuration has moved to the plugins/vmessage folder (lowercase).
 
                 Your old configuration has already been migrated automatically and is kept here,
-                renamed to MIGRATED-config.yml, only for reference. You can safely delete this
+                renamed to ${migratedFile.fileName}, only for reference. You can safely delete this
                 entire folder once you've confirmed everything migrated correctly.
             """.trimIndent()
         )
     }
 
-    fun buildLegacyConfigRoot(): CommentedConfigurationNode {
+    fun buildLegacyConfigRoot(file: Path): CommentedConfigurationNode {
         val loader: YamlConfigurationLoader = YamlConfigurationLoader.builder()
-            .path(legacyConfigFile)
+            .path(file)
             .defaultOptions { opts ->
                 opts.shouldCopyDefaults(true)
                     .header(
@@ -84,15 +136,10 @@ class LegacyConfigMigration {
         return loader.load()
     }
 
-    fun needsMigration(): Boolean {
-        // Once migration succeeds, the legacy config.yml is renamed to MIGRATED-config.yml,
-        // so its absence on the next boot is itself proof migration already ran.
-        return Files.exists(legacyConfigFile)
-    }
-
     @Suppress("DuplicatedCode")
-    private fun migrateLegacyConfig() {
-        val legacyConfigRoot = buildLegacyConfigRoot()
+    private fun migrateLegacyConfig(migratedFile: Path) {
+        val legacyConfigRoot = buildLegacyConfigRoot(migratedFile)
+        val newConfigRoot = Config.get().root
         val legacyConfig = legacyConfigRoot.get(LegacyMainConfig::class.java) ?: throw IllegalStateException("Legacy config is invalid, cannot migrate")
         val newConfig = Config.get().tree
 
