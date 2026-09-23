@@ -23,7 +23,7 @@ version = pluginVersion
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
+        languageVersion.set(JavaLanguageVersion.of(25))
     }
 }
 
@@ -37,14 +37,13 @@ repositories {
 
 dependencies {
     /* Fishy API */
-    implementation("off.szymon:fishy-api:0.9.5+eaab114a") // TODO: if it works release as stable
+    implementation("off.szymon:fishy-api:0.9.5+eaab114a") { // TODO: if it works release as stable
+        exclude(group = "net.kyori") // Adventure is provided by Velocity, bundling FishyAPI's copy would only add a second, older one
+    }
 
     /* Velocity API */
-    compileOnly("com.velocitypowered:velocity-api:3.5.0-SNAPSHOT") {
-        exclude(group = "org.spongepowered", module = "configurate-core")
-        exclude(group = "org.spongepowered", module = "configurate-yaml")
-    }
-    kapt("com.velocitypowered:velocity-api:3.5.0-SNAPSHOT")
+    compileOnly("com.velocitypowered:velocity-api:4.0.0")
+    kapt("com.velocitypowered:velocity-api:4.0.0")
 
     /* Plugin Integration APIs */
     // Placeholder Plugins
