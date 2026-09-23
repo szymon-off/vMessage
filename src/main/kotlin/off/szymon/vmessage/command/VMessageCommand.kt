@@ -18,6 +18,7 @@ import com.velocitypowered.api.command.BrigadierCommand
 import off.szymon.fishy.api.FishyAPI
 import off.szymon.vmessage.VMessage
 import off.szymon.vmessage.message.HandlerManager
+import kotlin.jvm.optionals.getOrDefault
 
 class VMessageCommand : PluginCommand("vmessage", "vmsg", "vm") {
 
@@ -30,7 +31,7 @@ class VMessageCommand : PluginCommand("vmessage", "vmsg", "vm") {
                     val authors = description.authors.joinToString("</#00ffff><gray>,</gray> <#00ffff>")
                     sendMessage(ctx.source, """
                         <dark_gray>▎</dark_gray><bold><#00ffff>vMessage</#00ffff></bold> <white>»</white> <gray>by</gray> <#00ffff>$authors</#00ffff>
-                        <dark_gray>▎</dark_gray><gray>Version</gray> <white>»</white> <#00ffff>${description.version}</#00ffff>
+                        <dark_gray>▎</dark_gray><gray>Version</gray> <white>»</white> <#00ffff>${description.version.getOrDefault("0.0.0-UNKNOWN")}</#00ffff>
                         <dark_gray>▎</dark_gray><gray>Powered by</gray> <white>»</white> <#00ffff>FishyAPI</#00ffff> <gray>v${FishyAPI.VERSION}</gray>
                         <dark_gray>▎</dark_gray><gray>Links</gray> <white>»</white> <gray><u><click:open_url:'https://github.com/szymon-off/vMessage/'>ⒼGitHub</click></u> <u><click:open_url:'https://modrinth.com/plugin/vmessage'>ⓂModrinth</click></u></gray>
                     """.trimIndent())
