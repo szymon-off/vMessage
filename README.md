@@ -35,7 +35,7 @@ What the conversion does:
 - `server-aliases` moves to `settings.server-aliases`, and `luck-perms-meta` to `placeholders.luck-perms.custom-meta`.
 - In `/msg` formats, `%sender-server%` and `%receiver-server%` become `$sender_server$` and `$receiver_server$`. `$prefix$` and `$suffix$` now mean the *other* player's, which is what `%receiver-prefix%` meant in the sender's copy and `%sender-prefix%` in the receiver's.
 
-Permissions aren't part of the config, so they aren't converted. The silent permissions were renamed from `vmessage.silent.*` to `vmessage-silent.*` (see [Silent joins, leaves and switches](#silent-joins-leaves-and-switches)); update them in your permissions plugin.
+[Permissions](https://github.com/szymon-off/vMessage/wiki/Upgrading-from-1.x#permissions) aren't part of the config, so they aren't converted. The silent permissions were renamed from `vmessage.silent.*` to `vmessage-silent.*` (see [Silent joins, leaves and switches](#silent-joins-leaves-and-switches)); update them in your permissions plugin.
 
 What no longer exists:
 
@@ -58,7 +58,7 @@ What no longer exists:
 
 The console can run all of them except `/message` and `/reply`. For `/message`, `/reply` and `/broadcast` the Default column is the `allow-by-default` value in the config; a permission that's explicitly set (true or false) always beats it. `/reply` only exists while `/message` is enabled.
 
-`/vmessage fake` sends the message the given player would have triggered, without the player doing anything.
+[`/vmessage fake`](https://github.com/szymon-off/vMessage/wiki/Commands-and-Permissions#vmessage-fake) sends the message the given player would have triggered, without the player doing anything.
 
 ### Silent joins, leaves and switches
 
@@ -96,7 +96,7 @@ Blocking `/msg` alone leaves `/w` and `/tell` open.
 
 ## Configuration
 
-Everything lives in `plugins/vmessage/config.yml`, and the generated file has comments on each option. `/vmessage reload` reloads formats, server aliases, integrations and which message types are on. It doesn't register or remove commands, so turning `/message`, `/reply` or `/broadcast` on or off needs a proxy restart.
+Everything lives in `plugins/vmessage/config.yml`. The generated file has comments on each option, and the [wiki](https://github.com/szymon-off/vMessage/wiki) has a page for each section. `/vmessage reload` reloads formats, server aliases, integrations and which message types are on. It doesn't register or remove commands, so turning `/message`, `/reply` or `/broadcast` on or off [needs a proxy restart](https://github.com/szymon-off/vMessage/wiki/Configuration-(config.yml)#reload-or-restart).
 
 A format is a MiniMessage string with placeholders in `$dollar$` signs. This is the default chat format:
 
@@ -109,7 +109,7 @@ messages:
     order: LAST
 ```
 
-With `allow-mini-message: false`, tags typed by players are escaped, so nobody can colour their own messages or break your layout. Chat, `/message` and `/broadcast` each have their own `allow-mini-message`. Whatever the setting, legacy `§` colour codes and control characters are always stripped from player text. `order` is when vMessage handles the chat event: `FIRST`, `EARLY`, `NORMAL`, `LATE` or `LAST`.
+With `allow-mini-message: false`, tags typed by players are escaped, so nobody can colour their own messages or break your layout. Chat, `/message` and `/broadcast` each have their own `allow-mini-message`. Whatever the setting, legacy `§` colour codes and control characters are always stripped from player text. [`order`](https://github.com/szymon-off/vMessage/wiki/Chat#messageschatorder) is when vMessage handles the chat event: `FIRST`, `EARLY`, `NORMAL`, `LATE` or `LAST`.
 
 Placeholders per format:
 
@@ -137,7 +137,7 @@ A server that isn't listed keeps its plain name from `velocity.toml`. `settings.
 
 ### LuckPerms and PlaceholderAPI
 
-For LuckPerms, `$prefix$` and `$suffix$` work as soon as it's installed. Any other meta value has to be mapped first, under `placeholders.luck-perms.custom-meta`. Each integration also has an `enabled` toggle (`placeholders.luck-perms.enabled`, `placeholders.placeholder-api.enabled`). Adding `rank: my_rank_meta` there lets you write `&rank&` in a format.
+For LuckPerms, `$prefix$` and `$suffix$` work as soon as it's installed. Any other meta value has to be mapped first, under [`placeholders.luck-perms.custom-meta`](https://github.com/szymon-off/vMessage/wiki/Placeholders#placeholdersluck-permscustom-meta). Each integration also has an `enabled` toggle (`placeholders.luck-perms.enabled`, `placeholders.placeholder-api.enabled`). Adding `rank: my_rank_meta` there lets you write `&rank&` in a format.
 
 PlaceholderAPI works through PAPIProxyBridge, so the placeholders are resolved by the backend the player is on. Each lookup is given `placeholders.placeholder-api.bridge-timeout` milliseconds (500 by default); if the backend doesn't answer in time, the placeholder is left unresolved and a warning is logged.
 
