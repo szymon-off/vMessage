@@ -35,6 +35,7 @@ class LegacyConfigMigration {
                 migrateLegacyConfig()
             } catch (e: Exception) {
                 VMessage.get().logger.error("Legacy config migration failed: ${e.message}", e)
+                Config.get().load() // drop whatever was already copied over before it failed
                 return
             }
 
