@@ -59,7 +59,10 @@ dependencies {
 val generateVersion = tasks.register("generateVersion") {
     description = "Generates a Version.kt file containing the plugin version."
     val outputDir = layout.buildDirectory.dir("generated/source/version/kotlin")
+    val versionString = pluginVersion
 
+    // Declared as an input so a different -PpluginVersion reruns the task instead of reusing a stale Version.kt
+    inputs.property("version", versionString)
     outputs.dir(outputDir)
 
     doLast {
@@ -73,16 +76,11 @@ val generateVersion = tasks.register("generateVersion") {
             package off.szymon.vmessage.generated
 
             object Version {
-                const val VERSION: String = "$version"
+                const val VERSION: String = "$versionString"
             }
             """.trimIndent()
         )
     }
-}
-
-
-tasks.compileJava {
-    dependsOn(generateVersion)
 }
 
 
