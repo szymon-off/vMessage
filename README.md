@@ -54,7 +54,7 @@ What no longer exists:
 | `/reply <message>` | `/r` | `vmessage.command.message.reply` | allowed |
 | `/broadcast <message>` | `/bc`, `/bcast`, `/shout` | `vmessage.command.broadcast` | denied |
 
-The console can run all of them. For `/message`, `/reply` and `/broadcast` the Default column is the `allow-by-default` value in the config; a permission that's explicitly set (true or false) always beats it. `/reply` only exists while `/message` is enabled.
+The console can run all of them except `/message` and `/reply`. For `/message`, `/reply` and `/broadcast` the Default column is the `allow-by-default` value in the config; a permission that's explicitly set (true or false) always beats it. `/reply` only exists while `/message` is enabled.
 
 `/vmessage fake` sends the message the given player would have triggered, without the player doing anything.
 
