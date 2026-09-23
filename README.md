@@ -35,6 +35,8 @@ What the conversion does:
 - `server-aliases` moves to `settings.server-aliases`, and `luck-perms-meta` to `placeholders.luck-perms.custom-meta`.
 - In `/msg` formats, `%sender-server%` and `%receiver-server%` become `$sender_server$` and `$receiver_server$`. `$prefix$` and `$suffix$` now mean the *other* player's, which is what `%receiver-prefix%` meant in the sender's copy and `%sender-prefix%` in the receiver's.
 
+Permissions aren't part of the config, so they aren't converted. The silent permissions were renamed from `vmessage.silent.*` to `vmessage-silent.*` (see [Silent joins, leaves and switches](#silent-joins-leaves-and-switches)); update them in your permissions plugin.
+
 What no longer exists:
 
 - Legacy `&` colour codes. Formats are MiniMessage only, and `§` codes in player messages are stripped.
