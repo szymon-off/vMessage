@@ -22,6 +22,11 @@ class LuckPermsIntegration : Integration("luck-perms", "luckperms") {
     val api = LuckPermsProvider.get()
     val playerAdapter = api.getPlayerAdapter(Player::class.java)
 
+    private val customMeta: Map<String, String> =
+        Config.get().root.node("placeholders", id, "custom-meta").childrenMap()
+            .mapNotNull { (k, v) -> v.string?.let { "&$k&" to it } }
+            .toMap()
+
     override fun parse(string: String, player: Player): String {
         val metaData = playerAdapter.getMetaData(player)
 
@@ -29,10 +34,8 @@ class LuckPermsIntegration : Integration("luck-perms", "luckperms") {
         builder.addPlaceholder($$"$prefix$", metaData.prefix ?: "")
         builder.addPlaceholder($$"$suffix$", metaData.suffix ?: "")
 
-        Config.get().root.node("placeholders",id,"custom-meta").childrenMap().forEach { (key, value) ->
-            val metaKey = key.toString()
-            val metaValue = metaData.getMetaValue(value.string ?: "") ?: ""
-            builder.addPlaceholder("&$metaKey&", metaValue)
+        customMeta.forEach { (placeholder, metaKey) ->
+            builder.addPlaceholder(placeholder, metaData.getMetaValue(metaKey) ?: "")
         }
 
         return builder.build().parse(string)

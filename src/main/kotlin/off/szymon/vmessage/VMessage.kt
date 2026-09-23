@@ -65,6 +65,8 @@ class VMessage @Inject constructor(
     val metricsFactory: Metrics.Factory
 ) {
 
+    // TODO: For 2.0.1: cleanup codebase more, use FishyAPI stable
+
     companion object {
         private lateinit var instance: VMessage
 
