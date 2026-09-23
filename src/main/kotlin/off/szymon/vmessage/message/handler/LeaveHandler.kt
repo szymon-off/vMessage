@@ -28,6 +28,9 @@ class LeaveHandler : MessagesHandler("leave") {
 
     @Subscribe
     fun onLeave(event: DisconnectEvent): EventTask? {
+        // anything else means the player never reached a server, so no join message was sent either
+        if (event.loginStatus != DisconnectEvent.LoginStatus.SUCCESSFUL_LOGIN) return null
+
         if (event.player.hasPermission(Config.get().tree.settings.silentPermissions.leave)) return null
         @Suppress("DuplicatedCode")
         return EventTask.async { broadcast(event.player) }
