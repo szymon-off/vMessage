@@ -16,39 +16,37 @@ import off.szymon.vmessage.VMessage
 import off.szymon.vmessage.config.Config
 import org.spongepowered.configurate.CommentedConfigurationNode
 import org.spongepowered.configurate.loader.HeaderMode
-import org.spongepowered.configurate.serialize.SerializationException
 import org.spongepowered.configurate.yaml.NodeStyle
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader
-import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 
 class LegacyConfigMigration {
 
     private val legacyConfigDir = VMessage.get().dataDir.parent.resolve("vMessage")
+    private val legacyConfigFile = legacyConfigDir.resolve("config.yml")
 
-    val legacyConfigRoot: CommentedConfigurationNode? = buildLegacyConfigRoot()
     val newConfigRoot: CommentedConfigurationNode = Config.get().root
 
     fun runMigrationIfNeeded() {
         if (needsMigration()) {
+            // any exception here comes from a legacy config we don't control, so none of them may stop the plugin from loading
             try {
                 migrateLegacyConfig()
-            } catch (e: UnsupportedOperationException) {
+            } catch (e: Exception) {
                 VMessage.get().logger.error("Legacy config migration failed: ${e.message}", e)
                 return
             }
 
             try {
                 finalizeLegacyConfigFolder()
-            } catch (e: IOException) {
+            } catch (e: Exception) {
                 VMessage.get().logger.warn("Legacy config was migrated, but the old plugins/vMessage folder could not be cleaned up: ${e.message}", e)
             }
         }
     }
 
     private fun finalizeLegacyConfigFolder() {
-        val legacyConfigFile = legacyConfigDir.resolve("config.yml")
         val migratedFile = legacyConfigDir.resolve("MIGRATED-config.yml")
         Files.move(legacyConfigFile, migratedFile, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
 
@@ -66,13 +64,9 @@ class LegacyConfigMigration {
         )
     }
 
-    fun buildLegacyConfigRoot(): CommentedConfigurationNode? {
-        val path = legacyConfigDir.resolve("config.yml")
-        if (!path.toFile().exists()) {
-            return null
-        }
+    fun buildLegacyConfigRoot(): CommentedConfigurationNode {
         val loader: YamlConfigurationLoader = YamlConfigurationLoader.builder()
-            .path(path)
+            .path(legacyConfigFile)
             .defaultOptions { opts ->
                 opts.shouldCopyDefaults(true)
                     .header(
@@ -92,18 +86,13 @@ class LegacyConfigMigration {
     fun needsMigration(): Boolean {
         // Once migration succeeds, the legacy config.yml is renamed to MIGRATED-config.yml,
         // so its absence on the next boot is itself proof migration already ran.
-        return legacyConfigRoot != null
+        return Files.exists(legacyConfigFile)
     }
 
     @Suppress("DuplicatedCode")
-    @Throws(UnsupportedOperationException::class)
     private fun migrateLegacyConfig() {
-        var legacyConfig: LegacyMainConfig?
-        try {
-            legacyConfig = legacyConfigRoot?.get(LegacyMainConfig::class.java) ?: throw UnsupportedOperationException("Legacy config is invalid, cannot migrate")
-        } catch (e: SerializationException) {
-            throw UnsupportedOperationException("Legacy config is invalid, cannot migrate", e)
-        }
+        val legacyConfigRoot = buildLegacyConfigRoot()
+        val legacyConfig = legacyConfigRoot.get(LegacyMainConfig::class.java) ?: throw IllegalStateException("Legacy config is invalid, cannot migrate")
         val newConfig = Config.get().tree
 
         newConfig.commands.message.enabled = legacyConfig.commands.message.enabled
