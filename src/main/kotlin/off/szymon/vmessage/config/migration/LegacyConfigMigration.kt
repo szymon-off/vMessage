@@ -102,8 +102,8 @@ class LegacyConfigMigration {
             .replace("%sender%", $$"$sender$")
             .replace("%receiver%", $$"$receiver$")
             .replace("%message%", $$"$message$")
-            .replace("%sender-server%", "")
-            .replace("%receiver-server%", "")
+            .replace("%sender-server%", $$"$sender_server$")
+            .replace("%receiver-server%", $$"$receiver_server$")
             .replace("%sender-prefix%", "")
             .replace("%receiver-prefix%", $$"$prefix$")
             .replace("%sender-suffix%", "")
@@ -112,8 +112,8 @@ class LegacyConfigMigration {
             .replace("%sender%", $$"$sender$")
             .replace("%receiver%", $$"$receiver$")
             .replace("%message%", $$"$message$")
-            .replace("%sender-server%", "")
-            .replace("%receiver-server%", "")
+            .replace("%sender-server%", $$"$sender_server$")
+            .replace("%receiver-server%", $$"$receiver_server$")
             .replace("%sender-prefix%", $$"$prefix$")
             .replace("%receiver-prefix%", "")
             .replace("%sender-suffix%", $$"$suffix$")
@@ -164,7 +164,8 @@ class LegacyConfigMigration {
         newConfig.messages.change.enabled = legacyConfig.messages.change.enabled
         newConfig.messages.change.format = legacyConfig.messages.change.format
             .replace("%player%", $$"$player$")
-            .replace("%server%", $$"$server$")
+            .replace("%old_server%", $$"$old_server$")
+            .replace("%new_server%", $$"$new_server$")
             .replace("%prefix%", $$"$prefix$")
             .replace("%suffix%", $$"$suffix$")
 

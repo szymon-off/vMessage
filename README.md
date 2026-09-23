@@ -33,7 +33,7 @@ What the conversion does:
 
 - Placeholders change from `%player%` to `$player$`. Formats, enabled flags and permission defaults carry over.
 - `server-aliases` moves to `settings.server-aliases`, and `luck-perms-meta` to `placeholders.luck-perms.custom-meta`.
-- In `/msg` formats, `%sender-server%` and `%receiver-server%` are removed. `$prefix$` and `$suffix$` now mean the *other* player's, which is what `%receiver-prefix%` meant in the sender's copy and `%sender-prefix%` in the receiver's.
+- In `/msg` formats, `%sender-server%` and `%receiver-server%` become `$sender_server$` and `$receiver_server$`. `$prefix$` and `$suffix$` now mean the *other* player's, which is what `%receiver-prefix%` meant in the sender's copy and `%sender-prefix%` in the receiver's.
 
 What no longer exists:
 
